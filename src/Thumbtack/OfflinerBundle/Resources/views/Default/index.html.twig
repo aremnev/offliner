@@ -1,0 +1,36 @@
+{% extends '::layout.html.twig' %}
+
+{% block login_place %}
+{% endblock %}
+
+{% block herounit %}
+    <div class="stats stats-theme-light pull-right" title="Click to refresh stat">
+        <span class="stats-item"><span class="stats-label">in query</span> <span class="stats-count">15</span></span>
+        <span class="stats-item"><span class="stats-label">in progress</span> <span class="stats-count">3</span></span>
+        <span class="stats-item"><span class="stats-label">done</span> <span class="stats-count">816</span></span>
+    </div>
+    <h2>Offliner welcomes you, hello {{ app.user.nickname|default("Anonymous") }} </h2>
+    <p>Our service make you happy! Сlone any website you wish to be</p>
+    <span style="vertical-align: super">
+             Login via:
+             <a href="connect/google" class="btn btn-danger btn-large">Google+</a>
+             <a href="connect/facebook" class="btn btn-info btn-large">FaceBook</a>
+    </span>
+{% endblock %}
+
+
+{% block rowdata %}
+    <div class="span4">
+        <h4>Сайт работает на</h4>
+        <p><img style="max-height: 40px" src="http://symfony.com/images/common/logo/logo_symfony_header.png"/></p>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <!-- SignIn script-->
+    <script src="{{ asset('assets/js/SignIn.js') }}"></script>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+

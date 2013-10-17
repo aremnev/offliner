@@ -1,0 +1,50 @@
+security:
+    encoders:
+        Symfony\Component\Security\Core\User\User: plaintext
+
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    providers:
+        in_memory:
+            memory:
+                users:
+                    user:  { password: userpass, roles: [ 'ROLE_USER' ] }
+                    admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
+        hwi_provider:
+             id: thumbtackoffliner.oauth_user_provider
+
+    firewalls:
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        login:
+            pattern:  ^/demo/secured/login$
+            security: false
+
+        secured_area:
+            pattern:    ^/
+            anonymous: true
+            #http_basic:
+            #    realm: "Secured Demo Area"
+            oauth:
+                            resource_owners:
+                                google:        "/login/check-google"
+                                facebook:        "/login/check-facebook"
+                                bitbucket:        "/login/check-bitbucket"
+                            login_path:        /
+                            failure_path:      /signin
+
+                            oauth_user_provider:
+                                service:  thumbtackoffliner.oauth_user_provider
+            logout:
+                path:   /logout
+                target: /
+                invalidate_session: false
+    access_control:
+        - { path: ^/cv, roles: IS_AUTHENTICATED_FULLY  }
+        - { path: ^/signin, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/connect, roles: IS_AUTHENTICATED_ANONYMOUSLY }

@@ -1,0 +1,99 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+
+framework:
+    #esi:             ~
+    #translator:      { fallback: %locale% }
+    secret:          %secret%
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: ~
+    form:            ~
+    csrf_protection: ~
+    validation:      { enable_annotations: true }
+    templating:
+        engines: ['twig', 'php']
+        #assets_version: SomeVersionScheme
+    default_locale:  "%locale%"
+    trusted_proxies: ~
+    session:         ~
+    fragments:       ~
+    http_method_override: true
+
+# Twig Configuration
+twig:
+    debug:            %kernel.debug%
+    strict_variables: %kernel.debug%
+
+# Assetic Configuration
+assetic:
+    debug:          %kernel.debug%
+    use_controller: false
+    bundles:        [ ]
+    #java: /usr/bin/java
+    filters:
+        cssrewrite: ~
+        #closure:
+        #    jar: %kernel.root_dir%/Resources/java/compiler.jar
+        #yui_css:
+        #    jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver:   %database_driver%
+        host:     %database_host%
+        dbname:   %database_name%
+        user:     %database_user%
+        password: %database_password%
+        charset:  UTF8
+        # if using pdo_sqlite as your database driver, add the path in parameters.yml
+        # e.g. database_path: %kernel.root_dir%/data/data.db3
+        # path:     %database_path%
+
+    orm:
+        auto_generate_proxy_classes: %kernel.debug%
+        auto_mapping: true
+# Swiftmailer Configuration
+swiftmailer:
+    transport: %mailer_transport%
+    host:      %mailer_host%
+    username:  %mailer_user%
+    password:  %mailer_password%
+    spool:     { type: memory }
+# KNPlabs
+knp_menu:
+    templating: true
+    twig: true
+knp_snappy:
+    pdf:
+        enabled:    true
+        binary:     /usr/local/bin/wkhtmltopdf-i386
+        options:    []
+    image:
+        enabled:    false
+        binary:     /usr/local/bin/wkhtmltoimage
+        options:    []
+hwi_oauth:
+    firewall_name: secured_area
+    resource_owners:
+        google:
+            type:              google
+            client_id:         100576398803.apps.googleusercontent.com
+            client_secret:     TolWfwlAwTHAR86B9g265RGg
+            scope:             "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/plus.login"
+        facebook:
+            type:              facebook
+            client_id:         404976959603498
+            client_secret:     e8affb1eba766a9246fd35064b3971dd
+            scope:             "email"
+        bitbucket:
+            type:              bitbucket
+            client_id:         X8WZYuL5pEcC4qvGTw
+            client_secret:     d3zcmwZpLYaH5BeSMF2xDQzwkqne64cG
+
+    http_client:
+            timeout:       10
+            verify_peer:   false
+            ignore_errors: false
+            max_redirects: 100
