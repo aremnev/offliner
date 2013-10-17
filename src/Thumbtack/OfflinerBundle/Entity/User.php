@@ -2,9 +2,10 @@
 
 namespace Thumbtack\OfflinerBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * user
  *
@@ -39,13 +40,13 @@ class User implements UserInterface, \Serializable {
      *
      * @ORM\Column(name="username", type="string", length=255)
      */
-    protected  $username;
+    protected $username;
     /**
      * @var string
      *
      * @ORM\Column(name="nickname", type="string", length=255)
      */
-    protected  $nickname='';
+    protected $nickname = '';
 
     /**
      * @var \DateTime
@@ -57,18 +58,17 @@ class User implements UserInterface, \Serializable {
     /**
      * Constructor
      */
-    public function __construct()
-    {
-        $this->cvs = new ArrayCollection();
+    public function __construct() {
+        $this->tasks = new ArrayCollection();
 
     }
+
     /**
      * Get id
      *
      * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -78,8 +78,7 @@ class User implements UserInterface, \Serializable {
      * @param string $email
      * @return User
      */
-    public function setEmail($email)
-    {
+    public function setEmail($email) {
         $this->email = $email;
 
         return $this;
@@ -90,8 +89,7 @@ class User implements UserInterface, \Serializable {
      *
      * @return string
      */
-    public function getEmail()
-    {
+    public function getEmail() {
         return $this->email;
     }
 
@@ -101,8 +99,7 @@ class User implements UserInterface, \Serializable {
      * @param string $username
      * @return User
      */
-    public function setUsername($username)
-    {
+    public function setUsername($username) {
         $this->username = $username;
 
         return $this;
@@ -113,18 +110,17 @@ class User implements UserInterface, \Serializable {
      *
      * @return string
      */
-    public function getUsername()
-    {
+    public function getUsername() {
         return $this->username;
     }
+
     /**
      * Set nickname
      *
      * @param string $nickname
      * @return User
      */
-    public function setNickname($nickname)
-    {
+    public function setNickname($nickname) {
         $this->nickname = $nickname;
 
         return $this;
@@ -135,8 +131,7 @@ class User implements UserInterface, \Serializable {
      *
      * @return string
      */
-    public function getNickname()
-    {
+    public function getNickname() {
         return $this->nickname;
     }
 
@@ -146,8 +141,7 @@ class User implements UserInterface, \Serializable {
      * @param \DateTime $joinDate
      * @return User
      */
-    public function setJoinDate($joinDate)
-    {
+    public function setJoinDate($joinDate) {
         $this->joinDate = $joinDate;
 
         return $this;
@@ -158,19 +152,17 @@ class User implements UserInterface, \Serializable {
      *
      * @return \DateTime
      */
-    public function getJoinDate()
-    {
+    public function getJoinDate() {
         return $this->joinDate;
     }
 
-     /**
+    /**
      * Set photo
      *
      * @param string $photo
      * @return User
      */
-    public function setPhoto($photo)
-    {
+    public function setPhoto($photo) {
         $this->photo = $photo;
 
         return $this;
@@ -181,65 +173,55 @@ class User implements UserInterface, \Serializable {
      *
      * @return string
      */
-    public function getPhoto()
-    {
+    public function getPhoto() {
         return $this->photo;
     }
 
     //------UserInterface implement
-    public function getRoles()
-    {
-        if($this->username=='xplk90@gmail.com'){
-            return array('ROLE_ADMIN','UASHE_KRASAVCHIK','ROLE_OAUTH_USER');
+    public function getRoles() {
+        if ($this->username == 'xplk90@gmail.com') {
+            return array('ROLE_ADMIN', 'UASHE_KRASAVCHIK', 'ROLE_OAUTH_USER');
         }
-        return array('ROLE_USER','POCHTI_KRASAVCHIK','ROLE_OAUTH_USER');
+        return array('ROLE_USER', 'POCHTI_KRASAVCHIK', 'ROLE_OAUTH_USER');
     }
+
     /**
      * {@inheritDoc}
      */
-    public function getPassword()
-    {
+    public function getPassword() {
         return null;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getSalt()
-    {
+    public function getSalt() {
         return $this->id;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function eraseCredentials()
-    {
+    public function eraseCredentials() {
         return true;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function equals(UserInterface $user)
-    {
+    public function equals(UserInterface $user) {
         return $user->getEmail() === $this->email;
     }
-    public function __toString(){
+
+    public function __toString() {
         return $this->nickname;
     }
 
-    public function serialize()
-    {
-        return \json_encode(
-            array($this->username, $this->email, $this->photo, $this->nickname, $this->joinDate,
-                $this->id));
+    public function serialize() {
+        return \json_encode(array($this->username, $this->email, $this->photo, $this->nickname, $this->joinDate, $this->id));
     }
 
-    public function unserialize($serialized)
-    {
-        list($this->username, $this->email, $this->photo, $this->nickname, $this->joinDate,
-            $this->id) = \json_decode(
-            $serialized);
+    public function unserialize($serialized) {
+        list($this->username, $this->email, $this->photo, $this->nickname, $this->joinDate, $this->id) = \json_decode($serialized);
     }
 }

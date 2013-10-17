@@ -2,61 +2,59 @@
 
 namespace Thumbtack\OfflinerBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-class RootController extends BaseController
-{
+class RootController extends BaseController {
     /**
-     *@Route("/signIn", name="homepage")
+     * @Route("/signIn", name="homepage")
      */
-    public function signInAction(){
+    public function signInAction() {
 
-        if ($this->isUserLogged()){
+        if ($this->isUserLogged()) {
             return $this->redirect($this->generateUrl('welcome'));
         }
-       return $this->render('ThumbtackOfflinerBundle:Default:index.html.twig');
+        return $this->render('ThumbtackOfflinerBundle:Default:index.html.twig');
     }
-    /**
-     *@Route("/", name="welcome")
-     */
-    public function welcomeAction(){
 
-        if (!$this->isUserLogged()){
+    /**
+     * @Route("/", name="welcome")
+     */
+    public function welcomeAction() {
+
+        if (!$this->isUserLogged()) {
             return $this->redirect($this->generateUrl('homepage'));
         }
         return $this->render('ThumbtackOfflinerBundle:Default:welcome.html.twig');
     }
+
     /**
-     *@Route("/", name="rootUrl")
+     * @Route("/", name="rootUrl")
      */
-    public function rootUrlAction(){
-            return $this->redirect($this->generateUrl('homepage'));
+    public function rootUrlAction() {
+        return $this->redirect($this->generateUrl('homepage'));
     }
+
     /**
-     *@Route("/about", name="about")
+     * @Route("/about", name="about")
      */
-    public function phpinfoAction(){
+    public function phpinfoAction() {
 
         return $this->render('ThumbtackOfflinerBundle:Default:about.html.php');
     }
 
     /**
-     *@Route("/users", name="userlist")
+     * @Route("/users", name="userlist")
      */
-    public function getUserListAction(){
-        $repository = $this->getDoctrine()
-            ->getRepository('ThumbtackOfflinerBundle:User');
+    public function getUserListAction() {
+        $repository = $this->getDoctrine()->getRepository('ThumbtackOfflinerBundle:User');
         $users = $repository->findAll();
 
         if (!$users) {
             throw $this->createNotFoundException('No users Found');
         }
         $resp = 'User names: ';
-         foreach($users as $user)
-            $resp.= " -> ".$user->getUsername();
+        foreach ($users as $user) $resp .= " -> " . $user->getUsername();
         return new Response($resp);
     }
- }
+}

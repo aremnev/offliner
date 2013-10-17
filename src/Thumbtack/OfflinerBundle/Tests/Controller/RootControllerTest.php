@@ -2,13 +2,11 @@
 
 namespace Thumbtack\OfflinerBundle\Tests\Controller;
 
+
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-
-class RootControllerTest extends WebTestCase
-{
-    public function testIndex()
-    {
+class RootControllerTest extends WebTestCase {
+    public function testIndex() {
         $client = static::createClient();
 
         $crawler = $client->request('GET', '/');
@@ -23,6 +21,5 @@ class RootControllerTest extends WebTestCase
 
         $client->request('GET', '/aaaa');
         $this->assertTrue($client->getResponse()->isNotFound());
-
     }
 }

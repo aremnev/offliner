@@ -3,5 +3,6 @@
 namespace Thumbtack\OfflinerBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-class ThumbtackOfflinerBundle extends Bundle{
+
+class ThumbtackOfflinerBundle extends Bundle {
 }
