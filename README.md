@@ -33,9 +33,13 @@ If you get any warnings or recommendations, fix these now before moving on.
 	$ git submodule init
 	$ git submodule update
 
-### d) Install the Vendor Libraries
+### d) Install the Vendor Libraries(npm must be installed)
 
     $ php composer.phar install
+
+### npm install command (if necessary)
+
+    $ curl https://npmjs.org/install.sh | sh
 
 ### e) Change DBAL settings, create DB and update it
 

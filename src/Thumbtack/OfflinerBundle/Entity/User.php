@@ -47,20 +47,24 @@ class User implements UserInterface, \Serializable {
      * @ORM\Column(name="nickname", type="string", length=255)
      */
     protected $nickname = '';
-
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="join_date", type="datetime")
      */
     protected $joinDate;
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Task", mappedBy="user")
+     */
+    protected $tasks = '';
 
     /**
      * Constructor
      */
     public function __construct() {
         $this->tasks = new ArrayCollection();
-
     }
 
     /**

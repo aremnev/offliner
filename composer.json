@@ -23,22 +23,39 @@
         "knplabs/knp-menu-bundle": "2.0.x-dev",
         "jms/serializer": "0.13.0",
         "knplabs/knp-snappy-bundle": "dev-master",
-        "hwi/oauth-bundle": "0.3.*@dev"
+        "hwi/oauth-bundle": "0.3.*@dev",
+        "xplk/phantomCrawl":"0.0.3"
     },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "xplk/phantomCrawl",
+                "version":"0.0.3",
+                "source": {
+                    "url": "https://github.com/xplk/phantomCrawl",
+                    "type": "git",
+                    "reference":"master"
+                }
+            }
+        }
+    ],
     "scripts": {
         "post-install-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "cd vendor/xplk/phantomCrawl && npm install"
         ],
         "post-update-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "cd vendor/xplk/phantomCrawl && npm install"
         ]
     },
     "config": {

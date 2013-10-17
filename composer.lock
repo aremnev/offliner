@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "d811a204d9b003045f2c3f019407cd59",
+    "hash": "df0259b8ef6ae1174755f281c56d1438",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -2126,6 +2126,16 @@
                 "templating"
             ],
             "time": "2013-10-15 19:17:38"
+        },
+        {
+            "name": "xplk/phantomCrawl",
+            "version": "0.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/xplk/phantomCrawl",
+                "reference": "master"
+            },
+            "type": "library"
         }
     ],
     "packages-dev": [
