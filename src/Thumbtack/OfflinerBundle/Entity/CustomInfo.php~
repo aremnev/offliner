@@ -1,0 +1,100 @@
+<?php
+
+namespace Thumbtack\testBundle\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
+
+/**
+ * custom cv info entity
+ *
+ * @ORM\Table(name="custom_info")
+ * @ORM\Entity()
+ */
+class CustomInfo
+{
+    /**
+     * custom cv info id
+     *
+     * @var integer $id
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * custom cv info title
+     *
+     * @var string $title
+     * @Assert\NotBlank()
+     * @ORM\Column(name="title", type="string", length=255)
+     */
+    private $title = '';
+
+    /**
+     *@var string $data
+     *
+     *@ORM\Column(name="$data", type="string", length=255)
+     */
+    private $data = '';
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     * @return custom_info
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string 
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set data
+     *
+     * @param string $data
+     * @return custom_info
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+    
+        return $this;
+    }
+
+    /**
+     * Get data
+     *
+     * @return string 
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+}
