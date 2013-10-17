@@ -4,6 +4,7 @@ namespace Thumbtack\OfflinerBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class RootController extends BaseController {
     /**

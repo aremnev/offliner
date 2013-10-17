@@ -68,6 +68,36 @@ class User implements UserInterface, \Serializable {
     }
 
     /**
+     * Add tasks
+     *
+     * @param \Thumbtack\OfflinerBundle\Entity\Task $tasks
+     * @return User
+     */
+    public function addTask(\Thumbtack\OfflinerBundle\Entity\Task $tasks) {
+        $this->tasks[] = $tasks;
+
+        return $this;
+    }
+
+    /**
+     * Remove tasks
+     *
+     * @param \Thumbtack\OfflinerBundle\Entity\Task $tasks
+     */
+    public function removeTask(\Thumbtack\OfflinerBundle\Entity\Task $tasks) {
+        $this->tasks->removeElement($tasks);
+    }
+
+    /**
+     * Get tasks
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTasks() {
+        return $this->tasks;
+    }
+
+    /**
      * Get id
      *
      * @return integer
@@ -228,4 +258,6 @@ class User implements UserInterface, \Serializable {
     public function unserialize($serialized) {
         list($this->username, $this->email, $this->photo, $this->nickname, $this->joinDate, $this->id) = \json_decode($serialized);
     }
+
+
 }
