@@ -6,36 +6,67 @@
  * Time: 8:42 PM
  * To change this template use File | Settings | File Templates.
  */
-
-namespace Application\Model;
+namespace Thumbtack\OfflinerBundle\Models;
 //TODO: error codes/messages
-class PageSaverModel {
-    //----constants
-    const STATUS_AWAITING = 1;
-    const STATUS_PROGRESS = 2;
-    const STATUS_READY = 3;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
+use Thumbtack\OfflinerBundle\Entity\Process;
+use Thumbtack\OfflinerBundle\Entity\Task;
 
-    private $dao;
-    private $systemDao;
-    function __construct(){
-        $this->dao = new PageSaverDAO();
-        $this->systemDao = new IndexerDAO(); //Link with index processes
+class OfflinerModel {
+    //----constants
+    const STATUS_AWAITING = 'in query';
+    const STATUS_PROGRESS = 'in progress';
+    const STATUS_READY = 'Ready';
+
+    /**
+     * @var EntityManager
+     */
+    private  $dm;
+    /**
+     * @var EntityRepository
+     */
+    private $tasksRepo;
+    /**
+     * @var EntityRepository
+     */
+    private $serviceRepo;
+    private $maxProcessCount;
+    /**
+     * @var Process
+     */
+    private $process;
+    /**
+     * @param EntityManager $dm
+     * @param integer $mpc
+     */
+    function __construct($dm,$mpc){
+        $this->dm = $dm;
+        $this->tasksRepo = $dm->getRepository('ThumbtackOfflinerBundle:Task');
+        $this->serviceRepo = $dm->getRepository('ThumbtackOfflinerBundle:Process');
+        $this->maxProcessCount = $mpc;
     }
     public function runQuerySave(){
-        $pr_id = $this->systemDao->regProcess(IndexerModel::PROCESS_COUNT);
-        if($pr_id){
-            $task = $this->dao->getQueryTask();
+        if($this->regProcess()){
+            /**
+             * @var Task $task;
+             */
+            $task = $this->tasksRepo->findOneByStatus(OfflinerModel::STATUS_AWAITING);
             if(isset($task)){
                 $script = $this->generateCrawlScript($task,"completed_tasks/".$task->getId());
-                //exec("node -e \"".$script."\"");
+                exec("node -e \"".$script."\"");
                 exec("cd completed_tasks/ && zip ".$task->getId().".zip -r ".$task->getId()." && mv -f ".$task->getId().".zip ../public/uploads/".$task->getId().".zip");
-                $this->dao->setTaskStatus($task->getId(),PageSaverModel::STATUS_READY);
+                $task->setStatus(PageSaverModel::STATUS_READY);
+                $this->dm->persist($task);
+                $this->dm->flush();
             }
+            $this->unregProcess();
         }
-        $this->systemDao->unregProcess($pr_id);
         return  true;
     }
-    function addTaskToQuery($url,$depth,$scripts,$domain,$email){
+    function addTaskToQuery($data){
+        $entity = new Task($data);
+         return $entity;
         $url = $this->prepareURL($url);
         //TODO: implement UserEntity, create TaskEntity
         $uid = $email;
@@ -85,9 +116,31 @@ class PageSaverModel {
         $url = preg_replace('#(?:http(s)?://)?(.+)#', 'http\1://\2', $url);
         return $url;
     }
-
+    public function regProcess(){
+        $success = false;
+        $this->dm->beginTransaction();
+        $query = $this->dm->createQuery('SELECT count(p) FROM ThumbtackOfflinerBundle:Process p');
+        if(intval($query->getSingleScalarResult()) < $this->maxProcessCount){
+            $pr = new Process();
+            $this->dm->persist($pr);
+            $this->dm->flush();
+            $this->dm->commit();
+            $this->process = $pr;
+            $success = true;
+        }else{
+            $this->dm->rollback();
+        }
+         return $success;
+    }
+    public function unregProcess(){ //TODO: think about exceptions!
+        if($this->process){
+            $this->dm->remove($this->process);
+            $this->dm->flush();
+            $this->dm->clear();
+        }
+    }
     /**
-     * @param SaveTaskEntity $task
+     * @param Task $task
      * @param string $savePath
      * @return string
      */
@@ -102,8 +155,8 @@ class PageSaverModel {
             crawlerPerThread:4,
             maxDepth:".$task->getMaxDepth().",
             base:'".$savePath."',
-            pageTransform:[". ($task->isClearScripts()?"'cleanJs', ":"") ."'cleanInlineCss', 'absoluteUrls', 'canvas', 'inputs', 'charset', 'white'],
-            urlFilters: [".($task->isOnlyDomain()?"'domain', ":"")."'level', 'crash']
+            pageTransform:[". ($task->getClearScripts()?"'cleanJs', ":"") ."'cleanInlineCss', 'absoluteUrls', 'canvas', 'inputs', 'charset', 'white'],
+            urlFilters: [".($task->getOnlyDomain()?"'domain', ":"")."'level', 'crash']
         });
         ";
         return $res;

@@ -5,9 +5,10 @@ namespace Thumbtack\OfflinerBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
- * user
+ * task
  *
  * @ORM\Table()
  * @ORM\Entity
@@ -82,7 +83,18 @@ class Task implements \Serializable {
     public function unserialize($serialized) {
         list($this->id, $this->maxDepth, $this->status, $this->onlyDomain, $this->clearScripts, $this->status) = \json_decode($serialized);
     }
-
+    public function __construct(){
+        if(func_get_arg(0)){
+            $data = func_get_arg(0);
+            $this->maxDepth = $data['maxDepth'];
+            $this->url = $data['url'];
+            $this->status = $data['status'];
+            $this->onlyDomain = $data['onlyDomain'];
+            $this->clearScripts = $data['clearScripts'];
+        }
+        $this->date = new DateTime();
+        $this->ready = false;
+    }
     /**
      * Get id
      *

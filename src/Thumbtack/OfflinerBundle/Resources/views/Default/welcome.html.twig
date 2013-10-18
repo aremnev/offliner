@@ -18,8 +18,12 @@
 
 
 {% block rowdata %}
+    {{ app.user.nickname }}
     <div class="span4">
-        <h1>FORM PLEASE!!!!</h1>
+        {% for task in app.user.tasks %}
+            <h5>{{task.url}}</h5>
+        {% endfor %}
+
     </div>
 {% endblock %}
 

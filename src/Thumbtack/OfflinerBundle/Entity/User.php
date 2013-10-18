@@ -252,11 +252,11 @@ class User implements UserInterface, \Serializable {
     }
 
     public function serialize() {
-        return \json_encode(array($this->username, $this->email, $this->photo, $this->nickname, $this->joinDate, $this->id));
+        return \json_encode(array($this->username, $this->email, $this->photo, $this->nickname, $this->joinDate, $this->id,$this->tasks));
     }
 
     public function unserialize($serialized) {
-        list($this->username, $this->email, $this->photo, $this->nickname, $this->joinDate, $this->id) = \json_decode($serialized);
+        list($this->username, $this->email, $this->photo, $this->nickname, $this->joinDate, $this->id,$this->tasks) = \json_decode($serialized);
     }
 
 

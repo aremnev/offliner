@@ -5,6 +5,7 @@ namespace Thumbtack\OfflinerBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Thumbtack\OfflinerBundle\Models\OfflinerModel;
 
 class RootController extends BaseController {
     /**
@@ -15,6 +16,8 @@ class RootController extends BaseController {
         if ($this->isUserLogged()) {
             return $this->redirect($this->generateUrl('welcome'));
         }
+//        $offliner = new OfflinerModel($this->getDoctrine()->getManager(),$this->container->getParameter('offliner_max_proccess_count'));
+
         return $this->render('ThumbtackOfflinerBundle:Default:index.html.twig');
     }
 
@@ -22,7 +25,6 @@ class RootController extends BaseController {
      * @Route("/", name="welcome")
      */
     public function welcomeAction() {
-
         if (!$this->isUserLogged()) {
             return $this->redirect($this->generateUrl('homepage'));
         }

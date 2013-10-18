@@ -9,25 +9,18 @@
 
 namespace Application\Controller;
 
-use Application\Model\Crawler;
-use Application\Model\IndexerDAO;
-use Application\Model\IndexerModel;
-use Application\Model\PageDAO;
-use Application\Model\PageSaverDAO;
-use Application\Model\PageSaverModel;
-use Application\Model\SitePageModel;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\Http\Response;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Thumbtack\OfflinerBundle\Models\OfflinerModel;
 
 class PageSaverController extends Controller {
     /**
      * @Route("/tasks/new", name="newTask")
      */
     public function addTaskAction(){
-      $data = json_decode($this->getRequest()->getContent());
-      $indexer= new PageSaverModel();
-      $msg= $indexer->addTaskToQuery($data->url,intval($data->depth),($data->cl_scripts?true:false),($data->only_domain?true:false),$data->email);
+      $data = json_decode($this->getRequest()->request->all());
+      $offliner= new OfflinerModel($this->getDoctrine()->getManager());
+      $msg= $offliner->addTaskToQuery($data);
       return  $this->getResponse()->setContent($msg);
     }
     /**

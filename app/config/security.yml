@@ -7,11 +7,6 @@ security:
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     providers:
-        in_memory:
-            memory:
-                users:
-                    user:  { password: userpass, roles: [ 'ROLE_USER' ] }
-                    admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
         hwi_provider:
              id: thumbtackoffliner.oauth_user_provider
 
@@ -44,7 +39,7 @@ security:
                 target: /
                 invalidate_session: false
     access_control:
-        - { path: ^/cv, roles: IS_AUTHENTICATED_FULLY  }
+        - { path: ^/tasks, roles: IS_AUTHENTICATED_FULLY  }
         - { path: ^/signin, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/connect, roles: IS_AUTHENTICATED_ANONYMOUSLY }

@@ -7,11 +7,10 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Application\Model;
+namespace Thumbtack\OfflinerBundle\Models;
 
-use Zend\Dom\Query;
 
-class PageSaverParser {
+class OfflinerParser {
     public static function getPage($link){
         require_once('module/Application/src/Application/Misc/url_to_absolute.php');
 
