@@ -1,5 +1,8 @@
-thumbtackOffliner_homepage:
+thumbtackOffliner_root:
     resource: "@ThumbtackOfflinerBundle/Controller/RootController.php"
+    type:     annotation
+thumbtackOffliner_offliner:
+    resource: "@ThumbtackOfflinerBundle/Controller/OfflinerController.php"
     type:     annotation
 thumbtackOffliner_oauth:
     resource: "@ThumbtackOfflinerBundle/Security/UserProvider.php"

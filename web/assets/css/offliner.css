@@ -46,3 +46,48 @@ body {
 .stats-theme-light .stats-count {
     color: #fff;
 }
+table{
+    border: 1px #808080 solid;
+    border-radius: 3px;
+    display: block;
+}
+table thead{
+    text-align: center;
+    font-weight: bold;
+}
+table tbody{
+    text-align: center;
+
+}
+.row{
+    margin-left: 0px;
+}
+footer{
+    margin-top: 50px;
+}
+table.list tbody tr:nth-child(2n+1) td {
+    background-color: #eee !important;
+}
+table.list thead td {
+    background-color: #969696 !important;
+}
+table.list tbody td {
+    border-left: #808080 1px solid;
+    border-right: #808080 1px solid;
+    vertical-align: middle;
+}
+table.list tbody tr:hover td {
+    background-color: #fdac9f !important;
+}
+.new-task-form {
+    padding: 0px;
+    vertical-align: middle;
+    border: darkolivegreen 2px solid;
+    border-radius: 6px;
+}
+input[type="number"]{
+    width: 2em;
+}
+input{
+    margin-bottom: 0 !important;
+}

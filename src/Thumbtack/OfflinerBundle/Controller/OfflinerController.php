@@ -1,44 +1,84 @@
 <?php
-/**
- * Zend Framework (http://framework.zend.com/)
- *
- * @link      http://github.com/zendframework/ZendSkeletonApplication for the canonical source repository
- * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
- */
 
-namespace Application\Controller;
+namespace Thumbtack\OfflinerBundle\Controller;
 
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Thumbtack\OfflinerBundle\Controller\BaseController;
+use Thumbtack\OfflinerBundle\Entity\User;
 use Thumbtack\OfflinerBundle\Models\OfflinerModel;
 
-class PageSaverController extends Controller {
+class OfflinerController extends BaseController {
     /**
      * @Route("/tasks/new", name="newTask")
+     * @Method ({"POST"})
      */
     public function addTaskAction(){
-      $data = json_decode($this->getRequest()->request->all());
-      $offliner= new OfflinerModel($this->getDoctrine()->getManager());
-      $msg= $offliner->addTaskToQuery($data);
-      return  $this->getResponse()->setContent($msg);
+      $data = $this->getRequest()->getContent();
+    /**
+     * @var OfflinerModel $offliner
+     */
+      $offliner= $this->get("thumbtackOffliner");
+      $msg = ($offliner->addTaskToQuery($data)?"true":"false");
+      $response = new \Symfony\Component\HttpFoundation\Response($msg);
+      $response->headers->set('Content-Type', 'application/json');
+    return $response;
     }
     /**
-     * @Route("/tasks", name="newTask")
+     * @Route("/tasks", name="tasksList")
+     * @Method ({"GET"})
      */
     public function taskListAction(){
-        $data = json_decode($this->getRequest()->getContent());
-        $indexer= new PageSaverModel();
-        $msg = $indexer->getTaskStatusByUser($data->email);
-        return  $this->getResponse()->setContent($msg);
+        /**
+         * @var User $user
+         */
+        $user = $this->getUser();
+        if($user){
+            $response = new \Symfony\Component\HttpFoundation\Response(json_encode($user->getTasks()->toArray()));
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
     }
-    //TODO: tasks delete/update/check
     /**
-     * @Route("/stat", name="newTask")
+     * @Route("/uploads/{path}", name="getFromUploads")
+     */
+    public function getFromUploadsAction($path) {
+        $upload_path = '/home/istrelnikov/offliner_uploads/'; //TODO: make as parameter
+        $response = new \Symfony\Component\HttpFoundation\Response(file_get_contents($upload_path.$path));
+        $response->headers->set('Content-Type', 'application/zip');
+        return $response;
+    }
+
+    /**
+     * @Route("/tasks/{id}", requirements={"id" = "\d+"}, defaults={"id" = null} , name="taskDelete")
+     * @Method ({"DELETE"})
+     */
+    public function taskDeleteAction($id){
+        /**
+         * @var OfflinerModel $offliner
+         */
+        $offliner = $this->get("thumbtackOffliner");
+        $msg = ($offliner->deleteTaskById($id)?"true":"false");
+        $response = new \Symfony\Component\HttpFoundation\Response($msg);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+
+    //TODO: tasks update
+
+    /**
+     * @Route("/stat", name="stat")
+     * @Method ({"GET"})
      */
     public function statAction(){
-        $dao = new PageSaverDAO();
-        $results = $dao->getSaverStat();
-        return  $this->getResponse()->setContent(json_encode($results));
+        /**
+         * @var OfflinerModel $offliner
+         */
+        $offliner = $this->get("thumbtackOffliner");
+        $msg = $offliner->getOfflinerStat();
+        $response = new \Symfony\Component\HttpFoundation\Response(json_encode($msg));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
 }

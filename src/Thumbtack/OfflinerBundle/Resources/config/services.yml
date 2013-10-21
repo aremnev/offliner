@@ -19,3 +19,9 @@ services:
  thumbtackoffliner.oauth_user_provider:
         class: Thumbtack\OfflinerBundle\Security\UserProvider
         arguments: [@doctrine]
+ thumbtackOffliner:
+        class: Thumbtack\OfflinerBundle\Models\OfflinerModel
+        arguments: [@security.context,@doctrine]
+ thumbtackOfflinerProcessor:
+        class: Thumbtack\OfflinerBundle\Models\OfflinerProcessor
+        arguments: [@doctrine,"%offliner_max_proccess_count%"]

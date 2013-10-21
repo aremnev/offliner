@@ -4,11 +4,6 @@
 {% endblock %}
 
 {% block herounit %}
-    <div class="stats stats-theme-light pull-right" title="Click to refresh stat">
-        <span class="stats-item"><span class="stats-label">in query</span> <span class="stats-count">15</span></span>
-        <span class="stats-item"><span class="stats-label">in progress</span> <span class="stats-count">3</span></span>
-        <span class="stats-item"><span class="stats-label">done</span> <span class="stats-count">816</span></span>
-    </div>
     <h2>Offliner welcomes you, hello {{ app.user.nickname|default("Anonymous") }} </h2>
     <p>Our service make you happy! Сlone any website you wish to be</p>
     <span style="vertical-align: super">
@@ -18,13 +13,60 @@
 
 
 {% block rowdata %}
-    {{ app.user.nickname }}
-    <div class="span4">
-        {% for task in app.user.tasks %}
-            <h5>{{task.url}}</h5>
-        {% endfor %}
-
-    </div>
+    {% verbatim %}
+        <div>
+            <a ng-click="showForm = !showForm">Expand</a>
+        </div>
+        <div ng-show="showForm">
+            <form class="new-task-form">
+                <input type="url" ng-model="url">
+                <input type="checkbox" ng-model="onlyDomain" >Domain Only
+                <input type="checkbox" ng-model="clearScripts" >Clear Scripts
+                <input type="number" ng-model="maxDepth" ng-change="validate()">Crawl depth
+                <button type="submit" ng-model="maxDepth" ng-click="sendRequest('newTask')">Create new task</button>
+            </form>
+        </div>
+        <table class="list">
+            <thead>
+                <tr>
+                    <td style="width: 25%"> Url</td>
+                    <td style="width: 10%"> Status</td>
+                    <td style="width: 10%"> Domain Only</td>
+                    <td style="width: 10%"> Clear Scripts</td>
+                    <td style="width: 5%"> Depth</td>
+                    <td style="width: 10%"> Date</td>
+                    <td style="width: 20%"> Options</td>
+                </tr>
+            </thead>
+            <tbody ng-repeat="task in tasks">
+                    <tr ng-show="!inEdit(task)" id="task{{task.id}}">
+                        <td> {{ task.url }}</td>
+                        <td> <label class="label">{{ task.status }}</label></td>
+                        <td> <label class="label">{{ task.onlyDomain }}</label></td>
+                        <td> <label class="label">{{ task.clearScripts }}</label></td>
+                        <td> <label class="label">{{ task.maxDepth }}</label></td>
+                        <td> <small>{{ task.date.date }}</small></td>
+                        <td>
+                            <label class="btn btn-success btn-mini pull-left" ng-if="task.ready" title="Download"><a href="uploads/{{task.id}}.zip" class="icon-download-alt"></a></label>
+                            <label class="btn btn-danger btn-mini pull-right" ng-click="sendRequest('deleteTask',{{task.id}})" title="Delete"><span class="icon-remove"></span></label>
+                            <label class="btn btn-info btn-mini pull-right " ng-if="task.status == 'in query'" ng-click="setEditId({{task.id}})" title="Edit"><span class="icon-edit"></span></label>
+                        </td>
+                    </tr>
+                    <tr ng-show="inEdit(task)" id="task{{task.id}}">
+                        <td> <input type="url" ng-model="task.url"></td>
+                        <td> <label class="label">{{ task.status }}</label></td>
+                        <td> <input type="checkbox" ng-model="task.onlyDomain"></td>
+                        <td>  <input type="checkbox" ng-model="task.clearScripts"></td>
+                        <td> <input type="number" ng-model="task.maxDepth"></td>
+                        <td> <small>{{ task.date.date }}</small></td>
+                        <td>
+                            <label class="btn btn-danger btn-mini disabled pull-right" title="Delete"><span class="icon-remove"></span></label>
+                            <label class="btn btn-info btn-mini pull-right" ng-click="setEditId(-1)" title="Save"><span class="icon-ok"></span></label>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+    {% endverbatim %}
 {% endblock %}
 
 {% block javascripts %}
