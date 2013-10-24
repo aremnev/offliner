@@ -17,11 +17,11 @@ command.
 ### a) Check your System Configuration
 
 Before you begin, make sure that your local system is properly configured
-for Symfony2. To do this, execute the following:
+for Symfony2 and php version 5.4+. To do this, execute the following:
 
 	$ ./app/check.php 
 
-If you get any warnings or recommendations, fix these now before moving on. 
+If you get any warnings or recommendations, fix these now before moving on.
 
 
 ### b) Change the permissions of the "app/cache/" and "app/logs" directories so that the web server can write into it. 

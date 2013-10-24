@@ -47,9 +47,9 @@
                         <td> <label class="label">{{ task.maxDepth }}</label></td>
                         <td> <small>{{ task.date.date }}</small></td>
                         <td>
-                            <label class="btn btn-success btn-mini pull-left" ng-if="task.ready" title="Download"><a href="uploads/{{task.id}}.zip" class="icon-download-alt"></a></label>
+                            <a href="uploads/{{task.id}}.zip"><label class="btn btn-success btn-mini pull-left" ng-if="task.ready" title="Download"><span class="icon-download-alt"></span></label></a>
                             <label class="btn btn-danger btn-mini pull-right" ng-click="sendRequest('deleteTask',{{task.id}})" title="Delete"><span class="icon-remove"></span></label>
-                            <label class="btn btn-info btn-mini pull-right " ng-if="task.status == 'in query'" ng-click="setEditId({{task.id}})" title="Edit"><span class="icon-edit"></span></label>
+                            <label class="btn btn-info btn-mini pull-right " ng-if="task.status == 'in queue'" ng-click="setEditId({{task.id}})" title="Edit"><span class="icon-edit"></span></label>
                         </td>
                     </tr>
                     <tr ng-show="inEdit(task)" id="task{{task.id}}">
@@ -61,7 +61,7 @@
                         <td> <small>{{ task.date.date }}</small></td>
                         <td>
                             <label class="btn btn-danger btn-mini disabled pull-right" title="Delete"><span class="icon-remove"></span></label>
-                            <label class="btn btn-info btn-mini pull-right" ng-click="setEditId(-1)" title="Save"><span class="icon-ok"></span></label>
+                            <label class="btn btn-info btn-mini pull-right" ng-click="saveEdit(task)" title="Save"><span class="icon-ok"></span></label>
                         </td>
                     </tr>
             </tbody>

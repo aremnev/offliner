@@ -11,13 +11,14 @@ namespace Thumbtack\OfflinerBundle\Models;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\Validator\Constraints\DateTime;
 use Thumbtack\OfflinerBundle\Entity\Process;
 use Thumbtack\OfflinerBundle\Entity\Task;
 use Thumbtack\OfflinerBundle\Entity\User;
 
 class OfflinerModel {
     //----constants
-    const STATUS_AWAITING = 'in query';
+    const STATUS_AWAITING = 'in queue';
     const STATUS_PROGRESS = 'in progress';
     const STATUS_READY = 'Ready';
 
@@ -46,16 +47,33 @@ class OfflinerModel {
         $this->tasksRepo = $this->dm->getRepository('ThumbtackOfflinerBundle:Task');
     }
 
-    function addTaskToQuery($json){
+    function addTaskToQueue($json){
         try{
             $data = json_decode($json,true);
+
             $data['url']= $this->prepareURL($data['url']);
             $data['status'] = OfflinerModel::STATUS_AWAITING;
-            $task = new Task($data);
-            $task->setUser($this->user);
-            $this->dm->persist($task);
-            $this->dm->flush();
-            return true;
+            if(!isset($data['id'])){
+                $task = new Task($data);
+                $task->setUser($this->user);
+                $this->dm->persist($task);
+                $this->dm->flush();
+                return true;
+            }else{  //
+                /**
+                 * @var Task $task
+                 */
+                $task = $this->tasksRepo->findOneById($data['id']);
+                $task->setUser($this->user);
+                $task->setClearScripts($data['clearScripts']);
+                $task->setMaxDepth($data['maxDepth']);
+                $task->setDate(new \DateTime());
+                $task->setOnlyDomain($data['onlyDomain']);
+                $task->setUrl($data['url']);
+                $this->dm->persist($task);
+                $this->dm->flush();
+                return true;
+            }
         }catch (Exception $e){
             return false;
         }
@@ -74,7 +92,7 @@ class OfflinerModel {
     public function getOfflinerStat(){
         $query = $this->dm->createQuery('SELECT count(t) FROM ThumbtackOfflinerBundle:Task t WHERE t.status = ?1');
         $query->setParameter(1, OfflinerModel::STATUS_AWAITING);
-        $result['query'] = $query->getSingleScalarResult();
+        $result['queue'] = $query->getSingleScalarResult();
         $query->setParameter(1, OfflinerModel::STATUS_PROGRESS);
         $result['progress'] = $query->getSingleScalarResult();
         $query->setParameter(1, OfflinerModel::STATUS_READY);

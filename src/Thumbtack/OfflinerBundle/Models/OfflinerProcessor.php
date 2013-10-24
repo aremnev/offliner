@@ -44,13 +44,16 @@ class OfflinerProcessor {
         $this->serviceRepo = $this->dm->getRepository('ThumbtackOfflinerBundle:Process');
         $this->maxProcessCount = $mpc;
     }
-    public function runQueryTask(){
+    public function runQueueTask(){
         if($this->regProcess()){
             /**
              * @var Task $task;
              */
             $task = $this->tasksRepo->findOneByStatus(OfflinerModel::STATUS_AWAITING);
             if(isset($task)){
+                $task->setStatus(OfflinerModel::STATUS_PROGRESS);
+                $this->dm->persist($task);
+                $this->dm->flush();
                 $script = $this->generateCrawlScript($task,"completed_tasks/".$task->getId());
                 exec("node -e \"".$script."\"");
                 exec("cd completed_tasks/ && zip ".$task->getId().".zip -r ".$task->getId()." && mv -f ".$task->getId().".zip /home/istrelnikov/offliner_uploads/".$task->getId().".zip");

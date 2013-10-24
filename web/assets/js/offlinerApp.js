@@ -34,7 +34,7 @@ app.controller("mainCtrl",function($scope,$http,$window){
     $scope.maxDepth = 0;
     $scope.tasks = [];
     $scope.message = '<p>Manage your tasks</p>';
-    $scope.stat ={'query':0,'progress':0,'done':0};
+    $scope.stat ={'queue':0,'progress':0,'done':0};
     $scope.showForm = false;
     $scope.inEditId = -1;
     $scope.divArrow=function(div){
@@ -49,25 +49,33 @@ app.controller("mainCtrl",function($scope,$http,$window){
         }
     }
     $scope.inEdit = function(task){
-        console.log($scope.inEditId);
-        return ($scope.inEditId == task.id && task.status == 'in query');
+        return ($scope.inEditId == task.id && task.status == 'in queue');
     }
     $scope.setEditId = function(id){
         $scope.inEditId = id;
     }
-    $scope.sendRequest = function(req_action,opt_id){
+    $scope.saveEdit = function(task){
+        $scope.sendRequest('updateTask',task.id,{url:task.url,onlyDomain:task.onlyDomain,clearScripts:task.clearScripts,maxDepth:task.maxDepth});
+        $scope.setEditId(-1);
+    }
+    $scope.sendRequest = function(req_action,opt_id,opt_data){
         var action;
         var method;
         var data = {};
         switch (req_action){
             case 'getTasks':
                 action = 'tasks';
-                method = 'GET';
+                method = 'POST';
                 break;
             case 'newTask':
                 action = 'tasks/new';
                 method = 'POST';
                 data = {url:$scope.url,onlyDomain:$scope.onlyDomain,clearScripts:$scope.clearScripts,maxDepth:$scope.maxDepth};
+                break;
+            case 'updateTask':
+                action = 'tasks/new';
+                method = 'PUT';
+                data = {id:opt_id,url:opt_data.url,onlyDomain:opt_data.onlyDomain,clearScripts:opt_data.clearScripts,maxDepth:opt_data.maxDepth};
                 break;
             case 'getStat':
                 action = 'stat';
@@ -104,7 +112,7 @@ app.controller("mainCtrl",function($scope,$http,$window){
                         }
                         break;
                     case 'getStat':
-                        $scope.stat ={'query':data.query,'progress':data.progress,'done':data.done};
+                        $scope.stat ={'queue':data['queue'],'progress':data.progress,'done':data.done};
                         break;
                     case 'deleteTask':
                         if(data){
@@ -115,6 +123,7 @@ app.controller("mainCtrl",function($scope,$http,$window){
                             $scope.message = 'Something wrong';
                         }
                         break;
+                    default:
                 }
             }).error(function(data, status, headers, config) {
                 $scope.message = 'Response failed! Status:'+status;
@@ -122,5 +131,6 @@ app.controller("mainCtrl",function($scope,$http,$window){
     }
     $scope.sendRequest('getStat');
     $scope.sendRequest('getTasks');
+
 });
 

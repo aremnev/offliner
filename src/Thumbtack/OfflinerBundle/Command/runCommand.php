@@ -23,6 +23,6 @@ class runCommand extends ContainerAwareCommand{
          * @var OfflinerProcessor $offliner
          */
         $offliner = $this->getContainer()->get("thumbtackOfflinerProcessor");
-        echo $offliner->runQueryTask();
+        echo $offliner->runQueueTask();
     }
 }

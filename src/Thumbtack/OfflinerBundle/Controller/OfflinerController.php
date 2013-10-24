@@ -20,22 +20,33 @@ class OfflinerController extends BaseController {
      * @var OfflinerModel $offliner
      */
       $offliner= $this->get("thumbtackOffliner");
-      $msg = ($offliner->addTaskToQuery($data)?"true":"false");
+      $msg = ($offliner->addTaskToQueue($data)?"true":"false");
       $response = new \Symfony\Component\HttpFoundation\Response($msg);
       $response->headers->set('Content-Type', 'application/json');
     return $response;
     }
     /**
+     * @Route("/tasks/{id}", name="updateTask")
+     * @Method ({"PUT"})
+     */
+    public function updateTaskAction($id){
+        return $this->addTaskAction();
+    }
+    /**
      * @Route("/tasks", name="tasksList")
-     * @Method ({"GET"})
+     * @Method ({"POST"})
      */
     public function taskListAction(){
         /**
          * @var User $user
          */
-        $user = $this->getUser();
-        if($user){
+        if($this->isUserLogged()){
+            $user = $this->getUser();
             $response = new \Symfony\Component\HttpFoundation\Response(json_encode($user->getTasks()->toArray()));
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }else{
+            $response = new \Symfony\Component\HttpFoundation\Response('');
             $response->headers->set('Content-Type', 'application/json');
             return $response;
         }

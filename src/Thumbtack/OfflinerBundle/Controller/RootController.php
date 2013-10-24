@@ -5,6 +5,10 @@ namespace Thumbtack\OfflinerBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Thumbtack\OfflinerBundle\Entity\User;
+use Thumbtack\OfflinerBundle\Security\TempResponse;
+use Thumbtack\OfflinerBundle\Security\UserProvider;
 
 
 class RootController extends BaseController {
@@ -16,8 +20,6 @@ class RootController extends BaseController {
         if ($this->isUserLogged()) {
             return $this->redirect($this->generateUrl('welcome'));
         }
-        $offliner = $this->get('thumbtackOffliner');
-
         return $this->render('ThumbtackOfflinerBundle:Default:index.html.twig');
     }
 
@@ -30,9 +32,23 @@ class RootController extends BaseController {
         }
         return $this->render('ThumbtackOfflinerBundle:Default:welcome.html.twig');
     }
-
-
-
+    /**
+     * @Route("/tmplogin", name="tmplogin")
+     */
+    public function logUser() {
+        if ($this->isUserLogged()) {
+            return $this->redirect($this->generateUrl('welcome'));
+        }
+        /**
+         * @var UserProvider $userProvider
+         */
+        $userProvider = $this->get('thumbtackoffliner.oauth_user_provider');
+        $tempResp = new TempResponse();
+        $tmpUser = $userProvider->loadUserByOAuthUserResponse($tempResp);
+        $token = new UsernamePasswordToken($tmpUser, null, 'main', $tmpUser->getRoles());
+        $this->container->get('security.context')->setToken($token);
+        return $this->redirect($this->generateUrl('welcome'));
+    }
     /**
      * @Route("/about", name="about")
      */
