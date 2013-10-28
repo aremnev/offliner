@@ -1,32 +1,74 @@
-{% extends '::layout.html.twig' %}
+{% extends '::layoutSignIn.html.twig' %}
 
-{% block login_place %}
-{% endblock %}
-
-{% block herounit %}
-    <h2>Offliner welcomes you, hello {{ app.user.nickname|default("Anonymous") }} </h2>
-    <p>Our service make you happy! Сlone any website you wish to be</p>
-    <span style="vertical-align: super">
-             Login via:
-             <a href="connect/google" class="btn btn-danger btn-large">Google+</a>
-             <a href="connect/facebook" class="btn btn-info btn-large">FaceBook</a>
-    </span>
-{% endblock %}
-
-
-{% block rowdata %}
-    <div class="span4">
-        <h4>Сайт работает на</h4>
-
-        <p><img style="max-height: 40px" src="http://symfony.com/images/common/logo/logo_symfony_header.png"/></p>
+{% block global_stat %}
+    {% verbatim %}
+    <div class="stats stats-theme-light pull-right">
+        <span class="stats-item"><span class="stats-label">Twitter</span> <span class="stats-count"><span class="icon icon-wf "></span></span></span>
+        <span class="stats-item"><span class="stats-label">Google</span> <span class="stats-count"><span class="icon icon-wf"></span></span></span>
+        <a href="https://github.com/aremnev/offliner"><span class="stats-item"><span class="stats-label">Github</span> <span class="stats-count"><span class="icon icon-wf ">&#62208;</span></span></span></a>
     </div>
+    {% endverbatim %}
 {% endblock %}
+{% block data %}
+    {% verbatim %}
+    <div class="row-fluid">
+        <div  ng-if="false" class="loading"><p>L<span class="rotateO"></span>ading...</p></div>
+        <div class="tabs-left" >
+            <ul class="nav nav-tabs">
+                <li style="color: #808080" class="disabled">
+                    Social login:
+                </li>
+                <li class="social disabled">
+                     <a href="connect/google"><span class="icon icon-wf"></span>
+                                Google+
+                     </a>
+                </li>
+                <li class="social disabled">
+                    <a href="connect/facebook"><span class="icon icon-wf "></span>
+                            Facebook
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="panel">
+                <h4> Hello! Sign-up and get started!</h4>
+                    <p>
+                        <button type="submit" ng-click="register=false" class="btn btn-info btn-small" >Login</button>
+                        <button type="submit" ng-click="register=true" class="btn btn-info btn-small" >Register</button>
+                        <button type="submit" class="btn btn-info btn-small" >Forgot password</button>
+                        <span style="display:inline-block;min-width: 10em"></span>
+                    </p>
+                    {{message}}
+                 </div>
+                <div class="page-content">
+                 <div class="login-form" ng-show="!register">
+                    <form>
+                        <h5>Sign-in: </h5>
+                        <input type="email" placeholder="E-mail" ng-model="email" class="panel-input">
+                        <input type="password" placeholder="Password" ng-model="pass" class="panel-input">
+                    </form>
+                     <p><button type="submit" ng-click="sendLoginRequest()" class="btn btn-success btn-large" >Login</button>
+                 </div>
+                <div class="register-form" ng-show="register" >
+                    <form>
+                        <h5>Sign-up: </h5>
+                        <input type="text" placeholder="Nickname" ng-model="nick" class="panel-input">
+                        <input type="email" placeholder="E-mail" ng-model="email" class="panel-input">
+                        <input type="password" placeholder="Password" ng-model="pass" class="panel-input">
+                    </form>
+                    <p><button type="submit" ng-click="sendRegisterRequest()" class="btn btn-success btn-large" >Register</button>
+                </div>
+                </div>
 
+
+            </div>
+         </div>
+    </div>
+    {% endverbatim %}
+{% endblock %}
 {% block javascripts %}
     <!-- SignIn script-->
     <script src="{{ asset('assets/js/SignIn.js') }}"></script>
 {% endblock %}
 
-{% block footer %}
-{% endblock %}
 

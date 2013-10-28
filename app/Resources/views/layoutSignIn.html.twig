@@ -9,14 +9,14 @@
 
     <!-- Le styles -->
     <link href="{{  asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{  asset('assets/css/offliner.css') }}" rel="stylesheet">
+    <link href="{{  asset('assets/css/offlinerSignIn.css') }}" rel="stylesheet">
 
     <!-- Fav and touch icons -->
     <link rel="shortcut icon" href="{{ asset('assets/ico/favicon.ico') }}">
     {% block stylesheets %}{% endblock %}
 </head>
 
-<body ng-app="offlinerApp" ng-controller="mainCtrl">
+<body ng-app="offlinerSignInApp" ng-controller="mainCtrl">
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
@@ -26,13 +26,6 @@
             </div><!--/.nav-collapse -->
             <div class="pull-right">
                 {% block global_stat %}
-                    {% verbatim %}
-                    <div class="stats stats-theme-light pull-right" title="Click to refresh stat" ng-click="sendRequest('getStat')">
-                        <span class="stats-item"><span class="stats-label">in queue</span> <span class="stats-count">{{stat.queue}}</span></span>
-                        <span class="stats-item"><span class="stats-label">in progress</span> <span class="stats-count">{{stat.progress}}</span></span>
-                        <span class="stats-item"><span class="stats-label">done</span> <span class="stats-count">{{stat.done}}</span></span>
-                    </div>
-                    {% endverbatim %}
                 {% endblock %}
             </div>
         </div>
@@ -54,7 +47,7 @@
 </footer>
 <script src="{{ asset('assets/js/libs/angular.js') }}"></script>
 <script src="{{ asset('assets/js/libs/ui-bootstrap-tpls-0.5.0.js') }}"></script>
-<script src="{{ asset('assets/js/offlinerApp.js') }}"></script>
+<script src="{{ asset('assets/js/offlinerSignInApp.js') }}"></script>
 {% block javascripts %}{% endblock %}
 </body>
 </html>

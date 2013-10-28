@@ -1,0 +1,14 @@
+@font-face {
+	font-family: 'Entypo';
+	src: url('entypo.eot?#iefix') format('embedded-opentype'),
+		url('entypo.woff') format('woff'),
+		url('entypo.ttf') format('truetype'),
+		url('entypo.svg') format('svg');
+}
+@font-face {
+    font-family: 'EntypoSocial';
+    src: url('entypo-social.eot?#iefix') format('embedded-opentype'),
+    url('entypo-social.woff') format('woff'),
+    url('entypo-social.ttf') format('truetype'),
+    url('entypo-social.svg') format('svg');
+}

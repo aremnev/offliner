@@ -55,7 +55,7 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-            "cd vendor/xplk/phantomCrawl && npm install"
+            "cd vendor/xplk/phantomCrawl && npm update"
         ]
     },
     "config": {

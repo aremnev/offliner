@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * user
  *
- * @ORM\Table()
+ * @ORM\Table(name = "users")
  * @ORM\Entity
  */
 class User implements UserInterface, \Serializable {
@@ -28,6 +28,12 @@ class User implements UserInterface, \Serializable {
      * @ORM\Column(name="email", type="string", length=255)
      */
     protected $email;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="password", type="string", length=255)
+     */
+    protected $password;
     /**
      * @var string
      *
@@ -223,7 +229,17 @@ class User implements UserInterface, \Serializable {
      * {@inheritDoc}
      */
     public function getPassword() {
-        return null;
+        return $this->password;
+    }
+    /**
+     * Set password
+     *
+     * @param string $pass
+     * @return User
+     */
+    public function setPassword($pass) {
+        $this->password = $pass;
+        return $this;
     }
 
     /**
@@ -252,11 +268,11 @@ class User implements UserInterface, \Serializable {
     }
 
     public function serialize() {
-        return \json_encode(array($this->username, $this->email, $this->photo, $this->nickname, $this->joinDate, $this->id,$this->tasks));
+        return \json_encode(array($this->username, $this->email,$this->password, $this->photo, $this->nickname, $this->joinDate, $this->id,$this->tasks));
     }
 
     public function unserialize($serialized) {
-        list($this->username, $this->email, $this->photo, $this->nickname, $this->joinDate, $this->id,$this->tasks) = \json_decode($serialized);
+        list($this->username, $this->email,$this->password, $this->photo, $this->nickname, $this->joinDate, $this->id,$this->tasks) = \json_decode($serialized);
     }
 
 

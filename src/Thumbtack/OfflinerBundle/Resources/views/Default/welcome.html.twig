@@ -1,44 +1,40 @@
 {% extends '::layout.html.twig' %}
 
-{% block login_place %}
-{% endblock %}
-
-{% block herounit %}
-    <h2>Offliner welcomes you, hello {{ app.user.nickname|default("Anonymous") }} </h2>
-    <p>Our service make you happy! Сlone any website you wish to be</p>
-    <span style="vertical-align: super">
-             <a href="logout" class="btn btn-danger btn-large">Logout</a>
-    </span>
-{% endblock %}
-
-
-{% block rowdata %}
+{% block data %}
     {% verbatim %}
-        <div>
-            <a ng-click="showForm = !showForm">Expand</a>
-        </div>
-        <div ng-show="showForm">
-            <form class="new-task-form">
-                <input type="url" ng-model="url">
-                <input type="checkbox" ng-model="onlyDomain" >Domain Only
-                <input type="checkbox" ng-model="clearScripts" >Clear Scripts
-                <input type="number" ng-model="maxDepth" ng-change="validate()">Crawl depth
-                <button type="submit" ng-model="maxDepth" ng-click="sendRequest('newTask')">Create new task</button>
-            </form>
-        </div>
-        <table class="list">
-            <thead>
-                <tr>
-                    <td style="width: 25%"> Url</td>
-                    <td style="width: 10%"> Status</td>
-                    <td style="width: 10%"> Domain Only</td>
-                    <td style="width: 10%"> Clear Scripts</td>
-                    <td style="width: 5%"> Depth</td>
-                    <td style="width: 10%"> Date</td>
-                    <td style="width: 20%"> Options</td>
-                </tr>
-            </thead>
-            <tbody ng-repeat="task in tasks">
+    <div class="row-fluid">
+        <div  ng-if="false" class="loading"><p>L<span class="rotateO"></span>ading...</p></div>
+        <tabset class="tabbable tabs-left">
+            <tab>
+                <tab-heading>
+                    <span class="icon icon-wf ">&#59198;</span>
+                    Offliner service
+                </tab-heading>
+                <div class="panel">
+                    <small>{{message}}</small>
+                    <div>
+                        <form class="new-task-form">
+                            <input type="url" ng-model="url">
+                            <input type="checkbox" ng-model="onlyDomain" >Domain Only
+                            <input type="checkbox" ng-model="clearScripts" >Clear Scripts
+                            <input type="number" ng-model="maxDepth" ng-change="validate()">Crawl depth
+                            <button type="submit" ng-model="maxDepth" ng-click="sendRequest('newTask')">Create new task</button>
+                        </form>
+                    </div>
+                </div>
+                <table class="list">
+                    <thead>
+                    <tr>
+                        <td style="width: 25%"> Url</td>
+                        <td style="width: 10%"> Status</td>
+                        <td style="width: 10%"> Domain Only</td>
+                        <td style="width: 10%"> Clear Scripts</td>
+                        <td style="width: 5%"> Depth</td>
+                        <td style="width: 10%"> Date</td>
+                        <td style="width: 20%"> Options</td>
+                    </tr>
+                    </thead>
+                    <tbody ng-repeat="task in tasks">
                     <tr ng-show="!inEdit(task)" id="task{{task.id}}">
                         <td> {{ task.url }}</td>
                         <td> <label class="label">{{ task.status }}</label></td>
@@ -47,9 +43,15 @@
                         <td> <label class="label">{{ task.maxDepth }}</label></td>
                         <td> <small>{{ task.date.date }}</small></td>
                         <td>
-                            <a href="uploads/{{task.id}}.zip"><label class="btn btn-success btn-mini pull-left" ng-if="task.ready" title="Download"><span class="icon-download-alt"></span></label></a>
-                            <label class="btn btn-danger btn-mini pull-right" ng-click="sendRequest('deleteTask',{{task.id}})" title="Delete"><span class="icon-remove"></span></label>
-                            <label class="btn btn-info btn-mini pull-right " ng-if="task.status == 'in queue'" ng-click="setEditId({{task.id}})" title="Edit"><span class="icon-edit"></span></label>
+                            <a href="uploads/{{task.id}}.zip"><label class="btn btn-success btn-mini pull-left" ng-if="task.ready" title="Download">
+                                    <span class="icon icon-wf icon-action">&#59256;</span>
+                                </label></a>
+                            <label class="btn btn-danger pull-right" ng-click="sendRequest('deleteTask',{{task.id}})" title="Delete">
+                                <span class="icon icon-wf icon-action">&#59177;</span>
+                            </label>
+                            <label class="btn btn-info pull-right " ng-if="task.status == 'in queue'" ng-click="setEditId({{task.id}})" title="Edit">
+                                <span class="icon icon-wf icon-action">&#9998;</span>
+                            </label>
                         </td>
                     </tr>
                     <tr ng-show="inEdit(task)" id="task{{task.id}}">
@@ -60,18 +62,36 @@
                         <td> <input type="number" ng-model="task.maxDepth"></td>
                         <td> <small>{{ task.date.date }}</small></td>
                         <td>
-                            <label class="btn btn-danger btn-mini disabled pull-right" title="Delete"><span class="icon-remove"></span></label>
-                            <label class="btn btn-info btn-mini pull-right" ng-click="saveEdit(task)" title="Save"><span class="icon-ok"></span></label>
+                            <label class="btn btn-danger disabled pull-right" title="Delete"><span class="icon icon-wf icon-action">&#59177;</span></label>
+                            <label class="btn btn-info pull-right" ng-click="saveEdit(task)" title="Save"><span class="icon icon-wf icon-action">&#10003;</span></label>
                         </td>
                     </tr>
-            </tbody>
-        </table>
+                    </tbody>
+                </table>
+            </tab>
+            <tab disabled='true'>
+                <tab-heading>
+                    <span class="icon icon-wf ">&#128213;</span>
+                    Search service
+                </tab-heading>
+            </tab>
+            <tab disabled='true'>
+                <tab-heading>
+                    <span class="icon icon-wf ">&#9881;</span>
+                    Search Stat&Test
+                </tab-heading>
+            </tab>
+            <tab>
+                <tab-heading>
+                    Logout
+                </tab-heading>
+                <div class="page-content">
+                 <h4>Thank you for anything
+                 <p> Create yours apps with us!
+                 </h4>
+                <a href="logout"><button class="btn btn-large btn-success">Goodbye!!!</button></a>
+                </div>
+            </tab>
+        </tabset>
     {% endverbatim %}
 {% endblock %}
-
-{% block javascripts %}
-{% endblock %}
-
-{% block footer %}
-{% endblock %}
-

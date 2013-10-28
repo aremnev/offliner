@@ -83,13 +83,19 @@ class OfflinerController extends BaseController {
      * @Method ({"GET"})
      */
     public function statAction(){
-        /**
-         * @var OfflinerModel $offliner
-         */
-        $offliner = $this->get("thumbtackOffliner");
-        $msg = $offliner->getOfflinerStat();
-        $response = new \Symfony\Component\HttpFoundation\Response(json_encode($msg));
-        $response->headers->set('Content-Type', 'application/json');
-        return $response;
+        if($this->isUserLogged()){
+            /**
+             * @var OfflinerModel $offliner
+             */
+            $offliner = $this->get("thumbtackOffliner");
+            $msg = $offliner->getUserStat($this->getUser());
+            $response = new \Symfony\Component\HttpFoundation\Response(json_encode($msg));
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }else{
+            $response = new \Symfony\Component\HttpFoundation\Response('');
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
     }
 }

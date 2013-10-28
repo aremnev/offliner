@@ -89,8 +89,9 @@ class OfflinerModel {
         }
     }
 
-    public function getOfflinerStat(){
-        $query = $this->dm->createQuery('SELECT count(t) FROM ThumbtackOfflinerBundle:Task t WHERE t.status = ?1');
+    public function getUserStat($user){
+        $query = $this->dm->createQuery('SELECT count(t) FROM ThumbtackOfflinerBundle:Task t WHERE t.status = ?1 AND t.user = ?2');
+        $query->setParameter(2, $user);
         $query->setParameter(1, OfflinerModel::STATUS_AWAITING);
         $result['queue'] = $query->getSingleScalarResult();
         $query->setParameter(1, OfflinerModel::STATUS_PROGRESS);

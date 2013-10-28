@@ -33,7 +33,7 @@ app.controller("mainCtrl",function($scope,$http,$window){
     $scope.clearScripts = false;
     $scope.maxDepth = 0;
     $scope.tasks = [];
-    $scope.message = '<p>Manage your tasks</p>';
+    $scope.message = '';
     $scope.stat ={'queue':0,'progress':0,'done':0};
     $scope.showForm = false;
     $scope.inEditId = -1;
@@ -47,6 +47,9 @@ app.controller("mainCtrl",function($scope,$http,$window){
         if($scope.maxDepth <0){
             $scope.maxDepth = 0;
         }
+    }
+    $scope.connect = function(prov){
+        console.log('hello'+prov);
     }
     $scope.inEdit = function(task){
         return ($scope.inEditId == task.id && task.status == 'in queue');

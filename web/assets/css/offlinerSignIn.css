@@ -5,10 +5,22 @@ body{
     padding-top: 80px;
     overflow-y: scroll;
 }
-a span.icon:hover{
-    text-underline-position: left;
+.register-form form,
+.login-form form{
+    padding: 25px;
+    border-radius: 3px;
+    border-left: 3px lightgray solid;
+    min-height: 12em;
 }
-
+.register-form button,
+.login-form button{
+    margin-left: 4em;
+    min-width: 10em;
+}
+.register-form input,
+.login-form input{
+    display: block;
+}
 @media (max-width: 979px) {
     body {
         padding-top: 0;
@@ -43,30 +55,7 @@ a span.icon:hover{
     from { -webkit-transform:rotate(0deg) }
     to { -webkit-transform:rotate(360deg) }
 }
-table{
-    border: #808080 1px solid;
-    width: 70%;
-    margin: 30px 30px 30px 30px;
-    text-align: center;
-    vertical-align: middle;
-}
-.list input{
-    margin: 0;
-}
-table.list tbody tr:nth-child(2n+1) td {
-    background-color: #eee !important;
-}
-table.list thead td {
-    background-color: #969696 !important;
-}
-table.list tbody td {
-    border-left: #808080 1px solid;
-    border-right: #808080 1px solid;
-    vertical-align: middle;
-}
-table.list tbody tr:hover td {
-    background-color: rgba(255,111,28,0.5)!important;
-}
+
 .rotateO{
     -webkit-animation-iteration-count:infinite;
     -webkit-animation-timing-function:linear;
@@ -107,12 +96,6 @@ table.list tbody tr:hover td {
     -webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.5);
     background: #eee;
 }
-.hero-unit{
-    padding: 5px 5px 5px 5px;
-    margin-bottom: 5px;
-
-}
-
 .navbar a {
     color: #fff;
 }
@@ -127,7 +110,7 @@ table.list tbody tr:hover td {
 
 .navbar-fixed-top .navbar-inner,
 .navbar-fixed-bottom .navbar-inner {
-    padding: 5px 20px;
+    padding: 5px 20px 0px 20px;
 }
 
 .navbar .brand {
@@ -156,7 +139,6 @@ table.list tbody tr:hover td {
     float: left;
     padding: 25px 20px 0;
     margin: 0;
-    text-align: center;
 }
 
 
@@ -184,6 +166,9 @@ table.list tbody tr:hover td {
 .icon {
     display: inline-block;
 }
+.social .icon {
+    font-family: EntypoSocial !important;
+}
 .icon-wf {
     font-family: Entypo;
     font-size: 32px;
@@ -206,10 +191,6 @@ table.list tbody tr:hover td {
 
 .icon-action {
     cursor: pointer;
-    vertical-align: sub;
-    color: #fff;
-    width: 18px;
-    height: 18px;
 }
 
 .tabs-left .nav-tabs .icon {
@@ -220,6 +201,25 @@ table.list tbody tr:hover td {
     height: 48px;
     line-height: 16px;
     color: #aaa;
+}
+.stats .icon {
+    font-family: EntypoSocial !important;
+    font-size: 64px;
+    display: block;
+    margin: 0 auto;
+    width: 48px;
+    height: 48px;
+    line-height: 16px;
+    color: #fff;
+}
+.stats-item {
+    height: 75px;
+}
+.stats-item:hover {
+    background-color: #fff;
+}
+.stats-item:hover .icon {
+    color: #000;
 }
 
 .tabs-left .nav-tabs li {
@@ -255,10 +255,18 @@ table.list tbody tr:hover td {
 .tabs-left > .nav-tabs > li > a {
     margin: 0 0 10px;
 }
-
+.nav>.social.disabled>a:hover,
+.nav>.social.disabled>a:focus{
+    border: none;
+    background-color: #fff;
+    border-radius: 2px;
+    transition: all .25s ease-in-out;
+    cursor: pointer;
+    color: #000;
+}
 .nav-tabs > li > a {
     border: none;
-    transition: background .25s ease-in-out;
+    transition: all .25s ease-in-out;
     cursor: pointer;
 }
 
@@ -271,7 +279,12 @@ table.list tbody tr:hover td {
 .nav-tabs > .active .icon {
     color: #d35400;
 }
-
+.nav-tabs > .disabled .icon {
+    color: #d35400;
+}
+.nav-tabs > .disabled {
+    cursor: pointer;
+}
 .tab-content {
     padding-left: 140px;
 }
@@ -294,8 +307,8 @@ table.list tbody tr:hover td {
 }
 
 .panel input[type="text"] {
-    width: 24em;
-    height: 28px;
+    width: 10em;
+    height: 14px;
     margin: 0 1em 0 0;
     border-radius: 2px;
 }
@@ -305,18 +318,13 @@ table.list tbody tr:hover td {
     margin: 0 1em 0 0;
     border-radius: 2px;
 }
-.panel input[type="checkbox"] {
-    width: 1em;
+.panel input[type="password"] {
+    width: 10em;
     height: 14px;
     margin: 0 1em 0 0;
     border-radius: 2px;
 }
-input[type="number"] {
-    width: 2em;
-    height: 16px;
-    margin: 0;
-    border-radius: 2px;
-}
+
 .panel form {
     display: inline;
 }
@@ -424,102 +432,6 @@ input[type="number"] {
 }
 .stats-theme-light.hovered {
     color: #92d7f5
-}
-.page-info {
-    margin-bottom: 2em;
-}
-
-.pages-item-list {
-    max-width: 60em;
-}
-.item-list-leave, .item-list-enter {
-    -webkit-transition:line-height cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.3s;
-    -moz-transition:line-height cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.3s;
-    -ms-transition:line-height cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.3s;
-    -o-transition:line-height cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.3s;
-    transition:line-height cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.3s;
-}
-.search-more-leave, .search-more-enter {
-    -webkit-transition: all 0.2s ease;
-    -moz-transition: all 0.2s ease;
-    -o-transition: all 0.2s ease;
-    transition: all 0.2s ease;
-}
-.search-more-enter {
-    line-height: 0;
-    opacity: 0;
-}
-.search-more-enter.search-more-enter-active {
-    line-height: 30px;
-    opacity: 1;
-}
-
-.search-more-leave {
-    line-height: 30px;
-    opacity: 1;
-}
-.search-more-leave.search-more-leave-active {
-    line-height: 0;
-    opacity: 0;
-}
-
-.pages-item {
-    border: 1px solid #e3e3e3;
-    padding: 1em;
-    margin-bottom:  1em;
-    position: relative;
-    -webkit-transition: all .25s ease-in-out;
-    -moz-transition: all .25s ease-in-out;
-    -o-transition: all .25s ease-in-out;
-    -ms-transition: all .25s ease-in-out;
-    transition: all .25s ease-in-out;
-}
-
-.pages-item:hover {
-    box-shadow: 0 4px 10px rgba(0,0,0,.1);
-    top: -2px;
-}
-
-.pages-item .status{
-    font-size: 0.8571em;
-    float: right;
-    color: #7f7f7f;
-}
-
-.pages-item-url {
-    font-size: .9285em;
-}
-
-.pages-item-copy {
-    font-size: 0.8571em;
-}
-
-.search-results {
-    max-width: 60em;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-.search-results-item {
-    position: relative;
-    padding: 1em;
-    margin-bottom:  1em;
-    border: 1px solid #e3e3e3;
-    -webkit-transition: all .25s ease-in-out;
-    -moz-transition: all .25s ease-in-out;
-    -o-transition: all .25s ease-in-out;
-    -ms-transition: all .25s ease-in-out;
-    transition: all .25s ease-in-out;
-}
-
-.search-results-item:hover {
-    box-shadow: 0 2px 4px rgba(0,0,0,.1);
-    top: -2px;
-}
-
-.search-results-details {
-    padding-top: .25em;
 }
 small > p {
     margin: 0;
