@@ -3,23 +3,12 @@
 var app = angular.module("offlinerSignInApp",['ui.bootstrap']);
 
 app.controller("mainCtrl",function($scope,$http,$window){
-   $scope.stat ={'queue':0,'progress':0,'done':0};
     $scope.message = '';
    $scope.loading = false;
 
     $scope.email ='';
     $scope.nick ='';
     $scope.pass ='';
-
-   $scope.sendStatRequest = function(){
-        $http({method:'GET',url:'stat'})
-            .success(function(data, status, headers, config) {
-                $scope.stat ={'queue':data['queue'],'progress':data.progress,'done':data.done};
-            }).error(function(data, status, headers, config) {
-                $scope.message = 'Response failed! Status:'+status;
-            });
-    }
-    $scope.sendStatRequest();
     $scope.sendLoginRequest = function(){
         $http({method:'GET',url:'login/'+$scope.email+'?pass='+$scope.pass})
             .success(function(data, status, headers, config) {

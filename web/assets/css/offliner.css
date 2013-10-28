@@ -1,14 +1,19 @@
 @import "bootstrap-responsive.min.css";
 @import "../fonts/fonts.css";
 body{
-    font-family: Entypo;
+    font-family: Tahoma, Geneva, sans-serif;
     padding-top: 80px;
     overflow-y: scroll;
 }
 a span.icon:hover{
     text-underline-position: left;
 }
-
+.logged{
+    padding-top: 30px;
+    padding-right: 5em ;
+    font-size: 18px;
+    color: #fff;
+}
 @media (max-width: 979px) {
     body {
         padding-top: 0;

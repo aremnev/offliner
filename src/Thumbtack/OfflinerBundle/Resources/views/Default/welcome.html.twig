@@ -1,4 +1,15 @@
 {% extends '::layout.html.twig' %}
+{% block global_stat %}
+
+    {% verbatim %}
+    <div class="stats stats-theme-light pull-right" title="Click to refresh stat" ng-click="sendRequest('getStat')">
+        <span class="stats-item"><span class="stats-label">in queue</span> <span class="stats-count">{{stat.queue}}</span></span>
+        <span class="stats-item"><span class="stats-label">in progress</span> <span class="stats-count">{{stat.progress}}</span></span>
+        <span class="stats-item"><span class="stats-label">done</span> <span class="stats-count">{{stat.done}}</span></span>
+    </div>
+    {% endverbatim %}
+    <div class="logged pull-right">Logged as: {{app.user.nickname}} </div>
+{% endblock %}
 
 {% block data %}
     {% verbatim %}
