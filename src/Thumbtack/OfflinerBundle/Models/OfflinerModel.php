@@ -38,8 +38,6 @@ class OfflinerModel {
     /**
      * @param $secure
      * @param $doctrine
-     * @param integer $mpc
-     * @internal param EntityManager $dm
      */
     function __construct($secure,$doctrine){
         $this->dm = $doctrine->getManager();
