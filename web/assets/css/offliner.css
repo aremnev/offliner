@@ -14,6 +14,19 @@ a span.icon:hover{
     font-size: 18px;
     color: #fff;
 }
+.status-message{
+    position: absolute;
+    left: 150px;
+    top: 210px;
+    padding: 0px 10px;
+    opacity: 1;
+    background-color: #faffe3;
+    border: 1px solid #808080;
+    border-radius: 4px;
+}
+.status-message b{
+    cursor: pointer;
+}
 @media (max-width: 979px) {
     body {
         padding-top: 0;
@@ -51,7 +64,7 @@ a span.icon:hover{
 table{
     border: #808080 1px solid;
     width: 70%;
-    margin: 30px 30px 30px 30px;
+    margin: 35px 30px 30px 30px;
     text-align: center;
     vertical-align: middle;
 }
@@ -71,6 +84,27 @@ table.list tbody td {
 }
 table.list tbody tr:hover td {
     background-color: rgba(255,111,28,0.5)!important;
+}
+.new-task-form{
+    font-size: 125%;
+    vertical-align: middle;
+    width: 65%;
+}
+.new-task-form input{
+    margin: 0;
+    font-size: 100%;
+}
+.new-task-form input[type='number']{
+    height: 1em;
+}
+.new-task-form input[type='checkbox']{
+    height: 1em;
+}
+.new-task-form button{
+    float: right;
+}
+.new-task-form .icon{
+    font-size: 56px;
 }
 .rotateO{
     -webkit-animation-iteration-count:infinite;
@@ -185,10 +219,24 @@ table.list tbody tr:hover td {
     bottom: 0;
     box-shadow: -2px 0 5px rgba(0,0,0,.1) inset;
 }
+.highlighted{
+    font-size: 80%;
+    color: rgba(0,0,0,0.3);
+    margin-left: 10px;
+    margin-top: 5px;
+    padding-left: 15px;
+    border-left: 1px solid rgba(255,111,28,1);
+}
+.highlighted em{
+    color: rgba(0,0,0,1);
+    font-style: normal;
+    background-color: #ffff00;
 
+}
 .icon {
     display: inline-block;
 }
+.icon-wf span,
 .icon-wf {
     font-family: Entypo;
     font-size: 32px;
@@ -301,25 +349,30 @@ table.list tbody tr:hover td {
 .panel input[type="text"] {
     width: 24em;
     height: 28px;
-    margin: 0 1em 0 0;
+    margin: 0 1em 0px 0;
+    border-radius: 2px;
+}
+.panel input[type="url"] {
+    width: 10em;
+    margin: 0 1em 5px 0;
     border-radius: 2px;
 }
 .panel input[type="email"] {
-    width: 10em;
+    width: 15em;
     height: 14px;
     margin: 0 1em 0 0;
     border-radius: 2px;
 }
-.panel input[type="checkbox"] {
-    width: 1em;
-    height: 14px;
-    margin: 0 1em 0 0;
+input[type="checkbox"] {
+    width: 1.3em;
+    height: 1.3em;
+    margin: 0 1em 3px 0.5em;
     border-radius: 2px;
 }
 input[type="number"] {
     width: 2em;
     height: 16px;
-    margin: 0;
+    margin: 0 1em 3px 0.5em;
     border-radius: 2px;
 }
 .panel form {
@@ -409,11 +462,17 @@ input[type="number"] {
 }
 
 .stats-count {
-    font-size: 3.2857em;
+    font-size: 1.7em;
     font-weight: 300;
     display: block;
     color: #d35400;
     line-height: 1;
+}
+.stats-count.stats-mini {
+    margin-top: 0.25em;
+    margin-bottom: 0.7em;
+    font-size: 1em;
+    vertical-align: middle;
 }
 
 .stats-theme-light {

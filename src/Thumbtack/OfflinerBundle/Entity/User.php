@@ -65,12 +65,19 @@ class User implements UserInterface, \Serializable {
      * @ORM\OneToMany(targetEntity="Task", mappedBy="user")
      */
     protected $tasks = '';
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Page", mappedBy="user")
+     */
+    protected $pages = '';
 
     /**
      * Constructor
      */
     public function __construct() {
         $this->tasks = new ArrayCollection();
+        $this->pages = new ArrayCollection();
     }
 
     /**
@@ -101,6 +108,35 @@ class User implements UserInterface, \Serializable {
      */
     public function getTasks() {
         return $this->tasks;
+    }
+    /**
+     * Add page
+     *
+     * @param \Thumbtack\OfflinerBundle\Entity\Page $page
+     * @return User
+     */
+    public function addPage(\Thumbtack\OfflinerBundle\Entity\Page $page) {
+        $this->pages[] = $page;
+
+        return $this;
+    }
+
+    /**
+     * Remove page
+     *
+     * @param \Thumbtack\OfflinerBundle\Entity\Page $page
+     */
+    public function removePage(\Thumbtack\OfflinerBundle\Entity\Page $page) {
+        $this->tasks->removeElement($page);
+    }
+
+    /**
+     * Get tasks
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPages() {
+        return $this->pages;
     }
 
     /**
@@ -264,7 +300,7 @@ class User implements UserInterface, \Serializable {
     }
 
     public function __toString() {
-        return $this->nickname;
+        return (string)$this->id;
     }
 
     public function serialize() {

@@ -3,9 +3,23 @@
 
     {% verbatim %}
     <div class="stats stats-theme-light pull-right" title="Click to refresh stat" ng-click="sendRequest('getStat')">
-        <span class="stats-item"><span class="stats-label">in queue</span> <span class="stats-count">{{stat.queue}}</span></span>
-        <span class="stats-item"><span class="stats-label">in progress</span> <span class="stats-count">{{stat.progress}}</span></span>
-        <span class="stats-item"><span class="stats-label">done</span> <span class="stats-count">{{stat.done}}</span></span>
+        <span class="stats-item"><span class="stats-label"></span>
+            <span class="stats-count">Offliner</span>
+            <span class="stats-count">Indexer</span>
+        </span>
+        <span class="stats-item"><span class="stats-label">tasks count</span>
+             <span class="stats-count">{{stat.queue}}</span>
+             <span class="stats-count">680</span>
+        </span>
+
+        <span class="stats-item"><span class="stats-label">Status</span>
+             <span class="stats-count stats-mini">awaiting</span>
+             <span class="stats-count stats-mini">index refreshing</span>
+        </span>
+        <span class="stats-item"><span class="stats-label">done</span>
+             <span class="stats-count">{{stat.done}}</span>
+             <span class="stats-count">87.4%</span>
+        </span>
     </div>
     {% endverbatim %}
     <div class="logged pull-right">Logged as: {{app.user.nickname}} </div>
@@ -22,17 +36,19 @@
                     Offliner service
                 </tab-heading>
                 <div class="panel">
-                    <small>{{message}}</small>
-                    <div>
-                        <form class="new-task-form">
-                            <input type="url" ng-model="url">
-                            <input type="checkbox" ng-model="onlyDomain" >Domain Only
-                            <input type="checkbox" ng-model="clearScripts" >Clear Scripts
-                            <input type="number" ng-model="maxDepth" ng-change="validate()">Crawl depth
-                            <button type="submit" ng-model="maxDepth" ng-click="sendRequest('newTask')">Create new task</button>
+                    <small>Offliner service allows download any website fully!
+                        <p>Мы рекомендуем выставлять галочку 'Clear Scripts' ввиду того что существует возможность искажения сохраненых страниц. </small>
+                    <div class="new-task-form">
+                        <form >
+                            <span><span class="icon icon-wf">&#59238;</span>URL <input type="url" ng-model="url"></span>
+                            <span> <span class="icon icon-wf">&#59238;</span>Domain Only<input type="checkbox" ng-model="onlyDomain" ></span>
+                            <span> <span class="icon icon-wf">&#59238;</span>Clear Scripts<input type="checkbox" ng-model="clearScripts" ></span>
+                            <span> <span class="icon icon-wf">&#59238;</span>Crawl depth<input type="number" ng-model="maxDepth" ng-change="validate()"></span>
+                            <button class="btn btn-info btn-large" type="submit" ng-model="maxDepth" ng-click="sendRequest('newTask')">Create new task</button>
                         </form>
                     </div>
                 </div>
+                <!--<div class='status-message' ng-show="message" ">Status message: {{ message }}  <b ng-click="message = ''">X</b></div>-->
                 <table class="list">
                     <thead>
                     <tr>
@@ -83,14 +99,38 @@
             <tab disabled='true'>
                 <tab-heading>
                     <span class="icon icon-wf ">&#128213;</span>
-                    Search service
+                    Indexer service
                 </tab-heading>
             </tab>
-            <tab disabled='true'>
+            <tab >
                 <tab-heading>
                     <span class="icon icon-wf ">&#9881;</span>
-                    Search Stat&Test
+                    Indexer Stat&Test
                 </tab-heading>
+                <div class="panel">
+                    <form>
+                        <input type="text" placeholder="Search"  ng-submit="sendSearchRequest()" ng-model="searchText" class="panel-input">
+                        <button type="submit" class="btn btn-success btn-large" ng-click="sendSearchRequest()" >Search</button>
+                    </form>
+                </div>
+                <div class="page-content">
+                    <p ng-show="links.length < 1 && searchResult.length < 1">Search results will show here</p>
+                    <p ng-show="searchResult.length > 1">{{searchResult}}</p>
+                    <ol class="nav-list search-results">
+                        <li ng-repeat="link in links" class="search-results-item">
+                            <i class="icon icon-wf icon-action pull-right" ng-click="divShow = !divShow" compile='divArrow(divShow)'></i>
+                            <a href="{{ link.page.url }}" target="_blank">{{ link.page.title }}</a>
+                            <div class="highlighted" ng-repeat="hl in link.highlights.content" compile= 'hl'></div>
+                            <div class="search-results-details" ng-show="divShow">
+                                <small>Last indexed: {{link.page.date}}
+                                    <a href="/preview?url={{ link.page.hash_url }}" target="_blank" title="Saved copy">Saved copy</a>
+                                    <div style="float: right">score:{{link.score}}%</div>
+                                </small>
+                            </div>
+                        </li>
+                    </ol>
+                    <div style="height: 10px"></div>
+                </div>
             </tab>
             <tab>
                 <tab-heading>

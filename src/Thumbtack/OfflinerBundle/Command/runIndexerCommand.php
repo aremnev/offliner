@@ -9,11 +9,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Thumbtack\OfflinerBundle\Models\OfflinerModel;
 use Thumbtack\OfflinerBundle\Models\OfflinerProcessor;
 
-class runCommand extends ContainerAwareCommand{
+class runIndexerCommand extends ContainerAwareCommand{
     protected function configure()
     {
         parent::configure();
-        $this->setDefinition(array())->setName('offliner:run')->setDescription('Run one task.');
+        $this->setDefinition(array())->setName('indexer:run')->setDescription('index one page.');
        // $this->addArgument('action', InputArgument::OPTIONAL, 'Description  of the bad work done.', 'default action'); //name, mode, description,  default
        // $this->addOption('myoption', 'shortcut-option',  InputOption::VALUE_OPTIONAL, 'Description of the option', 'default  value'); //name, shortcut, mode, description, default
     }

@@ -29,6 +29,9 @@ var app = angular.module("offlinerApp",['ui.bootstrap'], function($compileProvid
 
 app.controller("mainCtrl",function($scope,$http,$window){
     $scope.url = 'http://katoart.ru';
+    $scope.links = [];
+    $scope.searchResult = '';
+    $scope.searchText ='';
     $scope.onlyDomain = true;
     $scope.clearScripts = false;
     $scope.maxDepth = 0;
@@ -117,9 +120,12 @@ app.controller("mainCtrl",function($scope,$http,$window){
                     case 'getStat':
                         $scope.stat ={'queue':data['queue'],'progress':data.progress,'done':data.done};
                         break;
+                    case 'updateTask':
+                        $scope.message = 'Updated';
+                        break;
                     case 'deleteTask':
                         if(data){
-                            $scope.message = 'Deletion successful';
+                            $scope.message = 'Deleted';
                             $scope.sendRequest('getStat');
                             $scope.sendRequest('getTasks');
                         }else{
@@ -135,5 +141,28 @@ app.controller("mainCtrl",function($scope,$http,$window){
     $scope.sendRequest('getStat');
     $scope.sendRequest('getTasks');
 
+    $scope.sendSearchRequest = function(){
+        $scope.links = [];
+        if($scope.searchText.length <2){
+            $scope.searchResult = 'Search request must be >2 characters';
+
+            return;
+        }
+        $scope.loading = true;
+        $http({method:"POST",url:'search',data:{text:$scope.searchText}})
+            .success(function(data, status, headers, config) {
+                if(data.length > 1){
+                    $scope.links = data;
+                    $scope.searchResult = '';
+                }else{
+                    $scope.searchResult = 'Sorry...No matches';
+                    $scope.links = [];
+                }
+                $scope.loading = false;
+            }).error(function(data, status, headers, config) {
+                $scope.message = status;
+                $scope.loading = false;
+            });
+    }
 });
 

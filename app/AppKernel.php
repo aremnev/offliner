@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new Thumbtack\OfflinerBundle\ThumbtackOfflinerBundle(),
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
             new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
+            new FOS\ElasticaBundle\FOSElasticaBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

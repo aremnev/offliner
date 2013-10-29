@@ -2,10 +2,15 @@
 
 namespace Thumbtack\OfflinerBundle\Controller;
 
+use Elastica\Query\Bool;
+use Elastica\Query\Terms;
+use Elastica\Query\Text;
+use FOS\ElasticaBundle\Finder\TransformedFinder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Thumbtack\OfflinerBundle\Entity\Page;
 use Thumbtack\OfflinerBundle\Entity\User;
 use Thumbtack\OfflinerBundle\Security\UserProvider;
 
@@ -103,5 +108,25 @@ class RootController extends BaseController {
         $resp = 'User names: ';
         foreach ($users as $user) $resp .= " -> " . $user->getUsername();
         return new Response($resp);
+    }
+    /**
+     * @Route("/tmppages", name="tmpPages")
+     */
+    public function tmpPagesAction() {
+        $dm = $this->getDoctrine()->getManager();
+        $pages = array();
+        $content = file_get_contents('http://ru.wikipedia.org');
+        for($i=0;$i<2;++$i){
+            $page = new Page();
+            $page->setTitle('Wiki plain');
+            $page->setContent('');
+            $page->setStatus('good');
+            $page->setUrl('url');
+            $page->setDate(new \DateTime());
+            $page->setUser($this->getUser());
+            $dm->persist($page);
+        }
+        $dm->flush();
+        return new Response('good');
     }
 }

@@ -97,3 +97,29 @@ hwi_oauth:
             verify_peer:   false
             ignore_errors: false
             max_redirects: 100
+fos_elastica:
+    clients:
+        default: { host: localhost, port: 9200 }
+    indexes:
+        pages:
+            settings:
+              index:
+                  analysis:
+                      analyzer:
+                          my_analyzer:
+                              type: standard
+                              tokenizer: standart
+                              filter: [standard, lowercase, asciifolding, russian_morphology, english_morphology]
+            client: default
+            types:
+              page:
+                  mappings:
+                      title: { boost: 5 }
+                      content: { boost: 2 }
+                      user:
+                  persistence:
+                      driver: orm # orm, mongodb, propel are available
+                      model: Thumbtack\OfflinerBundle\Entity\Page
+                      provider: ~
+                      finder: ~
+                      listener: ~
