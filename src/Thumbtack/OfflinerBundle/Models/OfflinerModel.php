@@ -18,10 +18,6 @@ use Thumbtack\OfflinerBundle\Entity\User;
 
 class OfflinerModel {
     //----constants
-    const STATUS_AWAITING = 'in queue';
-    const STATUS_PROGRESS = 'in progress';
-    const STATUS_READY = 'Ready';
-
     /**
      * @var EntityManager
      */
@@ -50,7 +46,7 @@ class OfflinerModel {
             $data = json_decode($json,true);
 
             $data['url']= $this->prepareURL($data['url']);
-            $data['status'] = OfflinerModel::STATUS_AWAITING;
+            $data['status'] = ServiceProcessor::STATUS_AWAITING;
             if(!isset($data['id'])){
                 $task = new Task($data);
                 $task->setUser($this->user);
@@ -90,15 +86,16 @@ class OfflinerModel {
     public function getUserStat($user){
         $query = $this->dm->createQuery('SELECT count(t) FROM ThumbtackOfflinerBundle:Task t WHERE t.status = ?1 AND t.user = ?2');
         $query->setParameter(2, $user);
-        $query->setParameter(1, OfflinerModel::STATUS_AWAITING);
+        $query->setParameter(1, ServiceProcessor::STATUS_AWAITING);
         $result['queue'] = $query->getSingleScalarResult();
-        $query->setParameter(1, OfflinerModel::STATUS_PROGRESS);
+        $query->setParameter(1, ServiceProcessor::STATUS_PROGRESS);
         $result['progress'] = $query->getSingleScalarResult();
-        $query->setParameter(1, OfflinerModel::STATUS_READY);
+        $query->setParameter(1, ServiceProcessor::STATUS_READY);
         $result['done'] = $query->getSingleScalarResult();
         return $result;
     }
     public function prepareURL($url){
+        $url = rtrim($url,'/');
         $url = str_replace(array('\\"','\\\'','\'','"'),'',$url);
         $tmp = explode('#',$url);
         $url = reset($tmp);

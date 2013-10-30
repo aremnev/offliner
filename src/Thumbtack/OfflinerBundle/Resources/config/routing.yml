@@ -5,7 +5,7 @@ thumbtackOffliner_offliner:
     resource: "@ThumbtackOfflinerBundle/Controller/OfflinerController.php"
     type:     annotation
 thumbtackOffliner_searcher:
-    resource: "@ThumbtackOfflinerBundle/Controller/SearchController.php"
+    resource: "@ThumbtackOfflinerBundle/Controller/IndexerController.php"
     type:     annotation
 thumbtackOffliner_oauth:
     resource: "@ThumbtackOfflinerBundle/Security/UserProvider.php"

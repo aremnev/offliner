@@ -8,6 +8,21 @@ body{
 a span.icon:hover{
     text-underline-position: left;
 }
+.logout{
+    min-width: 230px;
+    float: right;
+}
+.logout-panel span{
+    position: relative;
+    top: 30px;
+    font-size: 125%;
+}
+.logout-panel {
+    min-height: 77px;
+}
+.logout-panel a{
+    float: right;
+}
 .logged{
     padding-top: 30px;
     padding-right: 5em ;
@@ -85,14 +100,25 @@ table.list tbody td {
 table.list tbody tr:hover td {
     background-color: rgba(255,111,28,0.5)!important;
 }
+.logout-panel,
+.search-form,
+.new-domain-form,
 .new-task-form{
     font-size: 125%;
     vertical-align: middle;
-    width: 65%;
+    width: 70%;
 }
+.search-form input,
+.new-domain-form input,
 .new-task-form input{
     margin: 0;
     font-size: 100%;
+}
+input[type='url']{
+    font-size: 80%;
+}
+.new-domain-form input[type='url']{
+    width: 15em !important;
 }
 .new-task-form input[type='number']{
     height: 1em;
@@ -100,9 +126,14 @@ table.list tbody tr:hover td {
 .new-task-form input[type='checkbox']{
     height: 1em;
 }
+.search-form button,
+.new-domain-form button,
 .new-task-form button{
     float: right;
+    min-width: 230px;
 }
+.search-form .icon,
+.new-domain-form .icon,
 .new-task-form .icon{
     font-size: 56px;
 }
@@ -347,13 +378,12 @@ table.list tbody tr:hover td {
 }
 
 .panel input[type="text"] {
-    width: 24em;
-    height: 28px;
-    margin: 0 1em 0px 0;
+    width: 20.7em;
+    margin: 0 1em 5px 0;
     border-radius: 2px;
 }
 .panel input[type="url"] {
-    width: 10em;
+    width: 15em;
     margin: 0 1em 5px 0;
     border-radius: 2px;
 }

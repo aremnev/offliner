@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
  * @ORM\Table()
  * @ORM\Entity
  */
-class Task implements \JsonSerializable {
+class Domain implements \JsonSerializable {
     /**
      * @var integer
      *
@@ -27,17 +27,10 @@ class Task implements \JsonSerializable {
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="tasks")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="domains")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="max_depth", type="integer")
-     */
-    protected $maxDepth;
     /**
      * @var string
      *
@@ -51,25 +44,6 @@ class Task implements \JsonSerializable {
      */
     protected $status = '';
     /**
-     * @var bool
-     *
-     * @ORM\Column(name="ready", type="boolean")
-     */
-    protected $ready;
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="only_domain", type="boolean")
-     */
-    protected $onlyDomain;
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="clear_scripts", type="boolean")
-     */
-    protected $clearScripts;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="datetime")
@@ -78,15 +52,13 @@ class Task implements \JsonSerializable {
 
 
     public function __toString() {
-        return json_encode($this->jsonSerialize());
+        return \json_encode(array("id"=>$this->id,"status"=>$this->status,"date"=>$this->date,"url"=>$this->url));
     }
-
     public function jsonSerialize() {
-        return array("id" => $this->id, "maxDepth" => $this->maxDepth, "status" => $this->status, "onlyDomain" => $this->onlyDomain, "clearScripts" => $this->clearScripts, "date" => $this->date, "url" => $this->url, "ready" => $this->ready);
+        return $this->__toString();
     }
-
-    public function __construct() {
-        if (func_get_arg(0)) {
+    public function __construct(){
+        if(func_get_arg(0)){
             $data = func_get_arg(0);
             $this->maxDepth = $data['maxDepth'];
             $this->url = $data['url'];
@@ -97,13 +69,13 @@ class Task implements \JsonSerializable {
         $this->date = new \DateTime();
         $this->ready = false;
     }
-
     /**
      * Get id
      *
-     * @return integer
+     * @return integer 
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
@@ -113,18 +85,20 @@ class Task implements \JsonSerializable {
      * @param integer $maxDepth
      * @return Task
      */
-    public function setMaxDepth($maxDepth) {
+    public function setMaxDepth($maxDepth)
+    {
         $this->maxDepth = $maxDepth;
-
+    
         return $this;
     }
 
     /**
      * Get maxDepth
      *
-     * @return integer
+     * @return integer 
      */
-    public function getMaxDepth() {
+    public function getMaxDepth()
+    {
         return $this->maxDepth;
     }
 
@@ -134,18 +108,20 @@ class Task implements \JsonSerializable {
      * @param string $url
      * @return Task
      */
-    public function setUrl($url) {
+    public function setUrl($url)
+    {
         $this->url = $url;
-
+    
         return $this;
     }
 
     /**
      * Get url
      *
-     * @return string
+     * @return string 
      */
-    public function getUrl() {
+    public function getUrl()
+    {
         return $this->url;
     }
 
@@ -155,18 +131,20 @@ class Task implements \JsonSerializable {
      * @param string $status
      * @return Task
      */
-    public function setStatus($status) {
+    public function setStatus($status)
+    {
         $this->status = $status;
-
+    
         return $this;
     }
 
     /**
      * Get status
      *
-     * @return string
+     * @return string 
      */
-    public function getStatus() {
+    public function getStatus()
+    {
         return $this->status;
     }
 
@@ -176,18 +154,20 @@ class Task implements \JsonSerializable {
      * @param boolean $ready
      * @return Task
      */
-    public function setReady($ready) {
+    public function setReady($ready)
+    {
         $this->ready = $ready;
-
+    
         return $this;
     }
 
     /**
      * Get ready
      *
-     * @return boolean
+     * @return boolean 
      */
-    public function getReady() {
+    public function getReady()
+    {
         return $this->ready;
     }
 
@@ -197,18 +177,20 @@ class Task implements \JsonSerializable {
      * @param boolean $onlyDomain
      * @return Task
      */
-    public function setOnlyDomain($onlyDomain) {
+    public function setOnlyDomain($onlyDomain)
+    {
         $this->onlyDomain = $onlyDomain;
-
+    
         return $this;
     }
 
     /**
      * Get onlyDomain
      *
-     * @return boolean
+     * @return boolean 
      */
-    public function getOnlyDomain() {
+    public function getOnlyDomain()
+    {
         return $this->onlyDomain;
     }
 
@@ -218,18 +200,20 @@ class Task implements \JsonSerializable {
      * @param boolean $clearScripts
      * @return Task
      */
-    public function setClearScripts($clearScripts) {
+    public function setClearScripts($clearScripts)
+    {
         $this->clearScripts = $clearScripts;
-
+    
         return $this;
     }
 
     /**
      * Get clearScripts
      *
-     * @return boolean
+     * @return boolean 
      */
-    public function getClearScripts() {
+    public function getClearScripts()
+    {
         return $this->clearScripts;
     }
 
@@ -239,18 +223,20 @@ class Task implements \JsonSerializable {
      * @param \DateTime $date
      * @return Task
      */
-    public function setDate($date) {
+    public function setDate($date)
+    {
         $this->date = $date;
-
+    
         return $this;
     }
 
     /**
      * Get date
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
-    public function getDate() {
+    public function getDate()
+    {
         return $this->date;
     }
 
@@ -260,18 +246,20 @@ class Task implements \JsonSerializable {
      * @param \Thumbtack\OfflinerBundle\Entity\User $user
      * @return Task
      */
-    public function setUser(\Thumbtack\OfflinerBundle\Entity\User $user = null) {
+    public function setUser(\Thumbtack\OfflinerBundle\Entity\User $user = null)
+    {
         $this->user = $user;
-
+    
         return $this;
     }
 
     /**
      * Get user
      *
-     * @return \Thumbtack\OfflinerBundle\Entity\User
+     * @return \Thumbtack\OfflinerBundle\Entity\User 
      */
-    public function getUser() {
+    public function getUser()
+    {
         return $this->user;
     }
 }

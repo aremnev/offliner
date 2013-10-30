@@ -2,16 +2,13 @@
 
 namespace Thumbtack\OfflinerBundle\Controller;
 
-use Elastica\Query\Bool;
-use Elastica\Query\Terms;
-use Elastica\Query\Text;
-use FOS\ElasticaBundle\Finder\TransformedFinder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Thumbtack\OfflinerBundle\Entity\Page;
 use Thumbtack\OfflinerBundle\Entity\User;
+use Thumbtack\OfflinerBundle\Models\Crawler;
 use Thumbtack\OfflinerBundle\Security\UserProvider;
 
 
@@ -128,5 +125,14 @@ class RootController extends BaseController {
         }
         $dm->flush();
         return new Response('good');
+    }
+    /**
+     * @Route("/tmpcrawl", name="tmpCrawl")
+     */
+    public function tmpCrawlAction() {
+        $page = Crawler::getPage('http://offliner.istrelnikov.dev.thumbtack.net/signIn');
+        $response= new Response($page);
+        $response->headers->set('Content-Type', 'text/html');
+        return $response;
     }
 }

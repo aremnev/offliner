@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints\DateTime;
+use Thumbtack\OfflinerBundle\Models\ServiceProcessor;
 
 /**
  * task
@@ -34,9 +35,22 @@ class Page implements \JsonSerializable{
     /**
      * @var string
      *
-     * @ORM\Column(name="url", type="string", length=600)
+     * @ORM\Column(name="domain", type="string", length=1000)
+     */
+    protected $domain = '';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="url", type="string", length=65531)
      */
     protected $url = '';
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="hash_url", type="string", length=100)
+     */
+    protected $hash_url = '';
     /**
      * @var string
      *
@@ -46,15 +60,27 @@ class Page implements \JsonSerializable{
     /**
      * @var string
      *
-     * @ORM\Column(name="content", type="text", length=65532)
+     * @ORM\Column(name="content", type="text", length=16777000 )
      */
     protected $content = '';
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="html", type="text", length=16777000 )
+     */
+    protected $html = '';
     /**
      * @var string
      *
      * @ORM\Column(name="status", type="string", length=20)
      */
     protected $status = '';
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="ready", type="boolean")
+     */
+    protected $ready;
 
     /**
      * @var \DateTime
@@ -62,6 +88,8 @@ class Page implements \JsonSerializable{
      * @ORM\Column(name="date", type="datetime")
      */
     protected $date;
+    public function __construct(){
+    }
 
     /**
      * Get id
@@ -80,7 +108,7 @@ class Page implements \JsonSerializable{
      */
     public function setUrl($url) {
         $this->url = $url;
-
+        $this->hash_url = md5($url);
         return $this;
     }
 
@@ -112,6 +140,26 @@ class Page implements \JsonSerializable{
      */
     public function getStatus() {
         return $this->status;
+    }
+    /**
+     * Set ready
+     *
+     * @param boolean $ready
+     * @return Task
+     */
+    public function setReady($ready) {
+        $this->ready = $ready;
+
+        return $this;
+    }
+
+    /**
+     * Get ready
+     *
+     * @return boolean
+     */
+    public function getReady() {
+        return $this->ready;
     }
     /**
      * Set title
@@ -154,7 +202,19 @@ class Page implements \JsonSerializable{
     public function getContent() {
         return $this->content;
     }
+    /**
+     * @param string $html
+     */
+    public function setHtml($html) {
+        $this->html = $html;
+    }
 
+    /**
+     * @return string
+     */
+    public function getHtml() {
+        return $this->html;
+    }
     /**
      * Set date
      *
@@ -175,7 +235,19 @@ class Page implements \JsonSerializable{
     public function getDate() {
         return $this->date;
     }
+    /**
+     * @param string $domain
+     */
+    public function setDomain($domain) {
+        $this->domain = $domain;
+    }
 
+    /**
+     * @return string
+     */
+    public function getDomain() {
+        return $this->domain;
+    }
     /**
      * Set user
      *
@@ -202,5 +274,5 @@ class Page implements \JsonSerializable{
         return json_encode($this->jsonSerialize);
     }
     public function jsonSerialize() {
-        return array("id"=>$this->id,"url"=>$this->url,'hash_url'=>md5($this->url),"date"=>$this->date->format('Y-m-d'),"title"=>$this->title);
+        return array("id"=>$this->id,"url"=>$this->url,'hash_url'=>$this->hash_url,"date"=>$this->date,"title"=>$this->title);
     }}

@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Thumbtack\OfflinerBundle\Models\OfflinerModel;
-use Thumbtack\OfflinerBundle\Models\OfflinerProcessor;
+use Thumbtack\OfflinerBundle\Models\ServiceProcessor;
 
 class runIndexerCommand extends ContainerAwareCommand{
     protected function configure()
@@ -20,9 +20,9 @@ class runIndexerCommand extends ContainerAwareCommand{
 
     protected function execute(InputInterface $input, OutputInterface $output){
         /**
-         * @var OfflinerProcessor $offliner
+         * @var ServiceProcessor $offliner
          */
-        $offliner = $this->getContainer()->get("thumbtackOfflinerProcessor");
-        echo $offliner->runQueueTask();
+        $service = $this->getContainer()->get("thumbtackServiceProcessor");
+        echo $service->runIndexing();
     }
 }

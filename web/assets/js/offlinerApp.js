@@ -1,44 +1,15 @@
 'use strict';
 
-var app = angular.module("offlinerApp",['ui.bootstrap'], function($compileProvider){
-    // configure new 'compile' directive by passing a directive
-    // factory function. The factory function injects the '$compile'
-    $compileProvider.directive('compile', function($compile) {
-        // directive factory creates a link function
-        return function(scope, element, attrs) {
-            scope.$watch(
-                function(scope) {
-                    // watch the 'compile' expression for changes
-                    return scope.$eval(attrs.compile);
-                },
-                function(value) {
-                    // when the 'compile' expression changes
-                    // assign it into the current DOM
-                    element.html(value);
+var app = angular.module("offlinerApp",[]);
 
-                    // compile the new DOM and link it to the current
-                    // scope.
-                    // NOTE: we only compile .childNodes so that
-                    // we don't get into infinite loop compiling ourselves
-                    $compile(element.contents())(scope);
-                }
-            );
-        };
-    })
-});
-
-app.controller("mainCtrl",function($scope,$http,$window){
-    $scope.url = 'http://katoart.ru';
+app.controller("offlinerCtrl",function($scope,$http,$window){
+    $scope.url = 'http://www.example.com';
     $scope.links = [];
-    $scope.searchResult = '';
-    $scope.searchText ='';
     $scope.onlyDomain = true;
     $scope.clearScripts = false;
     $scope.maxDepth = 0;
     $scope.tasks = [];
     $scope.message = '';
-    $scope.stat ={'queue':0,'progress':0,'done':0};
-    $scope.showForm = false;
     $scope.inEditId = -1;
     $scope.divArrow=function(div){
         return (!div ? '&#59236;':'&#59239;');
@@ -100,10 +71,7 @@ app.controller("mainCtrl",function($scope,$http,$window){
                 switch (req_action){
                     case 'getTasks':
                         if(data){
-                            $scope.tasks = [];
-                            for(var key in data){
-                                $scope.tasks.push(JSON.parse(data[key]));
-                            }
+                            $scope.tasks = data;
                         }else{
                             $scope.tasks = [];
                         }
@@ -138,31 +106,6 @@ app.controller("mainCtrl",function($scope,$http,$window){
                 $scope.message = 'Response failed! Status:'+status;
             });
     }
-    $scope.sendRequest('getStat');
     $scope.sendRequest('getTasks');
-
-    $scope.sendSearchRequest = function(){
-        $scope.links = [];
-        if($scope.searchText.length <2){
-            $scope.searchResult = 'Search request must be >2 characters';
-
-            return;
-        }
-        $scope.loading = true;
-        $http({method:"POST",url:'search',data:{text:$scope.searchText}})
-            .success(function(data, status, headers, config) {
-                if(data.length > 1){
-                    $scope.links = data;
-                    $scope.searchResult = '';
-                }else{
-                    $scope.searchResult = 'Sorry...No matches';
-                    $scope.links = [];
-                }
-                $scope.loading = false;
-            }).error(function(data, status, headers, config) {
-                $scope.message = status;
-                $scope.loading = false;
-            });
-    }
 });
 

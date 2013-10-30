@@ -11,15 +11,20 @@ namespace Thumbtack\OfflinerBundle\Models;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Thumbtack\OfflinerBundle\Entity\Page;
 use Thumbtack\OfflinerBundle\Entity\Process;
 use Thumbtack\OfflinerBundle\Entity\Task;
 use Thumbtack\OfflinerBundle\Entity\User;
 
-class OfflinerProcessor {
+class ServiceProcessor {
+    const STATUS_AWAITING = 'in queue';
+    const STATUS_PROGRESS = 'in progress';
+    const STATUS_READY = 'Ready';
     /**
      * @var EntityManager
      */
     private  $dm;
+    private  $doctrine;
     /**
      * @var EntityRepository
      */
@@ -28,38 +33,81 @@ class OfflinerProcessor {
      * @var EntityRepository
      */
     private $serviceRepo;
+    /**
+     * @var EntityRepository
+     */
+    private $pagesRepo;
     private $maxProcessCount;
     /**
      * @var Process
      */
     private $process;
+    private $index;
 
     /**
      * @param $doctrine
      * @param integer $mpc
+     * @param $secure
+     * @param $index
      */
-    function __construct($doctrine,$mpc){
+    function __construct($doctrine,$mpc,$index){
         $this->dm = $doctrine->getManager();
+        $this->doctrine = $doctrine;
         $this->tasksRepo = $this->dm->getRepository('ThumbtackOfflinerBundle:Task');
         $this->serviceRepo = $this->dm->getRepository('ThumbtackOfflinerBundle:Process');
+        $this->pagesRepo = $this->dm->getRepository('ThumbtackOfflinerBundle:Page');
         $this->maxProcessCount = $mpc;
+        $this->index = $index;
     }
     public function runQueueTask(){
         if($this->regProcess()){
             /**
              * @var Task $task;
              */
-            $task = $this->tasksRepo->findOneByStatus(OfflinerModel::STATUS_AWAITING);
+            $task = $this->tasksRepo->findOneByStatus(ServiceProcessor::STATUS_AWAITING);
             if(isset($task)){
-                $task->setStatus(OfflinerModel::STATUS_PROGRESS);
+                $task->setStatus(ServiceProcessor::STATUS_PROGRESS);
                 $this->dm->persist($task);
                 $this->dm->flush();
                 $script = $this->generateCrawlScript($task,"completed_tasks/".$task->getId());
                 exec("node -e \"".$script."\"");
                 exec("cd completed_tasks/ && zip ".$task->getId().".zip -r ".$task->getId()." && mv -f ".$task->getId().".zip /home/istrelnikov/offliner_uploads/".$task->getId().".zip");
-                $task->setStatus(OfflinerModel::STATUS_READY);
+                $task->setStatus(ServiceProcessor::STATUS_READY);
                 $task->setReady(true);
                 $this->dm->persist($task);
+                $this->dm->flush();
+            }
+            $this->unregProcess();
+        }
+        return  true;
+    }
+    public function runIndexing(){
+        if($this->regProcess()){
+            /**
+             * @var Page $page;
+             */
+            $page = $this->pagesRepo->findOneByStatus(ServiceProcessor::STATUS_AWAITING);
+            if(isset($page)){
+                $page->setStatus(ServiceProcessor::STATUS_PROGRESS);
+                $this->dm->persist($page);
+                $this->dm->flush();
+
+                $parsed_page = Crawler::getPage($page->getUrl());
+                if($parsed_page){
+                    $user = $page->getUser();
+                    $indexer = new IndexerModel($user,$this->index,$this->doctrine);
+                    foreach($parsed_page['links'] as $link){
+                        $indexer->addToQuery($link);
+                    }
+                    $page->setReady(true);
+                    $page->setStatus(ServiceProcessor::STATUS_READY);
+                    $page->setContent($parsed_page['plain']);
+                    $page->setHtml($parsed_page['html']);
+                    $page->setTitle($parsed_page['title']);
+                    $this->dm->persist($page);
+                }else{
+                    $this->dm->remove($page);
+                }
                 $this->dm->flush();
             }
             $this->unregProcess();

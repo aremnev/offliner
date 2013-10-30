@@ -71,7 +71,12 @@ class User implements UserInterface, \Serializable {
      * @ORM\OneToMany(targetEntity="Page", mappedBy="user")
      */
     protected $pages = '';
-
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Domain", mappedBy="user")
+     */
+    protected $domains = '';
     /**
      * Constructor
      */

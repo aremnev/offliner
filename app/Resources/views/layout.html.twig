@@ -16,7 +16,7 @@
     {% block stylesheets %}{% endblock %}
 </head>
 
-<body ng-app="offlinerApp" ng-controller="mainCtrl">
+<body ng-app="mainApp">
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
@@ -47,6 +47,8 @@
 </footer>
 <script src="{{ asset('assets/js/libs/angular.js') }}"></script>
 <script src="{{ asset('assets/js/libs/ui-bootstrap-tpls-0.5.0.js') }}"></script>
+<script src="{{ asset('assets/js/mainApp.js') }}"></script>
+<script src="{{ asset('assets/js/indexerApp.js') }}"></script>
 <script src="{{ asset('assets/js/offlinerApp.js') }}"></script>
 {% block javascripts %}{% endblock %}
 </body>

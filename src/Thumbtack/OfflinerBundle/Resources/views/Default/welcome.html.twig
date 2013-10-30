@@ -2,7 +2,7 @@
 {% block global_stat %}
 
     {% verbatim %}
-    <div class="stats stats-theme-light pull-right" title="Click to refresh stat" ng-click="sendRequest('getStat')">
+    <div ng-controller="mainCtrl" class="stats stats-theme-light pull-right" title="Click to refresh stat"">
         <span class="stats-item"><span class="stats-label"></span>
             <span class="stats-count">Offliner</span>
             <span class="stats-count">Indexer</span>
@@ -28,119 +28,173 @@
 {% block data %}
     {% verbatim %}
     <div class="row-fluid">
-        <div  ng-if="false" class="loading"><p>L<span class="rotateO"></span>ading...</p></div>
         <tabset class="tabbable tabs-left">
             <tab>
                 <tab-heading>
                     <span class="icon icon-wf ">&#59198;</span>
                     Offliner service
                 </tab-heading>
-                <div class="panel">
-                    <small>Offliner service allows download any website fully!
-                        <p>Мы рекомендуем выставлять галочку 'Clear Scripts' ввиду того что существует возможность искажения сохраненых страниц. </small>
-                    <div class="new-task-form">
-                        <form >
-                            <span><span class="icon icon-wf">&#59238;</span>URL <input type="url" ng-model="url"></span>
-                            <span> <span class="icon icon-wf">&#59238;</span>Domain Only<input type="checkbox" ng-model="onlyDomain" ></span>
-                            <span> <span class="icon icon-wf">&#59238;</span>Clear Scripts<input type="checkbox" ng-model="clearScripts" ></span>
-                            <span> <span class="icon icon-wf">&#59238;</span>Crawl depth<input type="number" ng-model="maxDepth" ng-change="validate()"></span>
-                            <button class="btn btn-info btn-large" type="submit" ng-model="maxDepth" ng-click="sendRequest('newTask')">Create new task</button>
-                        </form>
+                <div ng-controller="offlinerCtrl">
+                    <div  ng-if="loading" class="loading"><p>L<span class="rotateO"></span>ading...</p></div>
+                    <div class="panel">
+                        <small>Offliner service allows download any website fully!
+                            <p>Мы рекомендуем выставлять галочку 'Clear Scripts' ввиду того что существует возможность искажения сохраненых страниц. </small>
+                        <div class="new-task-form">
+                            <form >
+                                <span><span class="icon icon-wf">&#59238;</span>URL <input type="url" ng-model="url"></span>
+                                <span> <span class="icon icon-wf">&#59238;</span>Domain Only<input type="checkbox" ng-model="onlyDomain" ></span>
+                                <span> <span class="icon icon-wf">&#59238;</span>Clear Scripts<input type="checkbox" ng-model="clearScripts" ></span>
+                                <span> <span class="icon icon-wf">&#59238;</span>Crawl depth<input type="number" ng-model="maxDepth" ng-change="validate()"></span>
+                                <button class="btn btn-info btn-large" type="submit" ng-click="sendRequest('newTask')">Create new task</button>
+                            </form>
+                        </div>
                     </div>
+                    <!--Redesign needed-->
+                    <!--<div class='status-message' ng-show="message" ">Status message: {{ ctrl.message }}  <b ng-click="message = ''">X</b></div>-->
+                    <table class="list">
+                        <thead>
+                        <tr>
+                            <td style="width: 25%"> Url</td>
+                            <td style="width: 10%"> Status</td>
+                            <td style="width: 10%"> Domain Only</td>
+                            <td style="width: 10%"> Clear Scripts</td>
+                            <td style="width: 5%"> Depth</td>
+                            <td style="width: 10%"> Date</td>
+                            <td style="width: 20%"> Options</td>
+                        </tr>
+                        </thead>
+                        <tbody ng-repeat="task in tasks">
+                        <tr ng-show="!inEdit(task)" id="task{{task.id}}">
+                            <td> {{ task.url }}</td>
+                            <td> <label class="label">{{ task.status }}</label></td>
+                            <td> <label class="label">{{ task.onlyDomain }}</label></td>
+                            <td> <label class="label">{{ task.clearScripts }}</label></td>
+                            <td> <label class="label">{{ task.maxDepth }}</label></td>
+                            <td> <small>{{ task.date.date }}</small></td>
+                            <td>
+                                <a href="uploads/{{task.id}}.zip"з><label class="btn btn-success pull-left" ng-if="task.ready" title="Download">
+                                        <span class="icon icon-wf icon-action">&#59256;</span>
+                                    </label></a>
+                                <label class="btn btn-danger pull-right" ng-click="sendRequest('deleteTask',{{task.id}})" title="Delete">
+                                    <span class="icon icon-wf icon-action">&#59177;</span>
+                                </label>
+                                <label class="btn btn-info pull-right " ng-if="task.status == 'in queue'" ng-click="setEditId({{task.id}})" title="Edit">
+                                    <span class="icon icon-wf icon-action">&#9998;</span>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr ng-show="inEdit(task)" id="task{{task.id}}">
+                            <td> <input type="url" ng-model="task.url"></td>
+                            <td> <label class="label">{{ task.status }}</label></td>
+                            <td> <input type="checkbox" ng-model="task.onlyDomain"></td>
+                            <td>  <input type="checkbox" ng-model="task.clearScripts"></td>
+                            <td> <input type="number" ng-model="task.maxDepth"></td>
+                            <td> <small>{{ task.date.date }}</small></td>
+                            <td>
+                                <label class="btn btn-danger disabled pull-right" title="Delete"><span class="icon icon-wf icon-action">&#59177;</span></label>
+                                <label class="btn btn-info pull-right" ng-click="saveEdit(task)" title="Save"><span class="icon icon-wf icon-action">&#10003;</span></label>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <!--<div class='status-message' ng-show="message" ">Status message: {{ message }}  <b ng-click="message = ''">X</b></div>-->
-                <table class="list">
-                    <thead>
-                    <tr>
-                        <td style="width: 25%"> Url</td>
-                        <td style="width: 10%"> Status</td>
-                        <td style="width: 10%"> Domain Only</td>
-                        <td style="width: 10%"> Clear Scripts</td>
-                        <td style="width: 5%"> Depth</td>
-                        <td style="width: 10%"> Date</td>
-                        <td style="width: 20%"> Options</td>
-                    </tr>
-                    </thead>
-                    <tbody ng-repeat="task in tasks">
-                    <tr ng-show="!inEdit(task)" id="task{{task.id}}">
-                        <td> {{ task.url }}</td>
-                        <td> <label class="label">{{ task.status }}</label></td>
-                        <td> <label class="label">{{ task.onlyDomain }}</label></td>
-                        <td> <label class="label">{{ task.clearScripts }}</label></td>
-                        <td> <label class="label">{{ task.maxDepth }}</label></td>
-                        <td> <small>{{ task.date.date }}</small></td>
-                        <td>
-                            <a href="uploads/{{task.id}}.zip"><label class="btn btn-success btn-mini pull-left" ng-if="task.ready" title="Download">
-                                    <span class="icon icon-wf icon-action">&#59256;</span>
-                                </label></a>
-                            <label class="btn btn-danger pull-right" ng-click="sendRequest('deleteTask',{{task.id}})" title="Delete">
-                                <span class="icon icon-wf icon-action">&#59177;</span>
-                            </label>
-                            <label class="btn btn-info pull-right " ng-if="task.status == 'in queue'" ng-click="setEditId({{task.id}})" title="Edit">
-                                <span class="icon icon-wf icon-action">&#9998;</span>
-                            </label>
-                        </td>
-                    </tr>
-                    <tr ng-show="inEdit(task)" id="task{{task.id}}">
-                        <td> <input type="url" ng-model="task.url"></td>
-                        <td> <label class="label">{{ task.status }}</label></td>
-                        <td> <input type="checkbox" ng-model="task.onlyDomain"></td>
-                        <td>  <input type="checkbox" ng-model="task.clearScripts"></td>
-                        <td> <input type="number" ng-model="task.maxDepth"></td>
-                        <td> <small>{{ task.date.date }}</small></td>
-                        <td>
-                            <label class="btn btn-danger disabled pull-right" title="Delete"><span class="icon icon-wf icon-action">&#59177;</span></label>
-                            <label class="btn btn-info pull-right" ng-click="saveEdit(task)" title="Save"><span class="icon icon-wf icon-action">&#10003;</span></label>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
             </tab>
-            <tab disabled='true'>
+            <tab>
                 <tab-heading>
                     <span class="icon icon-wf ">&#128213;</span>
                     Indexer service
                 </tab-heading>
+                <div ng-controller="indexerCtrl">
+                    <div  ng-if="loading" class="loading"><p>L<span class="rotateO"></span>ading...</p></div>
+                    <div class="panel">
+                        <small>Indexer service allows получать результаты поиска по вашему сайту в виде JSON не утруждаясь ничем =) !
+                            <p>Для доступа к поисковому индексу с вашего сайта читайте <a href="#">документацию</a> </small>
+                        <div class="new-domain-form">
+                            <form >
+                                <span><span class="icon icon-wf">&#59238;</span>URL <input type="url" ng-model="url"></span>
+                                <button class="btn btn-info btn-large" type="submit" ng-model="maxDepth" ng-click="sendRequest('newDomain')">Add to my domains</button>
+                            </form>
+                        </div>
+                    </div>
+                    <!--Redesign needed-->
+                    <!--<div class='status-message' ng-show="message" ">Status message: {{ message }}  <b ng-click="message = ''">X</b></div>-->
+                    <table class="list">
+                        <thead>
+                        <tr>
+                            <td style="width: 25%"> Url</td>
+                            <td style="width: 10%"> Status</td>
+                            <td style="width: 10%"> Date</td>
+                            <td style="width: 20%"> Options</td>
+                        </tr>
+                        </thead>
+                        <tbody ng-repeat="domain in domains">
+                        <tr id="domain{{domain.id}}">
+                            <td> {{ domain.url }}</td>
+                            <td> <label class="label">{{ domain.status }}</label></td>
+                            <td> <small>{{ domain.date.date }}</small></td>
+                            <td>
+                                <label class="btn btn-danger pull-right" ng-click="sendRequest('deleteDomain',{{domain.id}})" title="Delete">
+                                    <span class="icon icon-wf icon-action">&#59177;</span>
+                                </label>
+                                <label class="btn btn-info pull-right " ng-if="domain.status == 'in queue'" ng-click="setEditId({{domain.id}})" title="Edit">
+                                    <span class="icon icon-wf icon-action">&#9998;</span>
+                                </label>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="page-content" compile="result"></div>
+                </div>
             </tab>
-            <tab >
+            <tab>
                 <tab-heading>
                     <span class="icon icon-wf ">&#9881;</span>
                     Indexer Stat&Test
                 </tab-heading>
-                <div class="panel">
-                    <form>
-                        <input type="text" placeholder="Search"  ng-submit="sendSearchRequest()" ng-model="searchText" class="panel-input">
-                        <button type="submit" class="btn btn-success btn-large" ng-click="sendSearchRequest()" >Search</button>
-                    </form>
-                </div>
-                <div class="page-content">
-                    <p ng-show="links.length < 1 && searchResult.length < 1">Search results will show here</p>
-                    <p ng-show="searchResult.length > 1">{{searchResult}}</p>
-                    <ol class="nav-list search-results">
-                        <li ng-repeat="link in links" class="search-results-item">
-                            <i class="icon icon-wf icon-action pull-right" ng-click="divShow = !divShow" compile='divArrow(divShow)'></i>
-                            <a href="{{ link.page.url }}" target="_blank">{{ link.page.title }}</a>
-                            <div class="highlighted" ng-repeat="hl in link.highlights.content" compile= 'hl'></div>
-                            <div class="search-results-details" ng-show="divShow">
-                                <small>Last indexed: {{link.page.date}}
-                                    <a href="/preview?url={{ link.page.hash_url }}" target="_blank" title="Saved copy">Saved copy</a>
-                                    <div style="float: right">score:{{link.score}}%</div>
-                                </small>
-                            </div>
-                        </li>
-                    </ol>
-                    <div style="height: 10px"></div>
+                <div ng-controller="indexerCtrl">
+                    <div  ng-if="loading" class="loading"><p>L<span class="rotateO"></span>ading...</p></div>
+                    <div class="panel">
+                        <small>Проверьте выдачу результатов по вашему поисковому индексу
+                            <p>Для доступа к поисковому индексу с вашего сайта читайте <a href="#">документацию</a> </small>
+                        <div class="search-form">
+                            <form>
+                                <span class="icon icon-wf">&#59238;</span>Search text <input type="text"  placeholder="Search"  ng-submit="sendSearchRequest()" ng-model="searchText" class="panel-input">
+                                <button type="submit" class="btn btn-success btn-large" ng-click="sendSearchRequest()" >Search</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <p ng-show="links.length < 1 && searchResult.length < 1">Search results will show here</p>
+                        <p ng-show="searchResult.length > 1">{{searchResult}}</p>
+                        <ol class="nav-list search-results">
+                            <li ng-repeat="link in links" class="search-results-item">
+                                <i class="icon icon-wf icon-action pull-right" ng-click="divShow = !divShow" compile='divArrow(divShow)'></i>
+                                <a href="{{ link.page.url }}" target="_blank">{{ link.page.title }}</a>
+                                <div class="highlighted" ng-repeat="hl in link.highlights.content" compile= 'hl'></div>
+                                <div class="search-results-details" ng-show="divShow">
+                                    <small>Last indexed: {{link.page.date.date}}
+                                        <a href="/preview?url={{ link.page.hash_url }}" target="_blank" title="Saved copy">Saved copy</a>
+                                        <div style="float: right">score:{{link.score}}%</div>
+                                    </small>
+                                </div>
+                            </li>
+                        </ol>
+                        <div style="height: 10px"></div>
+                    </div>
                 </div>
             </tab>
             <tab>
                 <tab-heading>
                     Logout
                 </tab-heading>
-                <div class="page-content">
-                 <h4>Thank you for anything
-                 <p> Create your apps with us!
-                 </h4>
-                <a href="logout"><button class="btn btn-large btn-success">Goodbye!!!</button></a>
+                <div class="panel">
+                 <div class="logout-panel">
+                     <span>
+                         Thank you for anything
+                         <p> Create your apps with us!
+                     </span>
+                     <a href="logout"><button class="btn btn-large btn-success logout">Goodbye!!!</button></a>
+                 </div>
                 </div>
             </tab>
         </tabset>

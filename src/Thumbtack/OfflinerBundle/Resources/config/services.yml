@@ -22,6 +22,6 @@ services:
  thumbtackOffliner:
         class: Thumbtack\OfflinerBundle\Models\OfflinerModel
         arguments: [@security.context,@doctrine]
- thumbtackOfflinerProcessor:
-        class: Thumbtack\OfflinerBundle\Models\OfflinerProcessor
-        arguments: [@doctrine,"%offliner_max_proccess_count%"]
+ thumbtackServiceProcessor:
+        class: Thumbtack\OfflinerBundle\Models\ServiceProcessor
+        arguments: ["@doctrine","%offliner_max_proccess_count%","@fos_elastica.index.pages.page"]
