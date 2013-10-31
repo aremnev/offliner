@@ -31,6 +31,7 @@
         <tabset class="tabbable tabs-left">
             <tab>
                 <tab-heading>
+                    <span style="float: right; vertical-align:top;font-size: 100%;color: red;">beta</span>
                     <span class="icon icon-wf ">&#59198;</span>
                     Offliner service
                 </tab-heading>
@@ -112,7 +113,7 @@
                         <div class="new-domain-form">
                             <form >
                                 <span><span class="icon icon-wf">&#59238;</span>URL <input type="url" ng-model="url"></span>
-                                <button class="btn btn-info btn-large" type="submit" ng-model="maxDepth" ng-click="sendRequest('newDomain')">Add to my domains</button>
+                                <button class="btn btn-info btn-large" type="submit" ng-click="sendRequest('newDomain')">Add to my domains</button>
                             </form>
                         </div>
                     </div>
@@ -135,9 +136,6 @@
                             <td>
                                 <label class="btn btn-danger pull-right" ng-click="sendRequest('deleteDomain',{{domain.id}})" title="Delete">
                                     <span class="icon icon-wf icon-action">&#59177;</span>
-                                </label>
-                                <label class="btn btn-info pull-right " ng-if="domain.status == 'in queue'" ng-click="setEditId({{domain.id}})" title="Edit">
-                                    <span class="icon icon-wf icon-action">&#9998;</span>
                                 </label>
                             </td>
                         </tr>
@@ -173,7 +171,7 @@
                                 <div class="highlighted" ng-repeat="hl in link.highlights.content" compile= 'hl'></div>
                                 <div class="search-results-details" ng-show="divShow">
                                     <small>Last indexed: {{link.page.date.date}}
-                                        <a href="/preview?url={{ link.page.hash_url }}" target="_blank" title="Saved copy">Saved copy</a>
+                                        <a href="/preview/{{ link.page.hash_url }}" target="_blank" title="Saved copy">Saved copy</a>
                                         <div style="float: right">score:{{link.score}}%</div>
                                     </small>
                                 </div>

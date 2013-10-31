@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
 /**
  * task
  *
- * @ORM\Table()
+ * @ORM\Table(name="indexer_domains")
  * @ORM\Entity
  */
 class Domain implements \JsonSerializable {
@@ -25,6 +25,13 @@ class Domain implements \JsonSerializable {
     protected $id;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Page", mappedBy="domain",cascade={"persist", "remove"})
+     */
+    protected $pages;
+
+    /**
      * @var User
      *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="domains")
@@ -34,9 +41,15 @@ class Domain implements \JsonSerializable {
     /**
      * @var string
      *
-     * @ORM\Column(name="url", type="string", length=600)
+     * @ORM\Column(name="url", type="string", length=1000)
      */
     protected $url = '';
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="host", type="string", length=1000)
+     */
+    protected $host = '';
     /**
      * @var string
      *
@@ -52,22 +65,49 @@ class Domain implements \JsonSerializable {
 
 
     public function __toString() {
-        return \json_encode(array("id"=>$this->id,"status"=>$this->status,"date"=>$this->date,"url"=>$this->url));
+        return (string)$this->id;
     }
     public function jsonSerialize() {
-        return $this->__toString();
+        return array("id"=>$this->id,"status"=>$this->status,"date"=>$this->date,"url"=>$this->url);
     }
     public function __construct(){
         if(func_get_arg(0)){
             $data = func_get_arg(0);
-            $this->maxDepth = $data['maxDepth'];
-            $this->url = $data['url'];
+            $this->setUrl($data['url']);
             $this->status = $data['status'];
-            $this->onlyDomain = $data['onlyDomain'];
-            $this->clearScripts = $data['clearScripts'];
         }
         $this->date = new \DateTime();
         $this->ready = false;
+        $this->pages = new ArrayCollection();
+    }
+    /**
+     * Add page
+     *
+     * @param \Thumbtack\OfflinerBundle\Entity\Page $page
+     * @return User
+     */
+    public function addPage(\Thumbtack\OfflinerBundle\Entity\Page $page) {
+        $this->pages[] = $page;
+
+        return $this;
+    }
+
+    /**
+     * Remove page
+     *
+     * @param \Thumbtack\OfflinerBundle\Entity\Page $page
+     */
+    public function removePage(\Thumbtack\OfflinerBundle\Entity\Page $page) {
+        $this->tasks->removeElement($page);
+    }
+
+    /**
+     * Get tasks
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPages() {
+        return $this->pages;
     }
     /**
      * Get id
@@ -111,7 +151,8 @@ class Domain implements \JsonSerializable {
     public function setUrl($url)
     {
         $this->url = $url;
-    
+        $parsed = parse_url($url);
+        $this->host = $parsed['host'];
         return $this;
     }
 
@@ -124,7 +165,15 @@ class Domain implements \JsonSerializable {
     {
         return $this->url;
     }
-
+    /**
+     * Get url
+     *
+     * @return string
+     */
+    public function getHost()
+    {
+        return $this->host;
+    }
     /**
      * Set status
      *

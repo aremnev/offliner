@@ -4,38 +4,39 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Elastica\Query\Bool;
 use Elastica\Query\Terms;
-use Elastica\Query\Text;
 use Elastica\Query;
 use Elastica\Result;
 use Elastica\ResultSet;
 use Elastica\Type;
-use FOS\ElasticaBundle\Finder\TransformedFinder;
-use FOS\ElasticaBundle\HybridResult;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\Validator\Constraints\DateTime;
+use Thumbtack\OfflinerBundle\Entity\Domain;
 use Thumbtack\OfflinerBundle\Entity\Page;
-use Thumbtack\OfflinerBundle\Entity\Process;
-use Thumbtack\OfflinerBundle\Entity\Task;
 use Thumbtack\OfflinerBundle\Entity\User;
 
 class IndexerModel {
     private $user;
     private $index;
-    /* @var EntityRepository $repo*/
-    private $repo;
+    /* @var EntityRepository $pageRepo*/
+    private $pageRepo;
+    /* @var EntityRepository $domainRepo*/
+    private $domainRepo;
     private $dm;
 
     public function __construct(User $user,Type $index,EntityManager $doctrine){
         $this->user = $user;
         $this->index = $index;
         $this->dm = $doctrine;
-        $this->repo = $doctrine->getRepository('ThumbtackOfflinerBundle:Page');
+        $this->pageRepo = $doctrine->getRepository('ThumbtackOfflinerBundle:Page');
+        $this->domainRepo = $doctrine->getRepository('ThumbtackOfflinerBundle:Domain');
     }
 
-    public function find($string){
+    public function find($string,$domainId){
         $boolQuery = new Bool();
         $userQuery = new Terms();
         $userQuery->setTerms('user',array($this->user->getId()));
+        if(isset($domainId)){
+            $userQuery->addTerm('domain',array($domainId));
+        }
         $boolQuery->addMust($userQuery);
         $boolQuery->setMinimumNumberShouldMatch(1);
         $contentQuery = new Query\FuzzyLikeThis();
@@ -54,7 +55,7 @@ class IndexerModel {
         $maxScore = $results->getMaxScore();
         /**@var Result $result */
         foreach($results->getResults() as $result){
-            $output[$i]['page'] = $this->repo->findOneById($result->getId());
+            $output[$i]['page'] = $this->pageRepo->findOneById($result->getId());
             $output[$i]['highlights']= $result->getHighlights();
             $output[$i]['$maxScore']= $maxScore;
             $output[$i++]['score']= intval($result->getScore()/$maxScore*100);
@@ -63,43 +64,39 @@ class IndexerModel {
         return $output;
     }
 
-    function addToQuery($url){
-        $url = $this->prepareURL($url);
-        $page = new Page();
-        $page->setStatus(ServiceProcessor::STATUS_AWAITING);
-        $page->setReady(false);
-        $page->setUrl($url);
-        $page->setUser($this->user);
-        $page->setDate(new \DateTime());
-        $this->dm->persist($page);
-        $this->dm->flush();
-        return true;
+    function addDomain($json){
+        try{
+            $data = json_decode($json,true);
+            $data['url']= ServiceProcessor::prepareURL($data['url']);
+            $data['status'] = ServiceProcessor::STATUS_AWAITING;
+            $domain = new Domain($data);
+            $domain->setUser($this->user);
+            $first_page = new Page($data['url']);
+            $first_page->setDomain($domain);
+            $this->dm->persist($domain);
+            $this->dm->persist($first_page);
+            $this->dm->flush();
+            return true;
+        }catch (Exception $e){
+            return false;
+        }
     }
-
-    function getPageStatus($url){
-        $url = $this->prepareURL($url);
-        return $this->repo->findOneBy(array('hash_url'=>md5($url)));
+    function deleteDomainById($id){ //TODO:related page too!
+        $domain = $this->domainRepo->findOneById($id);
+        if($domain){
+            $this->dm->remove($domain);
+            $this->dm->flush();
+            return true;
+        }else{
+            return false;
+        }
     }
-    /*function getDomainInfo($url){
-        $url = $this->prepareURL($url);
-        $parsed_url = parse_url($url);
-        $domain = $parsed_url['host'];
-        $result = $this->dao->getDomainInfo($domain);
-        if(!is_null($result)){
-            return json_encode($result);
+    function getDomainInfo($id){
+        $domain = $this->domainRepo->findOneById($id);
+        if(!is_null($domain)){
+            return json_encode($domain);
         }else{
             return null;
         }
-    }*/
-    public function prepareURL($url){
-        $url = rtrim($url,'/');
-        $url = str_replace(array('\\"','\\\'','\'','"'),'',$url);
-        $url = reset(explode('#',$url));
-        if(substr($url, 0, 2) === '//'){
-            $url = 'http:'.$url;
-        }
-        $url= str_replace('www.','',$url);
-        $url = preg_replace('#(?:http(s)?://)?(.+)#', 'http\1://\2', $url);
-        return $url;
     }
 }

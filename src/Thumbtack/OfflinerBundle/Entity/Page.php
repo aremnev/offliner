@@ -12,7 +12,11 @@ use Thumbtack\OfflinerBundle\Models\ServiceProcessor;
 /**
  * task
  *
- * @ORM\Table()
+ * @ORM\Table(name="indexer_pages",
+ *   uniqueConstraints={
+ *      @ORM\UniqueConstraint(name="search_idx", columns={"hash_url","domain_id"})
+ *  }
+ * )
  * @ORM\Entity
  */
 class Page implements \JsonSerializable{
@@ -26,31 +30,26 @@ class Page implements \JsonSerializable{
     protected $id;
 
     /**
-     * @var User
+     * @var Domain
      *
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="pages")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Domain", inversedBy="pages")
+     * @ORM\JoinColumn(name="domain_id", referencedColumnName="id")
      */
-    protected $user;
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="domain", type="string", length=1000)
-     */
-    protected $domain = '';
+    protected $domain;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="url", type="string", length=65531)
+     * @ORM\Column(name="url", type="string", length=1000)
      */
+
     protected $url = '';
     /**
      * @var string
      *
      * @ORM\Column(name="hash_url", type="string", length=100)
      */
-    protected $hash_url = '';
+    protected $hashUrl = '';
     /**
      * @var string
      *
@@ -88,9 +87,18 @@ class Page implements \JsonSerializable{
      * @ORM\Column(name="date", type="datetime")
      */
     protected $date;
-    public function __construct(){
+    public function __construct($url){
+        $this->status = ServiceProcessor::STATUS_AWAITING;
+        $this->ready = false;
+        $this->setUrl($url);
+        $this->date = new \DateTime();
     }
-
+    /**
+     * @return \Thumbtack\OfflinerBundle\Entity\User
+     */
+    public function getUser() {
+        return $this->domain->getUser();
+    }
     /**
      * Get id
      *
@@ -108,7 +116,7 @@ class Page implements \JsonSerializable{
      */
     public function setUrl($url) {
         $this->url = $url;
-        $this->hash_url = md5($url);
+        $this->hashUrl = md5($url);
         return $this;
     }
 
@@ -236,43 +244,22 @@ class Page implements \JsonSerializable{
         return $this->date;
     }
     /**
-     * @param string $domain
+     * @param Domain $domain
      */
     public function setDomain($domain) {
         $this->domain = $domain;
     }
 
     /**
-     * @return string
+     * @return Domain
      */
     public function getDomain() {
         return $this->domain;
     }
-    /**
-     * Set user
-     *
-     * @param \Thumbtack\OfflinerBundle\Entity\User $user
-     * @return Task
-     */
-    public function setUser(\Thumbtack\OfflinerBundle\Entity\User $user = null) {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \Thumbtack\OfflinerBundle\Entity\User
-     */
-    public function getUser() {
-        return $this->user;
-    }
-
 
     public function __toString() {
-        return json_encode($this->jsonSerialize);
+        return json_encode($this->jsonSerialize());
     }
     public function jsonSerialize() {
-        return array("id"=>$this->id,"url"=>$this->url,'hash_url'=>$this->hash_url,"date"=>$this->date,"title"=>$this->title);
+        return array("id"=>$this->id,"url"=>$this->url,'hash_url'=>$this->hashUrl,"date"=>$this->date,"title"=>$this->title);
     }}

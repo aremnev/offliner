@@ -2,35 +2,15 @@ var app = angular.module("indexerApp",[]);
 app.controller("indexerCtrl",function($scope,$http,$window){
     $scope.url = 'http://www.example.com';
     $scope.searchText = '';
-    $scope.action = 'checkStatus';
+    $scope.action = '';
     $scope.message = '';
     $scope.result = '';
     $scope.links = [];
-    $scope.displayAdd = false;
-    $scope.displayDomain = false;
-    $scope.stat ={'query':0,'progress':0,'done':0};
+    $scope.domains = [];
     $scope.showSMore = false;
     $scope.searchResult = '';
     $scope.showPagesIL = false;
     $scope.loading = false;
-    $scope.getActionName=function(action){
-        if(!action){
-            action = $scope.action;
-        }
-        switch (action){
-            case 'toQuery':
-                return 'Add to indexing queue';
-                break;
-            case 'checkStatus':
-                return 'Check page status';
-                break;
-            case 'domainInfo':
-                return 'Check domain info';
-                break;
-            default :
-                return 'Unknown action';
-        }
-    }
     $scope.showMessage=function(){
         return (!$scope.showPagesIL ? "Show page list":"Hide pages");
     }
@@ -38,51 +18,63 @@ app.controller("indexerCtrl",function($scope,$http,$window){
         return (!div ? '&#59236;':'&#59239;');
     }
 
-    $scope.sendRequest = function(opt_act){
-        var action = 'check';
-        $scope.loading = true;
-        if(opt_act){
-            $scope.action = opt_act;
+    $scope.sendRequest = function(req_action,opt_id,opt_data){
+        var action='';
+        var data = '';
+        var method = '';
+        switch (req_action){
+            case 'getDomains':
+                action = 'domains';
+                method = 'POST';
+                break;
+            case 'newDomain':
+                action = 'domains/new';
+                method = 'POST';
+                data = {url:$scope.url};
+                break;
+            case 'updateDomain':
+                action = 'domains/'+opt_id;
+                method = 'PUT';
+                data = {id:opt_id,url:opt_data.url};
+                break;
+            case 'deleteDomain':
+                action = 'domains/'+opt_id;
+                method = "DELETE";
+                break;
         }
-        switch ($scope.action){
-            case 'toQuery':
-                action = 'toquery';
-                break;
-            case 'checkStatus':
-                action = 'check';
-                break;
-            case 'domainInfo':
-                action = 'domaininfo';
-                break;
-        }
-        $http({method:"POST",url:action,data:{url:$scope.url}})
+        $http({method:method,url:action,data:data})
             .success(function(data, status, headers, config) {
-                switch ($scope.action){
-                    case 'toQuery':
+                switch (req_action){
+                    case 'getDomains':
                         if(data){
-                            $scope.message += '<p><h5>Page:'+$scope.url+' successfuly added to queue</h5>';
-                            $scope.displayAdd = false;
-                            $scope.displayDomain = true;
-                            $scope.sendRequest('getStat');
+                            $scope.domains = data;
                         }else{
-                            $scope.message += '<p><h5>Page:'+$scope.url+' already in database.</h5>';
-                            $scope.displayAdd = false;
-                            $scope.displayDomain = true;
+                            $scope.domains = [];
                         }
                         break;
-                    case 'checkStatus':
-                        $scope.result =$scope.checkTemplate(data);
-                        if($scope.displayAdd == false)
-                            $scope.displayDomain = true;
+                    case 'newDomain':
+                        if(data){
+                            $scope.message = 'Added';
+                            $scope.sendRequest('getDomains');
+                        }else{
+                            $scope.message = 'Something wrong';
+                        }
                         break;
-                    case 'domainInfo':
-                        $scope.result =$scope.domainTemplate(data);
+                    case 'updateDomain':
+                        $scope.message = 'Updated';
                         break;
+                    case 'deleteDomain':
+                        if(data){
+                            $scope.message = 'Deleted';
+                            $scope.sendRequest('getDomains');
+                        }else{
+                            $scope.message = 'Something wrong';
+                        }
+                        break;
+                    default:
                 }
-                $scope.loading = false;
             }).error(function(data, status, headers, config) {
                 $scope.message = 'Response failed! Status:'+status;
-                $scope.loading = false;
             });
     }
 
@@ -91,7 +83,7 @@ app.controller("indexerCtrl",function($scope,$http,$window){
         $scope.loading = true;
         $http({method:"POST",url:'search',data:{text:$scope.searchText}})
             .success(function(data, status, headers, config) {
-                if(data.length > 1){
+                if(data.length > 0){
                     $scope.links = data;
                     $scope.searchResult = '';
                 }else{
@@ -103,30 +95,6 @@ app.controller("indexerCtrl",function($scope,$http,$window){
                 $scope.message = status;
                 $scope.loading = false;
             });
-    }
-
-    $scope.checkTemplate = function(data){
-        var result ='';
-        if(status == 'Not in database'){
-            result += '<p>Page status: '+status+'</p>';
-            result += '<p>You can add this page to indexing queue</p>'
-            $scope.displayAdd = true;
-        }else{
-            result += '<div class="page-info">';
-
-            if(status=='Ready'){
-                result += '<p>'
-                    + '<a href="' + $scope.url + '">' + data.title + '</a> '
-                    + '<a class="label label-info" href="/preview?url=' + data.hash_url + '" target="_blank">'
-                    + '<small> Saved copy</small></a>'
-                    + '</p>';
-            }
-            result += '<p><span class="icon icon-wf">&#127758;</span> ' + data.domain + '</p>';
-            result += '<p>indexed: '+data.date+' </p>';
-            result += '<p>Page status: '+data.status+'</p>';
-            result += '</div>';
-        }
-        return result;
     }
 
     $scope.domainTemplate = function(data){
@@ -158,6 +126,6 @@ app.controller("indexerCtrl",function($scope,$http,$window){
         result += '</div>';
         return result;
     }
-
+    $scope.sendRequest('getDomains');
 });
 

@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * process
  *
- * @ORM\Table()
+ * @ORM\Table(name="service_info")
  * @ORM\Entity
  */
 class Process {

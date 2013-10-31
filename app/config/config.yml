@@ -117,6 +117,7 @@ fos_elastica:
                       title: { boost: 5 }
                       content: { boost: 2 }
                       user:
+                      domain:
                   persistence:
                       driver: orm # orm, mongodb, propel are available
                       model: Thumbtack\OfflinerBundle\Entity\Page

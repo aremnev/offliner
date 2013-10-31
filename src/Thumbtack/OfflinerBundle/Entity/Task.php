@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
 /**
  * task
  *
- * @ORM\Table()
+ * @ORM\Table(name="offliner_tasks")
  * @ORM\Entity
  */
 class Task implements \JsonSerializable {
@@ -41,7 +41,7 @@ class Task implements \JsonSerializable {
     /**
      * @var string
      *
-     * @ORM\Column(name="url", type="string", length=600)
+     * @ORM\Column(name="url", type="string", length=1000)
      */
     protected $url = '';
     /**

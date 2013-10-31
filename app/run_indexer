@@ -1,0 +1,6 @@
+#!/bin/bash
+while [ true ]
+do
+	php ./console indexer:run  &
+	sleep 5
+done

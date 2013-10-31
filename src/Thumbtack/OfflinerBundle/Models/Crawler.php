@@ -4,7 +4,7 @@ namespace Thumbtack\OfflinerBundle\Models;
 
 class Crawler {
     public static function getPage($link){
-        error_reporting(E_ERROR | E_WARNING | E_PARSE);
+        error_reporting(E_ERROR | E_PARSE);
         require_once(__DIR__.'/../Misc/url_to_absolute.php');
         $page = array();
         if(Crawler::retrieve_remote_file_size($link)>1024*1024){ // big files
@@ -23,7 +23,7 @@ class Crawler {
         if (isset($matches[5]))
             $initialEncoding = trim($matches[5],'"\' ');
         if(isset($initialEncoding)){
-            if( $initialEncoding != 'UTF-8' ){
+            if(strtolower($initialEncoding) != 'utf-8' ){
                 $page['html'] = preg_replace('/<meta(.+)charset(.+)>/i','<meta http-equiv="content-type" content="text/html; charset=utf-8">', $page['html']);
                 $page['html'] = mb_convert_encoding($page['html'],'UTF-8',$initialEncoding);
                 }
@@ -40,7 +40,7 @@ class Crawler {
         @$dom->loadHTML($page['html']);
         /*** replace $link if <base> ***/
         $base_xpth = new \DOMXPath($dom);
-        $base_tag = $base_xpth->query('//base');
+        $base_tag = $base_xpth->evaluate('//base');
         $cnt = $base_tag->length;
         for($i = 0; $i< $cnt;$i++){
             $link = $base_tag->item($i)->attributes->getNamedItem('href')->nodeValue;
@@ -48,7 +48,7 @@ class Crawler {
         /*** plaintext to index ***/
         $page['plain'] = '';
         $text_xpth = new \DOMXPath($dom);
-        $text_tags = $text_xpth->query("//text()[not(ancestor::script)][not(ancestor::style)][not(ancestor::noscript)][not(ancestor::form)]");
+        $text_tags = $text_xpth->evaluate("//text()[not(ancestor::script)][not(ancestor::style)][not(ancestor::noscript)]");
 
         $cnt = $text_tags->length;
         for($i = 0; $i< $cnt;$i++){
@@ -60,23 +60,21 @@ class Crawler {
 
         /*** title ***/
         $title_xpth = new \DOMXPath($dom);
-        $title_tag = $title_xpth->query('//title');
-        $cnt = $title_tag->length;
-        for($i = 0; $i< $cnt;$i++){
-            $page['title'] = $title_tag->item(0)->childNodes->item(0)->nodeValue;
-        }
+        $title_tag = $title_xpth->evaluate('//title');
+        $page['title'] = $title_tag->item(0)->nodeValue;
         /*** save inner JS ***/
         preg_match_all("/<script[^>]*>(.*)<.*script>/Uis",
             $page['html'], $innerJS );
         $page['html'] = preg_replace("/<script[^>]*>(.*)<.*script>/Uis",'!!!PUT_SCRIPT_HERE!!!',$page['html']);
         @$dom->loadHTML($page['html']);
-        $a_xpth = new \DOMXPath($dom);
-        $a_tags = $a_xpth->query('//a');
         /*** links ***/
+
+        $a_xpth = new \DOMXPath($dom);
+        $a_tags = $a_xpth->evaluate('//a');
         $links = array();
         $cnt = $a_tags->length;
         for($i = 0; $i< $cnt;$i++){
-            $url = $a_tags->item($i)->getAttribute('href')->nodeValue;
+            $url = $a_tags->item($i)->getAttribute('href');
             $url = url_to_absolute($link,$url);
             $links[] = $url;
             $a_tags->item($i)->setAttribute('href',$url);
@@ -99,7 +97,7 @@ class Crawler {
             $js = Crawler::replaceProperty($js,"<script","</script>","src",$url,1);
             $page['html']= preg_replace("/!!!PUT_SCRIPT_HERE!!!/",$js,$page['html'],1);
         }
-        return $page['html'];
+        return $page;
     }
 
     private static function retrieve_remote_file_size($url){

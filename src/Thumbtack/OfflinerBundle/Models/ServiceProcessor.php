@@ -1,20 +1,15 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: istrelnikov
- * Date: 9/20/13
- * Time: 8:42 PM
- * To change this template use File | Settings | File Templates.
- */
+
 namespace Thumbtack\OfflinerBundle\Models;
-//TODO: error codes/messages
+use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Thumbtack\OfflinerBundle\Entity\Domain;
 use Thumbtack\OfflinerBundle\Entity\Page;
 use Thumbtack\OfflinerBundle\Entity\Process;
 use Thumbtack\OfflinerBundle\Entity\Task;
-use Thumbtack\OfflinerBundle\Entity\User;
 
 class ServiceProcessor {
     const STATUS_AWAITING = 'in queue';
@@ -24,6 +19,9 @@ class ServiceProcessor {
      * @var EntityManager
      */
     private  $dm;
+    /**
+     * @var Registry
+     */
     private  $doctrine;
     /**
      * @var EntityRepository
@@ -42,22 +40,18 @@ class ServiceProcessor {
      * @var Process
      */
     private $process;
-    private $index;
 
     /**
      * @param $doctrine
      * @param integer $mpc
-     * @param $secure
-     * @param $index
      */
-    function __construct($doctrine,$mpc,$index){
+    function __construct($doctrine,$mpc){
         $this->dm = $doctrine->getManager();
         $this->doctrine = $doctrine;
         $this->tasksRepo = $this->dm->getRepository('ThumbtackOfflinerBundle:Task');
         $this->serviceRepo = $this->dm->getRepository('ThumbtackOfflinerBundle:Process');
         $this->pagesRepo = $this->dm->getRepository('ThumbtackOfflinerBundle:Page');
         $this->maxProcessCount = $mpc;
-        $this->index = $index;
     }
     public function runQueueTask(){
         if($this->regProcess()){
@@ -88,16 +82,22 @@ class ServiceProcessor {
              */
             $page = $this->pagesRepo->findOneByStatus(ServiceProcessor::STATUS_AWAITING);
             if(isset($page)){
+                $domain = $page->getDomain();
                 $page->setStatus(ServiceProcessor::STATUS_PROGRESS);
                 $this->dm->persist($page);
                 $this->dm->flush();
 
                 $parsed_page = Crawler::getPage($page->getUrl());
                 if($parsed_page){
-                    $user = $page->getUser();
-                    $indexer = new IndexerModel($user,$this->index,$this->doctrine);
                     foreach($parsed_page['links'] as $link){
-                        $indexer->addToQuery($link);
+                        $link = ServiceProcessor::prepareURL($link);
+                        $existed = $this->pagesRepo->findOneByHashUrl(md5($link));
+                        if($this->checkDomain($link,$domain->getHost()) && !$existed){
+                            $newPage = new Page($link);
+                            $newPage->setDomain($domain);
+                            $this->dm->persist($newPage);
+                            $this->dm->flush();
+                        }
                     }
                     $page->setReady(true);
                     $page->setStatus(ServiceProcessor::STATUS_READY);
@@ -137,6 +137,10 @@ class ServiceProcessor {
             $this->dm->clear();
         }
     }
+    private function checkDomain($url,$domainHost){
+        $parsed = parse_url($url);
+        return $parsed['host'] == $domainHost;
+    }
     /**
      * @param Task $task
      * @param string $savePath
@@ -158,5 +162,17 @@ class ServiceProcessor {
         });
         ";
         return $res;
+    }
+    public static function prepareURL($url){
+        $url = rtrim($url,'/');
+        $url = str_replace(array('\\"','\\\'','\'','"'),'',$url);
+        $tmp = explode('#',$url);
+        $url = reset($tmp);
+        if(substr($url, 0, 2) === '//'){
+            $url = 'http:'.$url;
+        }
+        $url= str_replace('www.','',$url);
+        $url = preg_replace('#(?:http(s)?://)?(.+)#', 'http\1://\2', $url);
+        return $url;
     }
 }

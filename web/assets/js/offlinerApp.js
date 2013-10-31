@@ -50,21 +50,14 @@ app.controller("offlinerCtrl",function($scope,$http,$window){
                 data = {url:$scope.url,onlyDomain:$scope.onlyDomain,clearScripts:$scope.clearScripts,maxDepth:$scope.maxDepth};
                 break;
             case 'updateTask':
-                action = 'tasks/new';
+                action = 'tasks/'+opt_id;
                 method = 'PUT';
                 data = {id:opt_id,url:opt_data.url,onlyDomain:opt_data.onlyDomain,clearScripts:opt_data.clearScripts,maxDepth:opt_data.maxDepth};
-                break;
-            case 'getStat':
-                action = 'stat';
-                method = 'GET';
                 break;
             case 'deleteTask':
                 action = 'tasks/'+opt_id;
                 method = "DELETE";
                 break;
-            default:
-                action = 'stat';
-                method = "GET";
         }
         $http({method:method,url:action,data:data})
             .success(function(data, status, headers, config) {
@@ -84,9 +77,6 @@ app.controller("offlinerCtrl",function($scope,$http,$window){
                         }else{
                             $scope.message = 'Something wrong';
                         }
-                        break;
-                    case 'getStat':
-                        $scope.stat ={'queue':data['queue'],'progress':data.progress,'done':data.done};
                         break;
                     case 'updateTask':
                         $scope.message = 'Updated';

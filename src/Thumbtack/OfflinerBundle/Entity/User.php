@@ -62,19 +62,13 @@ class User implements UserInterface, \Serializable {
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Task", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Task", mappedBy="user",cascade={"persist", "remove"})
      */
     protected $tasks = '';
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Page", mappedBy="user")
-     */
-    protected $pages = '';
-    /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Domain", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Domain", mappedBy="user",cascade={"persist", "remove"})
      */
     protected $domains = '';
     /**
@@ -82,7 +76,7 @@ class User implements UserInterface, \Serializable {
      */
     public function __construct() {
         $this->tasks = new ArrayCollection();
-        $this->pages = new ArrayCollection();
+        $this->domains = new ArrayCollection();
     }
 
     /**
@@ -115,33 +109,33 @@ class User implements UserInterface, \Serializable {
         return $this->tasks;
     }
     /**
-     * Add page
+     * Add domain
      *
-     * @param \Thumbtack\OfflinerBundle\Entity\Page $page
+     * @param \Thumbtack\OfflinerBundle\Entity\Domain $domain
      * @return User
      */
-    public function addPage(\Thumbtack\OfflinerBundle\Entity\Page $page) {
-        $this->pages[] = $page;
+    public function addDomain(\Thumbtack\OfflinerBundle\Entity\Domain $domain) {
+        $this->domains[] = $domain;
 
         return $this;
     }
 
     /**
-     * Remove page
+     * Remove domain
      *
-     * @param \Thumbtack\OfflinerBundle\Entity\Page $page
+     * @param \Thumbtack\OfflinerBundle\Entity\Domain $domain
      */
-    public function removePage(\Thumbtack\OfflinerBundle\Entity\Page $page) {
-        $this->tasks->removeElement($page);
+    public function removeDomain(\Thumbtack\OfflinerBundle\Entity\Domain $domain) {
+        $this->domains->removeElement($domain);
     }
 
     /**
-     * Get tasks
+     * Get domains
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getPages() {
-        return $this->pages;
+    public function getDomains() {
+        return $this->domains;
     }
 
     /**

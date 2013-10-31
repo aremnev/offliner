@@ -51,15 +51,6 @@ class OfflinerController extends BaseController {
             return $response;
         }
     }
-    /**
-     * @Route("/uploads/{path}", name="getFromUploads")
-     */
-    public function getFromUploadsAction($path) {
-        $upload_path = '/home/istrelnikov/offliner_uploads/'; //TODO: make as parameter
-        $response = new \Symfony\Component\HttpFoundation\Response(file_get_contents($upload_path.$path));
-        $response->headers->set('Content-Type', 'application/zip');
-        return $response;
-    }
 
     /**
      * @Route("/tasks/{id}", requirements={"id" = "\d+"}, defaults={"id" = null} , name="taskDelete")
@@ -76,8 +67,15 @@ class OfflinerController extends BaseController {
         return $response;
     }
 
-    //TODO: tasks update
-
+    /**
+     * @Route("/uploads/{path}", name="getFromUploads")
+     */
+    public function getFromUploadsAction($path) {
+        $upload_path = '/home/istrelnikov/offliner_uploads/'; //TODO: make as parameter
+        $response = new \Symfony\Component\HttpFoundation\Response(file_get_contents($upload_path.$path));
+        $response->headers->set('Content-Type', 'application/zip');
+        return $response;
+    }
     /**
      * @Route("/stat", name="stat")
      * @Method ({"GET"})

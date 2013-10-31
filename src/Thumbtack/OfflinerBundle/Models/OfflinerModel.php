@@ -11,8 +11,6 @@ namespace Thumbtack\OfflinerBundle\Models;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\Validator\Constraints\DateTime;
-use Thumbtack\OfflinerBundle\Entity\Process;
 use Thumbtack\OfflinerBundle\Entity\Task;
 use Thumbtack\OfflinerBundle\Entity\User;
 
@@ -44,8 +42,7 @@ class OfflinerModel {
     function addTaskToQueue($json){
         try{
             $data = json_decode($json,true);
-
-            $data['url']= $this->prepareURL($data['url']);
+            $data['url']= ServiceProcessor::prepareURL($data['url']);
             $data['status'] = ServiceProcessor::STATUS_AWAITING;
             if(!isset($data['id'])){
                 $task = new Task($data);
@@ -94,16 +91,5 @@ class OfflinerModel {
         $result['done'] = $query->getSingleScalarResult();
         return $result;
     }
-    public function prepareURL($url){
-        $url = rtrim($url,'/');
-        $url = str_replace(array('\\"','\\\'','\'','"'),'',$url);
-        $tmp = explode('#',$url);
-        $url = reset($tmp);
-        if(substr($url, 0, 2) === '//'){
-            $url = 'http:'.$url;
-        }
-        $url= str_replace('www.','',$url);
-        $url = preg_replace('#(?:http(s)?://)?(.+)#', 'http\1://\2', $url);
-        return $url;
-    }
+
 }
