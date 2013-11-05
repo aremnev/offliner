@@ -41,8 +41,9 @@ class OfflinerModel {
 
     function addTaskToQueue($json){
         try{
+            require_once(__DIR__.'/../Misc/normilize_url.php');
             $data = json_decode($json,true);
-            $data['url']= ServiceProcessor::prepareURL($data['url']);
+            $data['url']= normilize_url($data['url']);
             $data['status'] = ServiceProcessor::STATUS_AWAITING;
             if(!isset($data['id'])){
                 $task = new Task($data);

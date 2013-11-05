@@ -66,8 +66,9 @@ class IndexerModel {
 
     function addDomain($json){
         try{
+            require_once(__DIR__.'/../Misc/normilize_url.php');
             $data = json_decode($json,true);
-            $data['url']= ServiceProcessor::prepareURL($data['url']);
+            $data['url']= normilize_url($data['url']);
             $data['status'] = ServiceProcessor::STATUS_AWAITING;
             $domain = new Domain($data);
             $domain->setUser($this->user);

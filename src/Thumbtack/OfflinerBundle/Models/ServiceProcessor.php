@@ -86,11 +86,11 @@ class ServiceProcessor {
                 $page->setStatus(ServiceProcessor::STATUS_PROGRESS);
                 $this->dm->persist($page);
                 $this->dm->flush();
-
+                require_once(__DIR__.'/../Misc/normilize_url.php');
                 $parsed_page = Crawler::getPage($page->getUrl());
                 if($parsed_page){
                     foreach($parsed_page['links'] as $link){
-                        $link = ServiceProcessor::prepareURL($link);
+                        $link = normilize_url($link);
                         $existed = $this->pagesRepo->findOneByHashUrl(md5($link));
                         if($this->checkDomain($link,$domain->getHost()) && !$existed){
                             $newPage = new Page($link);
@@ -163,16 +163,5 @@ class ServiceProcessor {
         ";
         return $res;
     }
-    public static function prepareURL($url){
-        $url = rtrim($url,'/');
-        $url = str_replace(array('\\"','\\\'','\'','"'),'',$url);
-        $tmp = explode('#',$url);
-        $url = reset($tmp);
-        if(substr($url, 0, 2) === '//'){
-            $url = 'http:'.$url;
-        }
-        $url= str_replace('www.','',$url);
-        $url = preg_replace('#(?:http(s)?://)?(.+)#', 'http\1://\2', $url);
-        return $url;
-    }
+
 }

@@ -8,6 +8,7 @@ body{
 a span.icon:hover{
     text-underline-position: left;
 }
+
 .logout{
     min-width: 230px;
     float: right;
