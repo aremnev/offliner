@@ -37,7 +37,9 @@ class Crawler {
         }
        /*** a new dom object ***/
         $dom = new \DOMDocument();
-        @$dom->loadHTML($page['html']);
+        $dom->recover=TRUE;
+        $dom->stricterrorchecking = FALSE;
+        $dom->loadHTML($page['html']);
         /*** replace $link if <base> ***/
         $base_xpth = new \DOMXPath($dom);
         $base_tag = $base_xpth->evaluate('//base');

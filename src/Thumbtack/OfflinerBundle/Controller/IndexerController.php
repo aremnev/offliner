@@ -67,7 +67,7 @@ class IndexerController extends BaseController {
      * @Route("/domains/{id}", requirements={"id" = "\d+"}, defaults={"id" = null} , name="domainsDelete")
      * @Method ({"DELETE"})
      */
-    public function taskDeleteAction($id){
+    public function domainDeleteAction($id){
         /**
          * @var IndexerModel $indexer
          */
