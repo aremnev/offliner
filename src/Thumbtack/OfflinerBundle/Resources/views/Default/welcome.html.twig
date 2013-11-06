@@ -2,14 +2,14 @@
 {% block global_stat %}
 
     {% verbatim %}
-    <div ng-controller="mainCtrl" class="stats stats-theme-light pull-right" title="Click to refresh stat"">
+    <div ng-controller="mainCtrl" class="stats stats-theme-light pull-right" title="Click to refresh stat">
         <span class="stats-item"><span class="stats-label"></span>
             <span class="stats-count">Offliner</span>
             <span class="stats-count">Indexer</span>
         </span>
         <span class="stats-item"><span class="stats-label">tasks count</span>
              <span class="stats-count">{{stat.queue}}</span>
-             <span class="stats-count">680</span>
+             <span class="stats-count">87</span>
         </span>
 
         <span class="stats-item"><span class="stats-label">Status</span>
@@ -18,11 +18,11 @@
         </span>
         <span class="stats-item"><span class="stats-label">done</span>
              <span class="stats-count">{{stat.done}}</span>
-             <span class="stats-count">87.4%</span>
+             <span class="stats-count">47.4%</span>
         </span>
     </div>
     {% endverbatim %}
-    <div class="logged pull-right">Logged as: {{app.user.nickname}} </div>
+    <!--<div class="logged pull-right">Logged as: {{ app.user.nickname|length > 6 ? app.user.nickname|slice(0, 6) ~ '...' : app.user.nickname  }} </div>-->
 {% endblock %}
 
 {% block data %}
@@ -38,14 +38,14 @@
                 <div ng-controller="offlinerCtrl">
                     <div  ng-if="loading" class="loading"><p>L<span class="rotateO"></span>ading...</p></div>
                     <div class="panel">
-                        <small>Offliner service allows download any website fully!
-                            <p>Мы рекомендуем выставлять галочку 'Clear Scripts' ввиду того что существует возможность искажения сохраненых страниц. </small>
+                       Beta service! Offliner allows download any website fully! When task be ready your can download zip with website content.
+                       <p>NOTE: 'Clear Scripts' option may dramatically change the ready page quality.
                         <div class="new-task-form">
                             <form >
-                                <span><span class="icon icon-wf">&#59238;</span>URL <input type="url" ng-model="url"></span>
-                                <span> <span class="icon icon-wf">&#59238;</span>Domain Only<input type="checkbox" ng-model="onlyDomain" ></span>
-                                <span> <span class="icon icon-wf">&#59238;</span>Clear Scripts<input type="checkbox" ng-model="clearScripts" ></span>
-                                <span> <span class="icon icon-wf">&#59238;</span>Crawl depth<input type="number" ng-model="maxDepth" ng-change="validate()"></span>
+                                <span>URL <input type="url" ng-model="url"></span>
+                                <span>Domain Only<input type="checkbox" ng-model="onlyDomain" ></span>
+                                <span>Clear Scripts<input type="checkbox" ng-model="clearScripts" ></span>
+                                <span>Crawl depth<input type="number" ng-model="maxDepth" ng-change="validate()"></span>
                                 <button class="btn btn-info btn-large" type="submit" ng-click="sendRequest('newTask')">Create new task</button>
                             </form>
                         </div>
@@ -108,11 +108,11 @@
                 <div ng-controller="indexerCtrl">
                     <div  ng-if="loading" class="loading"><p>L<span class="rotateO"></span>ading...</p></div>
                     <div class="panel">
-                        <small>Indexer service allows получать результаты поиска по вашему сайту в виде JSON не утруждаясь ничем =) !
-                            <p>Для доступа к поисковому индексу с вашего сайта читайте <a href="#">документацию</a> </small>
+                        Manage domains in your search index . Answers? <a href="#">Quick Tour</a>
+                        <p>Read <a href="#">API References</a> for link it to your website.
                         <div class="new-domain-form">
                             <form >
-                                <span><span class="icon icon-wf">&#59238;</span>URL <input type="url" ng-model="url"></span>
+                                <span>URL <input type="url" ng-model="url"></span>
                                 <button class="btn btn-info btn-large" type="submit" ng-click="sendRequest('newDomain')">Add to my domains</button>
                             </form>
                         </div>
@@ -152,11 +152,11 @@
                 <div ng-controller="indexerCtrl">
                     <div  ng-if="loading" class="loading"><p>L<span class="rotateO"></span>ading...</p></div>
                     <div class="panel">
-                        <small>Проверьте выдачу результатов по вашему поисковому индексу
-                            <p>Для доступа к поисковому индексу с вашего сайта читайте <a href="#">документацию</a> </small>
+                        Check search results from your own index
+                        <p>Read <a href="#">API References</a> for link it to your website.
                         <div class="search-form">
                             <form>
-                                <span class="icon icon-wf">&#59238;</span>Search text <input type="text"  placeholder="Search"  ng-submit="sendSearchRequest()" ng-model="searchText" class="panel-input">
+                                <input type="text"  placeholder="Search"  ng-submit="sendSearchRequest()" ng-model="searchText" class="panel-input">
                                 <button type="submit" class="btn btn-success btn-large" ng-click="sendSearchRequest()" >Search</button>
                             </form>
                         </div>

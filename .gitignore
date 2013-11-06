@@ -16,3 +16,4 @@ completed_tasks
 *.log
 *.tmp
 .composer.lock
+/web/tmp_main

@@ -3,6 +3,7 @@
 {% block global_stat %}
     {% verbatim %}
     <div class="stats stats-theme-light pull-right">
+        <span style="display: inline-block;"><span class="stats-label"></span> <span class="stats-count" style="font-size: 100%">FOLLOW US:</span></span>
         <span class="stats-item"><span class="stats-label">Twitter</span> <span class="stats-count"><span class="icon icon-wf "></span></span></span>
         <span class="stats-item"><span class="stats-label">Google</span> <span class="stats-count"><span class="icon icon-wf"></span></span></span>
         <a href="https://github.com/aremnev/offliner"><span class="stats-item"><span class="stats-label">Github</span> <span class="stats-count"><span class="icon icon-wf ">&#62208;</span></span></span></a>
@@ -15,7 +16,7 @@
         <div  ng-if="false" class="loading"><p>L<span class="rotateO"></span>ading...</p></div>
         <div class="tabs-left" >
             <ul class="nav nav-tabs">
-                <li style="color: #808080" class="disabled">
+                <li style="color: #808080;font-size: 110%;" class="disabled">
                     Social login:
                 </li>
                 <li class="social disabled">
@@ -33,8 +34,8 @@
                 <div class="panel">
                 <h4> Hello! Sign-up and get started!</h4>
                     <p>
-                        <button type="submit" ng-click="register=false" class="btn btn-info btn-small" >Login</button>
-                        <button type="submit" ng-click="register=true" class="btn btn-info btn-small" >Register</button>
+                        <button type="submit" ng-click="register=false" ng-class="{'active': !register}" class="btn btn-info btn-small" >Login</button>
+                        <button type="submit" ng-click="register=true" ng-class="{'active': register}" class="btn btn-info btn-small" >Register</button>
                         <button type="submit" class="btn btn-info btn-small" >Forgot password</button>
                         <span style="display:inline-block;min-width: 10em"></span>
                     </p>
@@ -42,19 +43,21 @@
                  </div>
                 <div class="page-content">
                  <div class="login-form" ng-show="!register">
-                    <form>
+                    <form ng-submit="sendLoginRequest()">
                         <h5>Sign-in: </h5>
                         <input type="email" placeholder="E-mail" ng-model="email" class="panel-input">
                         <input type="password" placeholder="Password" ng-model="pass" class="panel-input">
+                        <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
                     </form>
                      <p><button type="submit" ng-click="sendLoginRequest()" class="btn btn-success btn-large" >Login</button>
                  </div>
                 <div class="register-form" ng-show="register" >
-                    <form>
+                    <form ng-submit="sendRegisterRequest()">
                         <h5>Sign-up: </h5>
-                        <input type="text" placeholder="Nickname" ng-model="nick" class="panel-input">
+                        <input type="text" required placeholder="Nickname" ng-model="nick" class="panel-input">
                         <input type="email" placeholder="E-mail" ng-model="email" class="panel-input">
-                        <input type="password" placeholder="Password" ng-model="pass" class="panel-input">
+                        <input type="password" min="6" placeholder="Password" ng-model="pass" class="panel-input">
+                        <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
                     </form>
                     <p><button type="submit" ng-click="sendRegisterRequest()" class="btn btn-success btn-large" >Register</button>
                 </div>

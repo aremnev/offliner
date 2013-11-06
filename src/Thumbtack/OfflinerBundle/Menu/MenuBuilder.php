@@ -21,6 +21,10 @@ class MenuBuilder {
 
     public function mainMenu(Request $request) {
         $menu = $this->factory->createItem('root');
+        $menu->addChild('Get Start', array('uri' => '#'));
+        $menu->addChild('Quick Tour', array('uri' => '#'));
+        $menu->addChild('API References', array('uri' => '#'));
+        $menu->addChild('Live Demo', array('uri' => '#'));
         $menu->addChild('About', array('route' => 'about'));
         $menu->addChild('Contact', array('uri' => '#'));
         $menu->setChildrenAttribute('class', 'nav');

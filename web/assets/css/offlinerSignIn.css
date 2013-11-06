@@ -116,7 +116,7 @@ body{
 .navbar .brand {
     display: block;
     float: left;
-    font-size: 2.1429em;
+    font-size: 2.5em;
     font-weight: bold;
     padding: 25px 20px 0;
     margin: 0;
@@ -127,7 +127,7 @@ body{
     padding: 0;
     text-shadow: none;
     color: #fff;
-    font-size: 2.1429em;
+    font-size:1.5em;
     font-weight: bold;
 }
 .navbar .nav>li>a:hover{

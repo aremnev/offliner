@@ -1,7 +1,7 @@
 'use strict';
 
 var app = angular.module("offlinerSignInApp",['ui.bootstrap']);
-
+//TODO: validation
 app.controller("mainCtrl",function($scope,$http,$window){
     $scope.message = '';
    $scope.loading = false;
