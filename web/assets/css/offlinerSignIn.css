@@ -7,6 +7,10 @@ body{
 }
 .register-form form,
 .login-form form{
+    margin-left: 2em;
+}
+.register-form form > div,
+.login-form form > div{
     padding: 25px;
     border-radius: 3px;
     border-left: 3px lightgray solid;
@@ -16,6 +20,7 @@ body{
 .login-form button{
     margin-left: 4em;
     min-width: 10em;
+
 }
 .register-form input,
 .login-form input{

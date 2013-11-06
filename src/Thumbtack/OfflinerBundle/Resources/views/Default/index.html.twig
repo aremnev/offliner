@@ -44,22 +44,25 @@
                 <div class="page-content">
                  <div class="login-form" ng-show="!register">
                     <form ng-submit="sendLoginRequest()">
-                        <h5>Sign-in: </h5>
-                        <input type="email" placeholder="E-mail" ng-model="email" class="panel-input">
-                        <input type="password" placeholder="Password" ng-model="pass" class="panel-input">
-                        <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
+                        <div>
+                            <h5>Sign-in: </h5>
+                            <input type="email" required placeholder="E-mail" ng-model="email" class="panel-input">
+                            <input type="password" required placeholder="Password" ng-model="pass" class="panel-input">
+                        </div>
+                        <p><button type="submit" class="btn btn-success btn-large" >Login</button>
                     </form>
-                     <p><button type="submit" ng-click="sendLoginRequest()" class="btn btn-success btn-large" >Login</button>
+
                  </div>
                 <div class="register-form" ng-show="register" >
                     <form ng-submit="sendRegisterRequest()">
-                        <h5>Sign-up: </h5>
-                        <input type="text" required placeholder="Nickname" ng-model="nick" class="panel-input">
-                        <input type="email" placeholder="E-mail" ng-model="email" class="panel-input">
-                        <input type="password" min="6" placeholder="Password" ng-model="pass" class="panel-input">
-                        <input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>
+                        <div>
+                            <h5>Sign-up: </h5>
+                            <input type="text" required placeholder="Nickname" ng-model="nick" class="panel-input">
+                            <input type="email" required placeholder="E-mail" ng-model="email" class="panel-input">
+                            <input type="password" required placeholder="Password" ng-model="pass" class="panel-input">
+                        </div>
+                        <p><button type="submit" class="btn btn-success btn-large" >Register</button>
                     </form>
-                    <p><button type="submit" ng-click="sendRegisterRequest()" class="btn btn-success btn-large" >Register</button>
                 </div>
                 </div>
 
