@@ -15,59 +15,54 @@
     <div class="row-fluid">
         <div  ng-if="false" class="loading"><p>L<span class="rotateO"></span>ading...</p></div>
         <div class="tabs-left" >
-            <ul class="nav nav-tabs">
-                <li style="color: #808080;font-size: 110%;" class="disabled">
-                    Social login:
-                </li>
-                <li class="social disabled">
-                     <a href="connect/google"><span class="icon icon-wf"></span>
-                                Google+
-                     </a>
-                </li>
-                <li class="social disabled">
-                    <a href="connect/facebook"><span class="icon icon-wf "></span>
-                            Facebook
-                    </a>
-                </li>
-            </ul>
-            <div class="tab-content">
                 <div class="panel">
-                <h4> Hello! Sign-up and get started!</h4>
-                    <p>
-                        <button type="submit" ng-click="register=false" ng-class="{'active': !register}" class="btn btn-info btn-small" >Login</button>
-                        <button type="submit" ng-click="register=true" ng-class="{'active': register}" class="btn btn-info btn-small" >Register</button>
-                        <button type="submit" class="btn btn-info btn-small" >Forgot password</button>
-                        <span style="display:inline-block;min-width: 10em"></span>
-                    </p>
+                <h4> Hello! You are not authorized. Please use forms below and get started!</h4>
                     {{message}}
                  </div>
                 <div class="page-content">
-                 <div class="login-form" ng-show="!register">
+                 <span class="login-form">
                     <form ng-submit="sendLoginRequest()">
-                        <div>
-                            <h5>Sign-in: </h5>
+                        <div class="bordered">
+                            <h4>Log in:</h4>
                             <input type="email" required placeholder="E-mail" ng-model="email" class="panel-input">
                             <input type="password" required placeholder="Password" ng-model="pass" class="panel-input">
+                            <p><a href="recover">Forgot password</a>
                         </div>
-                        <p><button type="submit" class="btn btn-success btn-large" >Login</button>
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-success btn-large" >Login</button>
+                        </div>
+                        <p style="margin: 0">
+                        <ul class="nav nav-tabs">
+
+                            <li class="social disabled">
+                                <a href="connect/google"><span class="icon icon-wf"></span>
+                                    Google+
+                                </a>
+                            </li>
+                            <li class="social disabled">
+                                <a href="connect/facebook"><span class="icon icon-wf "></span>
+                                    Facebook
+                                </a>
+                            </li>
+                        </ul>
                     </form>
 
-                 </div>
-                <div class="register-form" ng-show="register" >
+                 </span>
+                    <span style="margin-left:3em;font-size: 200%">&laquo&raquo</span>
+                <span class="register-form">
                     <form ng-submit="sendRegisterRequest()">
-                        <div>
-                            <h5>Sign-up: </h5>
+                        <div class="bordered">
+                            <h4>Register </h4>
                             <input type="text" required placeholder="Nickname" ng-model="nick" class="panel-input">
                             <input type="email" required placeholder="E-mail" ng-model="email" class="panel-input">
                             <input type="password" required placeholder="Password" ng-model="pass" class="panel-input">
                         </div>
-                        <p><button type="submit" class="btn btn-success btn-large" >Register</button>
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-success btn-large" >Register</button>
+                        </div>
                     </form>
+                </span>
                 </div>
-                </div>
-
-
-            </div>
          </div>
     </div>
     {% endverbatim %}

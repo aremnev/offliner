@@ -1,5 +1,8 @@
 @import "bootstrap-responsive.min.css";
 @import "../fonts/fonts.css";
+input, button, select, textarea{
+    font-family: 'Ubuntu', sans-serif;
+}
 body{
     font-family: 'Ubuntu', sans-serif;
     padding-top: 80px;
@@ -7,21 +10,33 @@ body{
 }
 .register-form form,
 .login-form form{
-    margin-left: 2em;
+    margin-left: 15em;
+    display: inline-table;
 }
-.register-form form > div,
-.login-form form > div{
+.register-form form .bordered,
+.login-form form .bordered{
     padding: 25px;
     border-radius: 3px;
     border-left: 3px lightgray solid;
     min-height: 12em;
 }
-.register-form button,
-.login-form button{
-    margin-left: 4em;
-    min-width: 10em;
 
+.register-form div.btn-group,
+.login-form div.btn-group{
+    padding: 25px 25px 0 25px;
 }
+.register-form div.btn-group.social .btn,
+.login-form div.btn-group.social .btn{
+    padding: 0;
+    min-height: 20px;
+    min-width: 4.9em;
+}
+
+.register-form div.btn-group button,
+.login-form div.btn-group button{
+    min-width: 10em;
+}
+
 .register-form input,
 .login-form input{
     display: block;
@@ -174,17 +189,18 @@ body{
 .social .icon {
     font-family: EntypoSocial !important;
 }
+.social .icon-wf,
 .icon-wf {
     font-family: Entypo;
-    font-size: 32px;
+    font-size: 15px;
     font-style: normal;
     display: inline-block;
     vertical-align: middle;
     width: 18px;
-    height: 18px;
+    height: 14px;
     line-height: 0;
     vertical-align: bottom;
-    color: #7f7f7f;
+    color: #fff;
     background: none;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -197,13 +213,15 @@ body{
 .icon-action {
     cursor: pointer;
 }
-
+.nav-tabs{
+    border-bottom: none;
+}
 .tabs-left .nav-tabs .icon {
-    font-size: 64px;
+    font-size: 32px;
     display: block;
     margin: 0 auto;
-    width: 48px;
-    height: 48px;
+    width: 24px;
+    height: 24px;
     line-height: 16px;
     color: #aaa;
 }
@@ -222,14 +240,15 @@ body{
 }
 .stats-item:hover {
     background-color: #fff;
+    color: #000;
 }
+
 .stats-item:hover .icon {
     color: #000;
 }
 
 .tabs-left .nav-tabs li {
     margin: 10px;
-    border-bottom: 1px solid #c4c4c4;
     box-shadow: 0 1px 0 #fff;
 }
 

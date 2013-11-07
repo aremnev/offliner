@@ -2,24 +2,11 @@
 {% block global_stat %}
 
     {% verbatim %}
-    <div ng-controller="mainCtrl" class="stats stats-theme-light pull-right" title="Click to refresh stat">
-        <span class="stats-item"><span class="stats-label"></span>
-            <span class="stats-count">Offliner</span>
-            <span class="stats-count">Indexer</span>
-        </span>
-        <span class="stats-item"><span class="stats-label">tasks count</span>
-             <span class="stats-count">{{stat.queue}}</span>
-             <span class="stats-count">87</span>
-        </span>
-
-        <span class="stats-item"><span class="stats-label">Status</span>
-             <span class="stats-count stats-mini">awaiting</span>
-             <span class="stats-count stats-mini">index refreshing</span>
-        </span>
-        <span class="stats-item"><span class="stats-label">done</span>
-             <span class="stats-count">{{stat.done}}</span>
-             <span class="stats-count">47.4%</span>
-        </span>
+    <div class="stats stats-theme-light pull-right social">
+        <span style="display: inline-block;"><span class="stats-label"></span> <span class="stats-count" style="font-size: 100%">FOLLOW US:</span></span>
+        <span class="stats-item"><span class="stats-label">Twitter</span> <span class="stats-count"><span class="icon icon-wf "></span></span></span>
+        <span class="stats-item"><span class="stats-label">Google</span> <span class="stats-count"><span class="icon icon-wf"></span></span></span>
+        <a href="https://github.com/aremnev/offliner"><span class="stats-item"><span class="stats-label">Github</span> <span class="stats-count"><span class="icon icon-wf ">&#62208;</span></span></span></a>
     </div>
     {% endverbatim %}
     <!--<div class="logged pull-right">Logged as: {{ app.user.nickname|length > 6 ? app.user.nickname|slice(0, 6) ~ '...' : app.user.nickname  }} </div>-->
@@ -29,6 +16,20 @@
     {% verbatim %}
     <div class="row-fluid">
         <tabset class="tabbable tabs-left">
+            <tab>
+                <tab-heading>
+                    <span class="icon icon-wf ">&#128240;</span>
+                    Profile
+                </tab-heading>
+                <div>
+                    <div class="loading"><p>In w<span class="rotateO"></span>rk</p></div>
+                    <div class="panel">
+                    {% endverbatim %}
+                    You are logged-in as <span class="username">{{ app.user.nickname }}</span>, manage your api keys and info below</a>.
+                    {% verbatim %}
+                    </div>
+                </div>
+            </tab>
             <tab>
                 <tab-heading>
                     <span style="float: right; vertical-align:top;font-size: 100%;color: red;">beta</span>
@@ -181,7 +182,7 @@
                     </div>
                 </div>
             </tab>
-            <tab>
+            <tab class="disabled">
                 <tab-heading>
                     Logout
                 </tab-heading>

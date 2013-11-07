@@ -89,4 +89,19 @@ class RootController extends BaseController {
 
         return $this->render('ThumbtackOfflinerBundle:Default:about.html.php');
     }
+    /**
+     * @Route("/userstat", name="userstat")
+     * @Route("/profile", name="profile")
+     * @Route("/recover", name="recover")
+     * @Route("/contacts", name="contacts")
+     * @Route("/quicktour", name="quicktour")
+     * @Route("/getstart", name="getstart")
+     * @Route("/api", name="api")
+     * @Route("/demo", name="demo")
+     */
+    public function todoAction() {
+
+        return $this->render('ThumbtackOfflinerBundle:Default:todo.html.twig');
+    }
+
 }

@@ -63,7 +63,7 @@ a span.icon:hover{
 
 .loading{
     position: fixed;
-    left: 0px;
+    left: 141px;
     right: 0px;
     background-color: rgba(0,0,0,0.15);
     opacity: 0.9;
@@ -271,6 +271,22 @@ input[type='url']{
 .icon {
     display: inline-block;
 }
+.username{
+    font-size: 120%;
+}
+.social .icon-wf {
+    font-family: EntypoSocial !important;
+}
+.stats .icon {
+    font-family: EntypoSocial !important;
+    font-size: 64px;
+    display: block;
+    margin: 0 auto;
+    width: 48px;
+    height: 48px;
+    line-height: 30px;
+    color: #fff;
+}
 .icon-wf span,
 .icon-wf {
     font-family: Entypo;
@@ -280,7 +296,7 @@ input[type='url']{
     vertical-align: middle;
     width: 18px;
     height: 18px;
-    line-height: 0;
+    line-height: 17px;
     vertical-align: bottom;
     color: #7f7f7f;
     background: none;
