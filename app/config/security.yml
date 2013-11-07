@@ -14,16 +14,14 @@ security:
         dev:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/
             security: false
-
-        login:
-            pattern:  ^/demo/secured/login$
-            security: false
-
         secured_area:
             pattern:    ^/
-            anonymous: true
+            anonymous: ~
+            form_login:
+                always_use_default_target_path: true
+                default_target_path: /
             #http_basic:
-            #    realm: "Secured Demo Area"
+
             oauth:
                             resource_owners:
                                 google:        "/login/check-google"
@@ -39,7 +37,13 @@ security:
                 target: /
                 invalidate_session: false
     access_control:
-        - { path: ^/tasks, roles: IS_AUTHENTICATED_FULLY  }
         - { path: ^/signin, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/connect, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/uploads, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/preview, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/$, roles: IS_AUTHENTICATED_FULLY  }
+        - { path: ^/stat$, roles: IS_AUTHENTICATED_FULLY  }
+        - { path: ^/tasks, roles: IS_AUTHENTICATED_FULLY  }
+        - { path: ^/domains, roles: IS_AUTHENTICATED_FULLY  }
+        - { path: ^/search, roles: IS_AUTHENTICATED_FULLY  }

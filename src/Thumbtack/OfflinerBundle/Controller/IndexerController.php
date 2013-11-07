@@ -51,16 +51,10 @@ class IndexerController extends BaseController {
         /**
          * @var User $user
          */
-        if($this->isUserLogged()){
-            $user = $this->getUser();
-            $response = new Response(json_encode($user->getDomains()->toArray()));
-            $response->headers->set('Content-Type', 'application/json');
-            return $response;
-        }else{
-            $response = new Response('');
-            $response->headers->set('Content-Type', 'application/json');
-            return $response;
-        }
+        $user = $this->getUser();
+        $response = new Response(json_encode($user->getDomains()->toArray()));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
 
     /**

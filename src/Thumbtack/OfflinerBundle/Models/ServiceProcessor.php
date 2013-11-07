@@ -41,17 +41,22 @@ class ServiceProcessor {
      */
     private $process;
 
+    private $uploadPath;
+
+
     /**
      * @param $doctrine
      * @param integer $mpc
+     * @param string $uploadPath
      */
-    function __construct($doctrine,$mpc){
+    function __construct($doctrine,$mpc,$uploadPath){
         $this->dm = $doctrine->getManager();
         $this->doctrine = $doctrine;
         $this->tasksRepo = $this->dm->getRepository('ThumbtackOfflinerBundle:Task');
         $this->serviceRepo = $this->dm->getRepository('ThumbtackOfflinerBundle:Process');
         $this->pagesRepo = $this->dm->getRepository('ThumbtackOfflinerBundle:Page');
         $this->maxProcessCount = $mpc;
+        $this->uploadPath = $uploadPath;
     }
     public function runQueueTask(){
         if($this->regProcess()){
@@ -65,7 +70,7 @@ class ServiceProcessor {
                 $this->dm->flush();
                 $script = $this->generateCrawlScript($task,"completed_tasks/".$task->getId());
                 exec("node -e \"".$script."\"");
-                exec("cd completed_tasks/ && zip ".$task->getId().".zip -r ".$task->getId()." && mv -f ".$task->getId().".zip /home/istrelnikov/offliner_uploads/".$task->getId().".zip");
+                exec("cd completed_tasks/ && zip ".$task->getId().".zip -r ".$task->getId()." && mv -f ".$task->getId().".zip ".$this->uploadPath.$task->getId().".zip");
                 $task->setStatus(ServiceProcessor::STATUS_READY);
                 $task->setReady(true);
                 $this->dm->persist($task);
@@ -130,7 +135,7 @@ class ServiceProcessor {
         }
          return $success;
     }
-    public function unregProcess(){ //TODO: think about exceptions!
+    public function unregProcess(){
         if($this->process){
             $this->dm->remove($this->process);
             $this->dm->flush();

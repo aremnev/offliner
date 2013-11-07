@@ -97,7 +97,7 @@ app.controller("indexerCtrl",function($scope,$http,$window){
             });
     }
 
-    $scope.domainTemplate = function(data){
+    /*$scope.domainTemplate = function(data){
         var status;
         var result ='';
         result += '<div class="page-info">';
@@ -125,7 +125,7 @@ app.controller("indexerCtrl",function($scope,$http,$window){
         }
         result += '</div>';
         return result;
-    }
+    }*/
     $scope.sendRequest('getDomains');
 });
 

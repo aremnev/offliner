@@ -14,6 +14,7 @@ class runOfflinerTaskCommand extends ContainerAwareCommand{
     {
         parent::configure();
         $this->setDefinition(array())->setName('offliner:run')->setDescription('Run one task.');
+        //TODO: more flexible with args and opts..
        // $this->addArgument('action', InputArgument::OPTIONAL, 'Description  of the bad work done.', 'default action'); //name, mode, description,  default
        // $this->addOption('myoption', 'shortcut-option',  InputOption::VALUE_OPTIONAL, 'Description of the option', 'default  value'); //name, shortcut, mode, description, default
     }

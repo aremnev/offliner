@@ -24,4 +24,4 @@ services:
         arguments: [@security.context,@doctrine]
  thumbtackServiceProcessor:
         class: Thumbtack\OfflinerBundle\Models\ServiceProcessor
-        arguments: ["@doctrine","%offliner_max_proccess_count%"]
+        arguments: ["@doctrine","%offliner_max_proccess_count%","%uploads_dir%"]

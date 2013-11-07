@@ -13,7 +13,8 @@ class runIndexerCommand extends ContainerAwareCommand{
     protected function configure()
     {
         parent::configure();
-        $this->setDefinition(array())->setName('indexer:run')->setDescription('index one page.');
+        $this->setDefinition(array())->setName('indexer:run')->setDescription('Index one page.');
+        //TODO: more flexible with args and opts..
        // $this->addArgument('action', InputArgument::OPTIONAL, 'Description  of the bad work done.', 'default action'); //name, mode, description,  default
        // $this->addOption('myoption', 'shortcut-option',  InputOption::VALUE_OPTIONAL, 'Description of the option', 'default  value'); //name, shortcut, mode, description, default
     }

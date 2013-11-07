@@ -28,9 +28,6 @@ class RootController extends BaseController {
      * @Route("/", name="welcome")
      */
     public function welcomeAction() {
-        if (!$this->isUserLogged()) {
-            return $this->redirect($this->generateUrl('homepage'));
-        }
         return $this->render('ThumbtackOfflinerBundle:Default:welcome.html.twig');
     }
     /**
@@ -66,6 +63,7 @@ class RootController extends BaseController {
     }
 
     /**
+     * Supply method
      * @param User $user
      * @return Response
      */
@@ -90,49 +88,5 @@ class RootController extends BaseController {
     public function phpinfoAction() {
 
         return $this->render('ThumbtackOfflinerBundle:Default:about.html.php');
-    }
-
-    /**
-     * @Route("/users", name="userlist")
-     */
-    public function getUserListAction() {
-        $repository = $this->getDoctrine()->getRepository('ThumbtackOfflinerBundle:User');
-        $users = $repository->findAll();
-
-        if (!$users) {
-            throw $this->createNotFoundException('No users Found');
-        }
-        $resp = 'User names: ';
-        foreach ($users as $user) $resp .= " -> " . $user->getUsername();
-        return new Response($resp);
-    }
-    /**
-     * @Route("/tmppages", name="tmpPages")
-     */
-    public function tmpPagesAction() {
-        $dm = $this->getDoctrine()->getManager();
-        $pages = array();
-        $content = file_get_contents('http://ru.wikipedia.org');
-        for($i=0;$i<2;++$i){
-            $page = new Page();
-            $page->setTitle('Wiki plain');
-            $page->setContent('');
-            $page->setStatus('good');
-            $page->setUrl('url');
-            $page->setDate(new \DateTime());
-            $page->setUser($this->getUser());
-            $dm->persist($page);
-        }
-        $dm->flush();
-        return new Response('good');
-    }
-    /**
-     * @Route("/tmpcrawl", name="tmpCrawl")
-     */
-    public function tmpCrawlAction() {
-        $page = Crawler::getPage('http://offliner.istrelnikov.dev.thumbtack.net/signIn');
-        $response= new Response($page);
-        $response->headers->set('Content-Type', 'text/html');
-        return $response;
     }
 }
