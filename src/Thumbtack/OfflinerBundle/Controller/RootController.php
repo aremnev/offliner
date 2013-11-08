@@ -14,6 +14,7 @@ use Thumbtack\OfflinerBundle\Security\UserProvider;
 
 class RootController extends BaseController {
     /**
+     * @Route("/getstart", name="getstart")
      * @Route("/signIn", name="homepage")
      */
     public function signInAction() {
@@ -95,7 +96,6 @@ class RootController extends BaseController {
      * @Route("/recover", name="recover")
      * @Route("/contacts", name="contacts")
      * @Route("/quicktour", name="quicktour")
-     * @Route("/getstart", name="getstart")
      * @Route("/api", name="api")
      * @Route("/demo", name="demo")
      */
