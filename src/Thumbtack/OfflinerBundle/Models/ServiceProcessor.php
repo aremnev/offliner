@@ -65,12 +65,14 @@ class ServiceProcessor {
              */
             $task = $this->tasksRepo->findOneByStatus(ServiceProcessor::STATUS_AWAITING);
             if(isset($task)){
+                $parsed = parse_url($task->getUrl());
+                $host = $parsed['host'];
                 $task->setStatus(ServiceProcessor::STATUS_PROGRESS);
                 $this->dm->persist($task);
                 $this->dm->flush();
                 $script = $this->generateCrawlScript($task,"completed_tasks/".$task->getId());
                 exec("node -e \"".$script."\"");
-                exec("cd completed_tasks/ && zip ".$task->getId().".zip -r ".$task->getId()." && mv -f ".$task->getId().".zip ".$this->uploadPath.$task->getId().".zip");
+                exec("cd completed_tasks/ && zip ".$task->getId().".zip -r ".$task->getId()." && mv -f ".$task->getId().".zip ".$this->uploadPath.$task->getId().$host.".zip");
                 $task->setStatus(ServiceProcessor::STATUS_READY);
                 $task->setReady(true);
                 $this->dm->persist($task);

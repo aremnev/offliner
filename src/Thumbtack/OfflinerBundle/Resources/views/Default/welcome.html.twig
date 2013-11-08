@@ -21,13 +21,14 @@
                     <span class="icon icon-wf ">&#128240;</span>
                     Profile
                 </tab-heading>
+                <div class="loading"><p>In w<span class="rotateO"></span>rk</p></div>
                 <div>
-                    <div class="loading"><p>In w<span class="rotateO"></span>rk</p></div>
                     <div class="panel">
                     {% endverbatim %}
                     You are logged-in as <span class="username">{{ app.user.nickname }}</span>, manage your api keys and info below</a>.
                     {% verbatim %}
                     </div>
+
                 </div>
             </tab>
             <tab>
@@ -40,13 +41,14 @@
                     <div  ng-if="loading" class="loading"><p>L<span class="rotateO"></span>ading...</p></div>
                     <div class="panel">
                        Beta service! Offliner allows download any website fully! When task be ready your can download zip with website content.
+                       <p>When each your task complete we send download url on your e-mail
                        <p>NOTE: 'Clear Scripts' option may dramatically change the ready page quality.
                         <div class="new-task-form">
                             <form >
                                 <span>URL <input type="url" ng-model="url"></span>
-                                <span>Domain Only<input type="checkbox" ng-model="onlyDomain" ></span>
+                                <!--<span>Domain Only<input type="checkbox" ng-model="onlyDomain" ></span>
                                 <span>Clear Scripts<input type="checkbox" ng-model="clearScripts" ></span>
-                                <span>Crawl depth<input type="number" ng-model="maxDepth" ng-change="validate()"></span>
+                                <span>Crawl depth<input type="number" ng-model="maxDepth" ng-change="validate()"></span>-->
                                 <button class="btn btn-info btn-large" type="submit" ng-click="sendRequest('newTask')">Create new task</button>
                             </form>
                         </div>
@@ -110,6 +112,7 @@
                     <div  ng-if="loading" class="loading"><p>L<span class="rotateO"></span>ading...</p></div>
                     <div class="panel">
                         Manage domains in your search index . Answers? <a href="#">Quick Tour</a>
+                        <p>Indexing status you can check on your profile page
                         <p>Read <a href="#">API References</a> for link it to your website.
                         <div class="new-domain-form">
                             <form >
@@ -148,12 +151,13 @@
             <tab>
                 <tab-heading>
                     <span class="icon icon-wf ">&#9881;</span>
-                    Indexer Stat&Test
+                    Indexer search test
                 </tab-heading>
                 <div ng-controller="indexerCtrl">
                     <div  ng-if="loading" class="loading"><p>L<span class="rotateO"></span>ading...</p></div>
                     <div class="panel">
                         Check search results from your own index
+                        <p>Search result output params managed on Indexer service tab
                         <p>Read <a href="#">API References</a> for link it to your website.
                         <div class="search-form">
                             <form>
@@ -182,21 +186,25 @@
                     </div>
                 </div>
             </tab>
-            <tab class="disabled">
+            <tab id="logout" >
                 <tab-heading>
                     Logout
                 </tab-heading>
-                <div class="panel">
-                 <div class="logout-panel">
-                     <span>
-                         Thank you for anything
-                         <p> Create your apps with us!
-                     </span>
-                     <a href="logout"><button class="btn btn-large btn-success logout">Goodbye!!!</button></a>
-                 </div>
-                </div>
+                <a href="logout"><h1>Log out</h1></a>
             </tab>
         </tabset>
     </div>
     {% endverbatim %}
+{% endblock %}
+{% block javascripts %}
+<script>
+    //logout action simple realization
+    window.onload = function(){
+        li = document.getElementById('logout');
+        a = li.children[0];
+        a.onclick = function(){
+            window.location = window.location + "logout";
+        }
+    }
+</script>
 {% endblock %}

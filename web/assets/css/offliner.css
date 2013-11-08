@@ -121,9 +121,6 @@ table.list tbody tr:hover td {
 input[type='url']{
     font-size: 80%;
 }
-.new-domain-form input[type='url']{
-    width: 15em !important;
-}
 .new-task-form input[type='number']{
     height: 1em;
 }
@@ -323,9 +320,11 @@ input[type='url']{
     width: 48px;
     height: 48px;
     line-height: 16px;
-    color: #aaa;
+    color: #000;
 }
-
+#logout tab-heading{
+    color: #000;
+}
 .tabs-left .nav-tabs li {
     margin: 10px;
     border-bottom: 1px solid #c4c4c4;
@@ -403,7 +402,7 @@ input[type='url']{
     border-radius: 2px;
 }
 .panel input[type="url"] {
-    width: 15em;
+    width: 30em;
     margin: 0 1em 5px 0;
     border-radius: 2px;
 }
