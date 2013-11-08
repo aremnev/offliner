@@ -57,7 +57,7 @@ a span.icon:hover{
 
     .navbar-fixed-top .navbar-inner,
     .navbar-fixed-bottom .navbar-inner {
-        padding: 0 20px;
+        padding: 5px 20px 0px 20px;
     }
 }
 
@@ -198,7 +198,7 @@ input[type='url']{
 
 .navbar-fixed-top .navbar-inner,
 .navbar-fixed-bottom .navbar-inner {
-    padding: 5px 20px;
+    padding: 5px 20px 0px 20px;
 }
 
 .navbar .brand {
@@ -502,8 +502,16 @@ input[type="number"] {
     margin-right: 2.5em;
     vertical-align: top;
     text-align: center;
+    height: 75px;
+}
+.stats-item:hover {
+    background-color: #fff;
+    color: #000;
 }
 
+.stats-item:hover .icon {
+    color: #000;
+}
 .stats-label {
     font-size: 0.92em;
     text-transform: lowercase;

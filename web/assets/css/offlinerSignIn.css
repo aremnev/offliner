@@ -452,12 +452,6 @@ body{
 .stats-theme-light .stats-count {
     color: #fff;
 }
-.stats-theme-light.hovered .stats-count {
-    color: #92d7f5
-}
-.stats-theme-light.hovered {
-    color: #92d7f5
-}
 small > p {
     margin: 0;
 }
