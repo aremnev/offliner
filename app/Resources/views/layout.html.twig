@@ -17,7 +17,8 @@
 </head>
 
 <body ng-app="mainApp">
-<div class="navbar navbar-fixed-top">
+<div ng-show="false" class="cloak"><p>L<span class="rotateO"></span>ading...</p></div>
+<div ng-cloak class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
             <a class="brand" href="{{ path('homepage')  }}">OFFLINER</a>
@@ -35,7 +36,7 @@
 {% block header %}
 
 {% endblock %}
-<div class="container">
+<div ng-cloak class="container">
     {% block data %}
 
     {% endblock %}

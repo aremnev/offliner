@@ -26,7 +26,7 @@ var app = angular.module("mainApp",['ui.bootstrap','offlinerApp','indexerApp','n
     })
 });
 
-app.controller("mainCtrl",function($scope,$http,$window){
+app.controller("mainCtrl",function($rootScope,$scope,$http,$window){
     $scope.message = '';
     $scope.stat ={'queue':0,'progress':0,'done':0};
     $scope.sendRequest = function(){
@@ -38,7 +38,7 @@ app.controller("mainCtrl",function($scope,$http,$window){
             });
     }
     $scope.sendRequest();
-
+    $rootScope.ready = true;
 });
 app.controller("tabsCtrl",function($rootScope,$cookies){
     $rootScope.tabSelect = function(tabname){

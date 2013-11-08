@@ -80,6 +80,7 @@ class RootController extends BaseController {
             $result['message'] = 'failed';
         }
         $response = new Response(json_encode($result));
+        $response->setStatusCode(($result['code'] == 0?200:401));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }

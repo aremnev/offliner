@@ -15,11 +15,13 @@ app.controller("mainCtrl",function($scope,$http,$window){
                 if(data.code ==0){
                 $scope.message = 'Successful login';
                 window.location.reload(true);
-                }else{
-                    $scope.message = 'Login failed';
                 }
             }).error(function(data, status, headers, config) {
+                if(data.code == 1){
+                    $scope.message = 'Login failed';
+                }else{
                 $scope.message = 'Response failed! Status:'+status;
+                }
             });
     }
     $scope.sendRegisterRequest = function(){
@@ -28,11 +30,13 @@ app.controller("mainCtrl",function($scope,$http,$window){
                 if(data.code ==0){
                     $scope.message = 'Successful register';
                     window.location.reload(true);
-                }else{
-                    $scope.message = 'Register failed';
                 }
             }).error(function(data, status, headers, config) {
-                $scope.message = 'Response failed! Status:'+status;
+                if(data.code == 1){
+                    $scope.message = 'Register failed';
+                }else{
+                    $scope.message = 'Response failed! Status:'+status;
+                }
             });
     }
 });
