@@ -64,7 +64,7 @@ app.controller("indexerCtrl",function($scope,$http,$window){
                         $scope.message = 'Updated';
                         break;
                     case 'deleteDomain':
-                        if(data){
+                        if(status == 204){
                             $scope.message = 'Deleted';
                             $scope.sendRequest('getDomains');
                         }else{

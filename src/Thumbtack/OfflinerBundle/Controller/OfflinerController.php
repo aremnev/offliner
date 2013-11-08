@@ -57,10 +57,9 @@ class OfflinerController extends BaseController {
          * @var OfflinerModel $offliner
          */
         $offliner = $this->get("thumbtackOffliner");
-        $msg = ($offliner->deleteTaskById($id)?"true":"false");
-        $response = new Response($msg);
+        $response = new Response();
+        $response->setStatusCode($offliner->deleteTaskById($id)?204:404);
         $response->headers->set('Content-Type', 'application/json');
-        $response->setStatusCode(204);
         return $response;
     }
 

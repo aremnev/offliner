@@ -82,7 +82,7 @@ app.controller("offlinerCtrl",function($scope,$http,$window){
                         $scope.message = 'Updated';
                         break;
                     case 'deleteTask':
-                        if(data){
+                        if(status == 204){
                             $scope.message = 'Deleted';
                             $scope.sendRequest('getStat');
                             $scope.sendRequest('getTasks');

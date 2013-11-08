@@ -68,10 +68,9 @@ class IndexerController extends BaseController {
          */
         $index = $this->container->get('fos_elastica.index.pages.page');
         $indexer = new IndexerModel($this->getUser(),$index,$this->getDoctrine()->getManager());
-        $msg = ($indexer->deleteDomainById($id)?"true":"false");
-        $response = new Response($msg);
+        $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-        $response->setStatusCode(204);
+        $response->setStatusCode($indexer->deleteDomainById($id)?204:404);
         return $response;
     }
     /**
