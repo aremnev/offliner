@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module("mainApp",['ui.bootstrap','offlinerApp','indexerApp'], function($compileProvider){
+var app = angular.module("mainApp",['ui.bootstrap','offlinerApp','indexerApp','ngCookies'], function($compileProvider){
     // configure new 'compile' directive by passing a directive
     // factory function. The factory function injects the '$compile'
     $compileProvider.directive('compile', function($compile) {
@@ -38,4 +38,15 @@ app.controller("mainCtrl",function($scope,$http,$window){
             });
     }
     $scope.sendRequest();
+
+});
+app.controller("tabsCtrl",function($rootScope,$cookies){
+    $rootScope.tabSelect = function(tabname){
+        $cookies.service = tabname;
+    }
+    $rootScope.tabs = {'profile':true,'offliner':false,'search':false,'indexer':false};
+    if($rootScope.tabs.hasOwnProperty($cookies.service)){
+        $rootScope.tabs[$cookies.service] = true;
+        console.log('set ' + $cookies.service);
+    }
 });

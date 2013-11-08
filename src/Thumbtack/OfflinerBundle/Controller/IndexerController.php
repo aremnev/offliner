@@ -41,6 +41,7 @@ class IndexerController extends BaseController {
         $msg = ($indexer->addDomain($data)?"true":"false");
         $response = new Response($msg);
         $response->headers->set('Content-Type', 'application/json');
+        $response->setStatusCode(201);
         return $response;
     }
     /**
@@ -70,6 +71,7 @@ class IndexerController extends BaseController {
         $msg = ($indexer->deleteDomainById($id)?"true":"false");
         $response = new Response($msg);
         $response->headers->set('Content-Type', 'application/json');
+        $response->setStatusCode(204);
         return $response;
     }
     /**

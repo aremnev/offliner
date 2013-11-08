@@ -24,6 +24,7 @@ class OfflinerController extends BaseController {
       $msg = ($offliner->addTaskToQueue($data)?"true":"false");
       $response = new Response($msg);
       $response->headers->set('Content-Type', 'application/json');
+        $response->setStatusCode(202);
     return $response;
     }
     /**
@@ -59,6 +60,7 @@ class OfflinerController extends BaseController {
         $msg = ($offliner->deleteTaskById($id)?"true":"false");
         $response = new Response($msg);
         $response->headers->set('Content-Type', 'application/json');
+        $response->setStatusCode(204);
         return $response;
     }
 
