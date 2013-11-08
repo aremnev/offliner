@@ -16,12 +16,13 @@
     {% verbatim %}
     <div class="row-fluid">
         <tabset class="tabbable tabs-left">
-            <tab>
-                <tab-heading>
+         <input id='active_tab' ng-show="false" ng-model="active_tab.selected"/>
+            <tab select="tabActive();">
+                <tab-heading id="profile">
                     <span class="icon icon-wf ">&#128240;</span>
                     Profile
                 </tab-heading>
-                <div class="loading"><p>In w<span class="rotateO"></span>rk</p></div>
+                <div class="loading hidden"><p>In w<span class="rotateO"></span>rk</p></div>
                 <div>
                     <div class="panel">
                     {% endverbatim %}
@@ -31,8 +32,8 @@
 
                 </div>
             </tab>
-            <tab>
-                <tab-heading>
+            <tab select="tabActive();">
+                <tab-heading id="offliner">
                     <span style="float: right; vertical-align:top;font-size: 100%;color: red;">beta</span>
                     <span class="icon icon-wf ">&#59198;</span>
                     Offliner service
@@ -104,7 +105,7 @@
                 </div>
             </tab>
             <tab>
-                <tab-heading>
+                <tab-heading id="indexer">
                     <span class="icon icon-wf ">&#128213;</span>
                     Indexer service
                 </tab-heading>
@@ -149,7 +150,7 @@
                 </div>
             </tab>
             <tab>
-                <tab-heading>
+                <tab-heading id="search">
                     <span class="icon icon-wf ">&#9881;</span>
                     Indexer search test
                 </tab-heading>
@@ -186,11 +187,11 @@
                     </div>
                 </div>
             </tab>
-            <tab id="logout" >
-                <tab-heading>
+            <tab >
+                <tab-heading id="logout">
                     Logout
                 </tab-heading>
-                <a href="logout"><h1>Log out</h1></a>
+                <a href="logout"><h1>Logging out... click here if you read this</h1></a>
             </tab>
         </tabset>
     </div>
@@ -200,11 +201,49 @@
 <script>
     //logout action simple realization
     window.onload = function(){
-        li = document.getElementById('logout');
-        a = li.children[0];
-        a.onclick = function(){
-            window.location = window.location + "logout";
+
+        active = document.getElementById('active_tab');
+        active.value = readCookie('service');
+
+        tabs = document.getElementsByTagName('tab-heading');
+        for(var key in tabs){
+            if(tabs[key].parentNode){
+                tabs[key].parentNode.onclick = function(){
+                    createCookie( 'service',  this.children[0].id);
+                };
+            }
+            if(tabs[key].id == 'logout'){
+                tabs[key].parentNode.onclick = function(){
+                    window.location = window.location + "logout";
+                }
+            }
         }
+    }
+    // You should also use some cross-browser cookie functions that make your life a lot easier
+    // function taken from: http://www.quirksmode.org/js/cookies.html
+    function createCookie(name,value,days) {
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime()+(days*24*60*60*1000));
+            var expires = "; expires="+date.toGMTString();
+        }
+        else var expires = "";
+        document.cookie = name+"="+value+expires+"; path=/";
+    }
+
+    function readCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0;i < ca.length;i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
+    }
+
+    function eraseCookie(name) {
+        createCookie(name,"",-1);
     }
 </script>
 {% endblock %}

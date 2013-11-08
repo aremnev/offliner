@@ -38,10 +38,4 @@ app.controller("mainCtrl",function($scope,$http,$window){
             });
     }
     $scope.sendRequest();
-    $scope.logout = function(){
-        setTimeout(function() {
-            alert("You've selected the alert tab!");
-        });
-    }
 });
-
