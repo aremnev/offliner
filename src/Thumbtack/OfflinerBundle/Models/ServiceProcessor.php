@@ -127,7 +127,6 @@ class ServiceProcessor {
         return  true;
     }
     public function runStatUpdate(){
-        if($this->regProcess()){
             /**
              * @var Domain $domain;
              */
@@ -167,8 +166,6 @@ class ServiceProcessor {
                 $this->dm->persist($domain);
                 $this->dm->flush();
             }
-            $this->unregProcess();
-        }
         return true;
     }
     public function regProcess(){
