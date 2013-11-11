@@ -5,7 +5,6 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Thumbtack\OfflinerBundle\Entity\Domain;
 use Thumbtack\OfflinerBundle\Entity\Page;
@@ -137,40 +136,36 @@ class ServiceProcessor {
                  FROM ThumbtackOfflinerBundle:Domain d
                  WHERE d.refreshDate < :date
                  AND d.status != :ready'
-            )->setParameter('ready', ServiceProcessor::STATUS_READY);
+            )->setMaxResults(1)->setParameter('ready', ServiceProcessor::STATUS_READY);
             $date = new \DateTime();
             $date->sub(new \DateInterval('PT10M'));
             $query->setParameter('date',$date);
-            try{
-                $domain = $query->getOneOrNullResult();
-                if(isset($domain)){
-                    $result = array();
-                    $query = $this->dm->createQuery(
-                        'SELECT count(p)
-                         FROM ThumbtackOfflinerBundle:Page p
-                         WHERE p.domain = :domain
-                         AND p.status = :status'
-                    )->setParameter('domain', $domain);
-                    $query->setParameter('status',ServiceProcessor::STATUS_AWAITING);
-                    $result['await'] = $query->getSingleScalarResult();
-                    $query->setParameter('status',ServiceProcessor::STATUS_PROGRESS);
-                    $result['progress'] = $query->getSingleScalarResult();
-                    $query->setParameter('status',ServiceProcessor::STATUS_READY);
-                    $result['ready'] = $query->getSingleScalarResult();
-                    if($result['ready'] != 0 && $result['progress'] == 0 && $result['await']==0){
-                        $domain->setStatus(ServiceProcessor::STATUS_READY);
-                        $result['lastTotal'] = $result['ready'];
-                    }else{
-                        $domain->setStatus(ServiceProcessor::STATUS_PROGRESS);
-                        $result['lastTotal'] = 15;
-                    }
-                    $domain->setStatistics(json_encode($result));
-                    $domain->setRefreshDate(new \DateTime('now'));
-                    $this->dm->persist($domain);
-                    $this->dm->flush();
+            $domain = $query->getResult()[0];
+            if(isset($domain)){
+                $result = array();
+                $query = $this->dm->createQuery(
+                   'SELECT count(p)
+                    FROM ThumbtackOfflinerBundle:Page p
+                    WHERE p.domain = :domain
+                    AND p.status = :status'
+                )->setParameter('domain', $domain);
+                $query->setParameter('status',ServiceProcessor::STATUS_AWAITING);
+                $result['await'] = $query->getSingleScalarResult();
+                $query->setParameter('status',ServiceProcessor::STATUS_PROGRESS);
+                $result['progress'] = $query->getSingleScalarResult();
+                $query->setParameter('status',ServiceProcessor::STATUS_READY);
+                $result['ready'] = $query->getSingleScalarResult();
+                if($result['ready'] != 0 && $result['progress'] == 0 && $result['await']==0){
+                    $domain->setStatus(ServiceProcessor::STATUS_READY);
+                    $result['lastTotal'] = $result['ready'];
+                }else{
+                    $domain->setStatus(ServiceProcessor::STATUS_PROGRESS);
+                    $result['lastTotal'] = 15;
                 }
-            }catch (NonUniqueResultException $e){
-                return false;
+                $domain->setStatistics(json_encode($result));
+                $domain->setRefreshDate(new \DateTime('now'));
+                $this->dm->persist($domain);
+                $this->dm->flush();
             }
             $this->unregProcess();
         }
