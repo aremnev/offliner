@@ -59,7 +59,7 @@
                             <td> <label class="label">{{ task.onlyDomain }}</label></td>
                             <td> <label class="label">{{ task.clearScripts }}</label></td>
                             <td> <label class="label">{{ task.maxDepth }}</label></td>
-                            <td> <small>{{ task.date.date }}</small></td>
+                            <td> <small>{{ task.date|date:'yyyy-MM-dd HH:mm:ss'  }}</small></td>
                             <td>
                                 <a href="uploads/{{task.id}}.zip"з><label class="btn btn-success pull-left" ng-if="task.ready" title="Download">
                                         <span class="icon icon-wf icon-action">&#59256;</span>
@@ -78,7 +78,7 @@
                             <td> <input type="checkbox" ng-model="task.onlyDomain"></td>
                             <td>  <input type="checkbox" ng-model="task.clearScripts"></td>
                             <td> <input type="number" ng-model="task.maxDepth"></td>
-                            <td> <small>{{ task.date.date }}</small></td>
+                            <td> <small>{{ task.date|date:'yyyy-MM-dd HH:mm:ss' }}</small></td>
                             <td>
                                 <label class="btn btn-danger disabled pull-right" title="Delete"><span class="icon icon-wf icon-action">&#59177;</span></label>
                                 <label class="btn btn-info pull-right" ng-click="saveEdit(task)" title="Save"><span class="icon icon-wf icon-action">&#10003;</span></label>
@@ -121,7 +121,7 @@
                         <tr id="domain{{domain.id}}">
                             <td> {{ domain.url }}</td>
                             <td> <label class="label">{{ domain.status }}</label></td>
-                            <td> <small>{{ domain.date.date }}</small></td>
+                            <td> <small>{{ domain.date|date:'yyyy-MM-dd HH:mm:ss' }}</small></td>
                             <td>
                                 <label class="btn btn-danger pull-right" ng-click="sendRequest('deleteDomain',{{domain.id}})" title="Delete">
                                     <span class="icon icon-wf icon-action">&#59177;</span>

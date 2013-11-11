@@ -65,6 +65,10 @@ app.controller("offlinerCtrl",function($scope,$http,$window){
                     case 'getTasks':
                         if(data){
                             $scope.tasks = data;
+                            for(var key in $scope.tasks){
+                                var d1 = new Date($scope.tasks[key].date.date);
+                                $scope.tasks[key].date = d1.setHours(d1.getHours() + ((new Date()).getTimezoneOffset() / 60 +13) ); //Europe/Berlin => +13
+                            }
                         }else{
                             $scope.tasks = [];
                         }

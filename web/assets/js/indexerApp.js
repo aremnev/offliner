@@ -52,6 +52,12 @@ app.controller("indexerCtrl",function($scope,$http,$window){
                     case 'getDomains':
                         if(data){
                             $scope.domains = data;
+                            for(var key in $scope.domains){
+                                var d1 = new Date($scope.domains[key].date.date);
+                                var d2= new Date($scope.domains[key].refreshDate.date);
+                                $scope.domains[key].date = d1.setHours(d1.getHours() + ((new Date()).getTimezoneOffset() / 60 +13) ); //Europe/Berlin => +13
+                                $scope.domains[key].refreshDate = d2.setHours(d2.getHours() + ((new Date()).getTimezoneOffset() / 60 +13) );
+                            }
                         }else{
                             $scope.domains = [];
                         }
@@ -122,7 +128,7 @@ app.controller("indexerCtrl",function($scope,$http,$window){
                 result += '<h4>Refreshing index: '+proc+'%</h4>';
             }else{
                 var now = new Date();
-                var d = new Date(domain.refreshDate.date);
+                var d = new Date(domain.refreshDate);
                 result += '<h4>Index is actual. Until next refreshing: '+parseInt(24-(now-d)/(3600*1000))+' hours</h4>'
             }
         }else{
