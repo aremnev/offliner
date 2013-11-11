@@ -119,7 +119,7 @@ app.controller("indexerCtrl",function($scope,$http,$window){
         if(data.lastTotal){
             proc = Math.round(data.ready/data.lastTotal*100);
             if(proc != 100){
-                result += '<h4>Refreshing index: '++'%</h4>'
+                result += '<h4>Refreshing index: '+proc+'%</h4>';
             }else{
                 result += '<h4>Index is actual. Until next refreshing:  14 hours</h4>'
             }
