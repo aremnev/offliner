@@ -66,10 +66,13 @@ class IndexerModel {
 
     function addDomain($json){
         try{
+            // Review: need up to begin of file
             require_once(__DIR__.'/../Misc/normilize_url.php');
+            // Review: check on bad value
             $data = json_decode($json,true);
             $data['url']= normilize_url($data['url']);
             $data['status'] = ServiceProcessor::STATUS_AWAITING;
+            // Review: Domain doesn't  have params
             $domain = new Domain($data);
             $domain->setUser($this->user);
             $first_page = new Page($data['url']);
@@ -84,6 +87,8 @@ class IndexerModel {
     }
     function deleteDomainById($id){ //TODO:related page too!
         $domain = $this->domainRepo->findOneById($id);
+        // Review: 'else' can remove
+        // What will be If exception is happening?
         if($domain){
             $this->dm->remove($domain);
             $this->dm->flush();

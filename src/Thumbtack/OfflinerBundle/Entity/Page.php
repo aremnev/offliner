@@ -4,6 +4,9 @@ namespace Thumbtack\OfflinerBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints\DateTime;
 use Thumbtack\OfflinerBundle\Models\ServiceProcessor;
 
 /**
@@ -31,7 +34,8 @@ class Page implements \JsonSerializable{
      *
      * @ORM\ManyToOne(targetEntity="Domain", inversedBy="pages")
      * @ORM\JoinColumn(name="domain_id", referencedColumnName="id")
-     */
+     */flf
+    
     protected $domain;
 
     /**
@@ -84,6 +88,7 @@ class Page implements \JsonSerializable{
      * @ORM\Column(name="date", type="datetime")
      */
     protected $date;
+
     public function __construct($url){
         $this->status = ServiceProcessor::STATUS_AWAITING;
         $this->ready = false;
@@ -91,7 +96,7 @@ class Page implements \JsonSerializable{
         $this->date = new \DateTime();
     }
     /**
-     * @return User
+     * @return \Thumbtack\OfflinerBundle\Entity\User
      */
     public function getUser() {
         return $this->domain->getUser();
