@@ -55,8 +55,8 @@ app.controller("indexerCtrl",function($scope,$http,$window){
                             for(var key in $scope.domains){
                                 var d1 = new Date($scope.domains[key].date.date);
                                 var d2= new Date($scope.domains[key].refreshDate.date);
-                                $scope.domains[key].date = d1.setHours(d1.getHours() + ((new Date()).getTimezoneOffset() / 60 +1) ); //Europe/Berlin => +1
-                                $scope.domains[key].refreshDate = d2.setHours(d2.getHours() + ((new Date()).getTimezoneOffset() / 60 +1) );
+                                $scope.domains[key].date = d1.setHours(d1.getHours() + ((new Date()).getTimezoneOffset() / 60 +13) ); //Europe/Berlin => +13
+                                $scope.domains[key].refreshDate = d2.setHours(d2.getHours() + ((new Date()).getTimezoneOffset() / 60 +13) );
                             }
                         }else{
                             $scope.domains = [];
