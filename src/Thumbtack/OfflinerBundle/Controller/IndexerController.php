@@ -14,6 +14,8 @@ use Thumbtack\OfflinerBundle\Models\IndexerModel;
 use Thumbtack\OfflinerBundle\Models\ServiceProcessor;
 
 class IndexerController extends BaseController {
+
+
     /**
      * @Route ("/search", name="search")
      * @Method ({"POST"})
@@ -21,10 +23,13 @@ class IndexerController extends BaseController {
     public function searchAction(){
         $data = json_decode($this->getRequest()->getContent());
         /* @var TransformedFinder $finder */
-        $index = $this->container->get('fos_elastica.index.pages.page');
-        $searcher = new IndexerModel($this->getUser(),$index,$this->getDoctrine()->getManager());
-        $domain = (isset($data->domainId)?$data->domainId:null);
-        $results = $searcher->find($data->text,$domain);
+        $results = '';
+        if($data){
+            $index = $this->container->get('fos_elastica.index.pages.page');
+            $searcher = new IndexerModel($this->getUser(),$index,$this->getDoctrine()->getManager());
+            $domain = (isset($data->domainId)?$data->domainId:null);
+            $results = $searcher->find($data->text,$domain);
+        }
         return new Response(json_encode($results));
     }
     /**

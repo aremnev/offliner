@@ -29,7 +29,8 @@ class RootController extends BaseController {
      * @Route("/", name="welcome")
      */
     public function welcomeAction() {
-        return $this->render('ThumbtackOfflinerBundle:Default:welcome.html.twig');
+        $key = base64_encode(ApiController::strcode($this->getUser()->getId(),$this->container->getParameter('secret')));
+        return $this->render('ThumbtackOfflinerBundle:Default:welcome.html.twig',array('user_api_key' => $key));
     }
     /**
      * @Route("/login/{email}", name="login")
