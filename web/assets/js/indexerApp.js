@@ -123,6 +123,11 @@ app.controller("indexerCtrl",function($scope,$http,$window){
             }else{
                 var now = new Date();
                 var d = new Date(domain.refreshDate.date);
+                now.setHours(now.getHours() + ((new Date()).getTimezoneOffset() / 60 +1));
+                console.log(now);
+                console.log(d);
+                console.log(now-d);
+                console.log(parseInt(24-(now-d)/(3600*1000)));
                 result += '<h4>Index is actual. Until next refreshing: '+parseInt(24-(now-d)/(3600*1000))+' hours</h4>'
             }
         }else{
