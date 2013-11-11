@@ -57,7 +57,7 @@ class IndexerModel {
         foreach($results->getResults() as $result){
             $output[$i]['page'] = $this->pageRepo->findOneById($result->getId());
             $output[$i]['highlights']= $result->getHighlights();
-            $output[$i]['$maxScore']= $maxScore;
+            $output[$i]['maxScore']= $maxScore;
             $output[$i++]['score']= intval($result->getScore()/$maxScore*100);
 
         }
@@ -93,11 +93,8 @@ class IndexerModel {
         }
     }
     function getDomainInfo($id){
+        /** @var Domain $domain */
         $domain = $this->domainRepo->findOneById($id);
-        if(!is_null($domain)){
-            return json_encode($domain);
-        }else{
-            return null;
-        }
+        return $domain->getStatistics();
     }
 }

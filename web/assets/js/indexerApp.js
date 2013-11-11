@@ -25,7 +25,11 @@ app.controller("indexerCtrl",function($scope,$http,$window){
         switch (req_action){
             case 'getDomains':
                 action = 'domains';
-                method = 'POST';
+                method = 'GET';
+                break;
+            case 'getDomainInfo':
+                action = 'domains/'+opt_id;
+                method = 'GET';
                 break;
             case 'newDomain':
                 action = 'domains/new';
@@ -52,6 +56,12 @@ app.controller("indexerCtrl",function($scope,$http,$window){
                             $scope.domains = [];
                         }
                         break;
+                    case 'getDomainInfo':
+                        if(data){
+                            $scope.result = $scope.domainTemplate(data,opt_data);
+                        }else{
+                            $scope.result = '<h4>'+opt_data.url+' statistics is empty</h4>';
+                        }
                     case 'newDomain':
                         if(data){
                             $scope.message = 'Added';
@@ -97,18 +107,22 @@ app.controller("indexerCtrl",function($scope,$http,$window){
             });
     }
 
-    /*$scope.domainTemplate = function(data){
-        var status;
+    $scope.domainTemplate = function(data,domain){
         var result ='';
         result += '<div class="page-info">';
-        result += '<h4>'+data.domain+' stat:</h4>';
+        result += '<h4>'+domain.url+' stat:</h4>';
         result += '<div class="stats">';
-        result += '<span class="stats-item"><span class="stats-label">In queue</span> <span class="stats-count">' + data.query + '</span></span>';
+        result += '<span class="stats-item"><span class="stats-label">In queue</span> <span class="stats-count">' + data.await + '</span></span>';
         result += '<span class="stats-item"><span class="stats-label">In progress</span> <span class="stats-count">' + data.progress + '</span></span>';
-        result += '<span class="stats-item"><span class="stats-label">Done</span>  <span class="stats-count">' + data.done + '</span></span>';
+        result += '<span class="stats-item"><span class="stats-label">Done</span>  <span class="stats-count">' + data.ready + '</span></span>';
         result += '</div>';
+        if(data.lastTotal){
+            result += '<h4>Refreshing index: '+Math.round(data.ready/data.lastTotal*100)+'%</h4>';
+        }else{
+            result += '<h4>Initial indexing</h4>';
+        }
         result += '</div>';
-        console.log(data)
+       /* console.log(data)
         if(data.pages.length > 0){
             result += '<p><a ng-click="showPagesIL = !showPagesIL">{{showMessage();}}</a></p>';
         }
@@ -123,9 +137,9 @@ app.controller("indexerCtrl",function($scope,$http,$window){
                 + '<div class="pages-item-copy"><a href="/preview?url=' + data.pages[key].hash_url + '" target="_blank">'+(data.pages[key].title!='unavailable' ? "Saved copy":"")+'</a></div>'
                 +'</div>';
         }
-        result += '</div>';
+        result += '</div>';*/
         return result;
-    }*/
+    }
     $scope.sendRequest('getDomains');
 });
 

@@ -35,6 +35,10 @@ class ServiceProcessor {
      * @var EntityRepository
      */
     private $pagesRepo;
+    /**
+     * @var EntityRepository
+     */
+    private $domainsRepo;
     private $maxProcessCount;
     /**
      * @var Process
@@ -55,6 +59,7 @@ class ServiceProcessor {
         $this->tasksRepo = $this->dm->getRepository('ThumbtackOfflinerBundle:Task');
         $this->serviceRepo = $this->dm->getRepository('ThumbtackOfflinerBundle:Process');
         $this->pagesRepo = $this->dm->getRepository('ThumbtackOfflinerBundle:Page');
+        $this->domainsRepo = $this->dm->getRepository('ThumbtackOfflinerBundle:Domain');
         $this->maxProcessCount = $mpc;
         $this->uploadPath = $uploadPath;
     }
@@ -120,6 +125,41 @@ class ServiceProcessor {
             $this->unregProcess();
         }
         return  true;
+    }
+    public function runStatUpdate(){
+        if($this->regProcess()){
+            /**
+             * @var Domain $domain;
+             */
+            $domain = $this->domainsRepo->findOneByStatus(ServiceProcessor::STATUS_AWAITING);
+            if(isset($domain)){
+                $result = array();
+                $query = $this->dm->createQuery(
+                   'SELECT count(p)
+                    FROM ThumbtackOfflinerBundle:Page p
+                    WHERE p.domain = :domain
+                    AND p.status = :status'
+                )->setParameter('domain', $domain);
+                $query->setParameter('status',ServiceProcessor::STATUS_AWAITING);
+                $result['await'] = $query->getSingleScalarResult();
+                $query->setParameter('status',ServiceProcessor::STATUS_PROGRESS);
+                $result['progress'] = $query->getSingleScalarResult();
+                $query->setParameter('status',ServiceProcessor::STATUS_READY);
+                $result['ready'] = $query->getSingleScalarResult();
+                if($result['ready'] != 0 && $result['progress'] == 0 && $result['await']==0){
+                    $domain->setStatus(ServiceProcessor::STATUS_READY);
+                    $result['lastTotal'] = $result['ready'];
+                }else{
+                    $domain->setStatus(ServiceProcessor::STATUS_PROGRESS);
+                    $result['lastTotal'] = 15;
+                }
+                $domain->setStatistics(json_encode($result));
+                $this->dm->persist($domain);
+                $this->dm->flush();
+            }
+            $this->unregProcess();
+        }
+        return true;
     }
     public function regProcess(){
         $success = false;

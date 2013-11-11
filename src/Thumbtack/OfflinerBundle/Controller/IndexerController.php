@@ -46,7 +46,7 @@ class IndexerController extends BaseController {
     }
     /**
      * @Route("/domains", name="domainsList")
-     * @Method ({"POST"})
+     * @Method ({"GET"})
      */
     public function domainsListAction(){
         /**
@@ -71,6 +71,20 @@ class IndexerController extends BaseController {
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $response->setStatusCode($indexer->deleteDomainById($id)?204:404);
+        return $response;
+    }
+    /**
+     * @Route("/domains/{id}", requirements={"id" = "\d+"}, defaults={"id" = null} , name="getDomainInfo")
+     * @Method ({"GET"})
+     */
+    public function getDomainInfoAction($id){
+        /**
+         * @var IndexerModel $indexer
+         */
+        $index = $this->container->get('fos_elastica.index.pages.page');
+        $indexer = new IndexerModel($this->getUser(),$index,$this->getDoctrine()->getManager());
+        $response = new Response($indexer->getDomainInfo($id));
+        $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
     /**

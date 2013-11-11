@@ -564,6 +564,7 @@ input[type="number"] {
 }
 .page-info {
     margin-bottom: 2em;
+    margin-left: 10em;
 }
 
 .pages-item-list {

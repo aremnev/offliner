@@ -82,10 +82,10 @@ class User implements UserInterface, \Serializable {
     /**
      * Add tasks
      *
-     * @param \Thumbtack\OfflinerBundle\Entity\Task $tasks
+     * @param Task $tasks
      * @return User
      */
-    public function addTask(\Thumbtack\OfflinerBundle\Entity\Task $tasks) {
+    public function addTask(Task $tasks) {
         $this->tasks[] = $tasks;
 
         return $this;
@@ -94,16 +94,16 @@ class User implements UserInterface, \Serializable {
     /**
      * Remove tasks
      *
-     * @param \Thumbtack\OfflinerBundle\Entity\Task $tasks
+     * @param Task $tasks
      */
-    public function removeTask(\Thumbtack\OfflinerBundle\Entity\Task $tasks) {
+    public function removeTask(Task $tasks) {
         $this->tasks->removeElement($tasks);
     }
 
     /**
      * Get tasks
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return ArrayCollection
      */
     public function getTasks() {
         return $this->tasks;
@@ -111,10 +111,10 @@ class User implements UserInterface, \Serializable {
     /**
      * Add domain
      *
-     * @param \Thumbtack\OfflinerBundle\Entity\Domain $domain
+     * @param Domain $domain
      * @return User
      */
-    public function addDomain(\Thumbtack\OfflinerBundle\Entity\Domain $domain) {
+    public function addDomain(Domain $domain) {
         $this->domains[] = $domain;
 
         return $this;
@@ -123,16 +123,16 @@ class User implements UserInterface, \Serializable {
     /**
      * Remove domain
      *
-     * @param \Thumbtack\OfflinerBundle\Entity\Domain $domain
+     * @param Domain $domain
      */
-    public function removeDomain(\Thumbtack\OfflinerBundle\Entity\Domain $domain) {
+    public function removeDomain(Domain $domain) {
         $this->domains->removeElement($domain);
     }
 
     /**
      * Get domains
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return ArrayCollection
      */
     public function getDomains() {
         return $this->domains;

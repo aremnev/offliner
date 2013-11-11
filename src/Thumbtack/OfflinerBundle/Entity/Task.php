@@ -4,9 +4,6 @@ namespace Thumbtack\OfflinerBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * task

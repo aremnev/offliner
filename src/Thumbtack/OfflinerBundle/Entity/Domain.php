@@ -4,9 +4,6 @@ namespace Thumbtack\OfflinerBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * task
@@ -57,6 +54,13 @@ class Domain implements \JsonSerializable {
      */
     protected $status = '';
     /**
+     * JSON string
+     * @var string
+     *
+     * @ORM\Column(name="statistics", type="string", length=1000)
+     */
+    protected $statistics = '';
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="datetime")
@@ -83,10 +87,10 @@ class Domain implements \JsonSerializable {
     /**
      * Add page
      *
-     * @param \Thumbtack\OfflinerBundle\Entity\Page $page
+     * @param Page $page
      * @return User
      */
-    public function addPage(\Thumbtack\OfflinerBundle\Entity\Page $page) {
+    public function addPage(Page $page) {
         $this->pages[] = $page;
 
         return $this;
@@ -95,10 +99,10 @@ class Domain implements \JsonSerializable {
     /**
      * Remove page
      *
-     * @param \Thumbtack\OfflinerBundle\Entity\Page $page
+     * @param Page $page
      */
-    public function removePage(\Thumbtack\OfflinerBundle\Entity\Page $page) {
-        $this->tasks->removeElement($page);
+    public function removePage(Page $page) {
+        $this->pages->removeElement($page);
     }
 
     /**
@@ -117,29 +121,6 @@ class Domain implements \JsonSerializable {
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set maxDepth
-     *
-     * @param integer $maxDepth
-     * @return Task
-     */
-    public function setMaxDepth($maxDepth)
-    {
-        $this->maxDepth = $maxDepth;
-    
-        return $this;
-    }
-
-    /**
-     * Get maxDepth
-     *
-     * @return integer 
-     */
-    public function getMaxDepth()
-    {
-        return $this->maxDepth;
     }
 
     /**
@@ -198,72 +179,17 @@ class Domain implements \JsonSerializable {
     }
 
     /**
-     * Set ready
-     *
-     * @param boolean $ready
-     * @return Task
+     * @param string $statistics
      */
-    public function setReady($ready)
-    {
-        $this->ready = $ready;
-    
-        return $this;
+    public function setStatistics($statistics) {
+        $this->statistics = $statistics;
     }
 
     /**
-     * Get ready
-     *
-     * @return boolean 
+     * @return string
      */
-    public function getReady()
-    {
-        return $this->ready;
-    }
-
-    /**
-     * Set onlyDomain
-     *
-     * @param boolean $onlyDomain
-     * @return Task
-     */
-    public function setOnlyDomain($onlyDomain)
-    {
-        $this->onlyDomain = $onlyDomain;
-    
-        return $this;
-    }
-
-    /**
-     * Get onlyDomain
-     *
-     * @return boolean 
-     */
-    public function getOnlyDomain()
-    {
-        return $this->onlyDomain;
-    }
-
-    /**
-     * Set clearScripts
-     *
-     * @param boolean $clearScripts
-     * @return Task
-     */
-    public function setClearScripts($clearScripts)
-    {
-        $this->clearScripts = $clearScripts;
-    
-        return $this;
-    }
-
-    /**
-     * Get clearScripts
-     *
-     * @return boolean 
-     */
-    public function getClearScripts()
-    {
-        return $this->clearScripts;
+    public function getStatistics() {
+        return $this->statistics;
     }
 
     /**
@@ -292,10 +218,10 @@ class Domain implements \JsonSerializable {
     /**
      * Set user
      *
-     * @param \Thumbtack\OfflinerBundle\Entity\User $user
+     * @param User $user
      * @return Task
      */
-    public function setUser(\Thumbtack\OfflinerBundle\Entity\User $user = null)
+    public function setUser(User $user = null)
     {
         $this->user = $user;
     
@@ -305,7 +231,7 @@ class Domain implements \JsonSerializable {
     /**
      * Get user
      *
-     * @return \Thumbtack\OfflinerBundle\Entity\User 
+     * @return User
      */
     public function getUser()
     {

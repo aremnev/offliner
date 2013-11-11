@@ -44,7 +44,7 @@ app.controller("tabsCtrl",function($rootScope,$cookies){
     $rootScope.tabSelect = function(tabname){
         $cookies.service = tabname;
     }
-    $rootScope.tabs = {'profile':true,'offliner':false,'search':false,'indexer':false};
+    $rootScope.tabs = {'profile':false,'offliner':true,'search':false,'indexer':false};
     if($rootScope.tabs.hasOwnProperty($cookies.service)){
         $rootScope.tabs[$cookies.service] = true;
     }
