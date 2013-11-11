@@ -66,7 +66,12 @@ class Domain implements \JsonSerializable {
      * @ORM\Column(name="date", type="datetime")
      */
     protected $date;
-
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="refresh_date", type="datetime")
+     */
+    protected $refreshDate;
 
     public function __toString() {
         return (string)$this->id;
@@ -81,6 +86,7 @@ class Domain implements \JsonSerializable {
             $this->status = $data['status'];
         }
         $this->date = new \DateTime();
+        $this->refreshDate = new \DateTime('2000-01-01');
         $this->ready = false;
         $this->pages = new ArrayCollection();
     }
@@ -236,5 +242,19 @@ class Domain implements \JsonSerializable {
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @param \DateTime $refreshDate
+     */
+    public function setRefreshDate($refreshDate) {
+        $this->refreshDate = $refreshDate;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getRefreshDate() {
+        return $this->refreshDate;
     }
 }

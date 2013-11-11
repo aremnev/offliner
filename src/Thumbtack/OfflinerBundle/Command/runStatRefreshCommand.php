@@ -13,7 +13,7 @@ class runStatRefreshCommand extends ContainerAwareCommand{
     protected function configure()
     {
         parent::configure();
-        $this->setDefinition(array())->setName('offliner:stats:get')->setDescription('get offliner stats');
+        $this->setDefinition(array())->setName('offliner:stats:refresh')->setDescription('refresh one domain stats');
         //TODO: more flexible with args and opts..
        // $this->addArgument('action', InputArgument::OPTIONAL, 'Description  of the bad work done.', 'default action'); //name, mode, description,  default
        // $this->addOption('myoption', 'shortcut-option',  InputOption::VALUE_OPTIONAL, 'Description of the option', 'default  value'); //name, shortcut, mode, description, default

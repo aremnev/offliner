@@ -1,0 +1,6 @@
+#!/bin/bash
+while [ true ]
+do
+	php app/console offliner:stats:refresh  &
+	sleep 20
+done

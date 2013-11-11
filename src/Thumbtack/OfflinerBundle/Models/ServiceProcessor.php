@@ -131,7 +131,16 @@ class ServiceProcessor {
             /**
              * @var Domain $domain;
              */
-            $domain = $this->domainsRepo->findOneByStatus(ServiceProcessor::STATUS_AWAITING);
+            $query = $this->dm->createQuery(
+                'SELECT d
+                 FROM ThumbtackOfflinerBundle:Domain d
+                 WHERE d.refreshDate < :date
+                 AND d.status != :ready'
+            )->setParameter('ready', ServiceProcessor::STATUS_READY);
+            $date = new \DateTime();
+            $date->sub(new \DateInterval('PT10M'));
+            $query->setParameter('date',$date);
+            $domain = $query->getOneOrNullResult();
             if(isset($domain)){
                 $result = array();
                 $query = $this->dm->createQuery(
@@ -154,6 +163,7 @@ class ServiceProcessor {
                     $result['lastTotal'] = 15;
                 }
                 $domain->setStatistics(json_encode($result));
+                $domain->setRefreshDate(new \DateTime('now'));
                 $this->dm->persist($domain);
                 $this->dm->flush();
             }
