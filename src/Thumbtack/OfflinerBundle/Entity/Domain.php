@@ -87,6 +87,7 @@ class Domain implements \JsonSerializable {
         }
         $this->date = new \DateTime();
         $this->refreshDate = new \DateTime('2000-01-01');
+        // REVIEW: where it is used
         $this->ready = false;
         $this->pages = new ArrayCollection();
     }
@@ -138,6 +139,7 @@ class Domain implements \JsonSerializable {
     public function setUrl($url)
     {
         $this->url = $url;
+        // REVIEW: if only one url parameter is needed - use second param of parse_url(), like that - PHP_URL_HOST
         $parsed = parse_url($url);
         $this->host = $parsed['host'];
         return $this;

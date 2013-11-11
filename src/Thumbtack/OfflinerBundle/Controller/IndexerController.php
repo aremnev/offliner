@@ -19,6 +19,8 @@ class IndexerController extends BaseController {
      * @Method ({"POST"})
      */
     public function searchAction(){
+
+        // Review: add validation on null
         $data = json_decode($this->getRequest()->getContent());
         /* @var TransformedFinder $finder */
         $index = $this->container->get('fos_elastica.index.pages.page');
@@ -38,7 +40,8 @@ class IndexerController extends BaseController {
          */
         $index = $this->container->get('fos_elastica.index.pages.page');
         $indexer = new IndexerModel($this->getUser(),$index,$this->getDoctrine()->getManager());
-        $msg = ($indexer->addDomain($data)?"true":"false");
+        // Review: $indexer->addDomain($data) already return bool value
+        $msg = ($indexer->addDomain($data) ? "true" : "false");
         $response = new Response($msg);
         $response->headers->set('Content-Type', 'application/json');
         $response->setStatusCode(201);
@@ -70,7 +73,7 @@ class IndexerController extends BaseController {
         $indexer = new IndexerModel($this->getUser(),$index,$this->getDoctrine()->getManager());
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-        $response->setStatusCode($indexer->deleteDomainById($id)?204:404);
+        $response->setStatusCode($indexer->deleteDomainById($id) ? 204 : 404);
         return $response;
     }
     /**
@@ -92,6 +95,7 @@ class IndexerController extends BaseController {
      * @Method ({"GET"})
      */
     public function savedCopyAction($hash){
+        // Review: move to view
         /** @var Page $page */
         $page = $this->getDoctrine()->getManager()->getRepository('ThumbtackOfflinerBundle:Page')->findOneByHashUrl($hash);
         $response='<h1 style="text-align: center">This page have status: ';
