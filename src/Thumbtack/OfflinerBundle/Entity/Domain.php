@@ -77,7 +77,7 @@ class Domain implements \JsonSerializable {
         return (string)$this->id;
     }
     public function jsonSerialize() {
-        return array("id"=>$this->id,"status"=>$this->status,"date"=>$this->date,"url"=>$this->url);
+        return array("id"=>$this->id,"status"=>$this->status,"date"=>$this->date,"url"=>$this->url,"refreshDate"=>$this->refreshDate);
     }
     public function __construct(){
         if(func_get_arg(0)){

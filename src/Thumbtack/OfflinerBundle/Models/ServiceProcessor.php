@@ -62,6 +62,7 @@ class ServiceProcessor {
         $this->domainsRepo = $this->dm->getRepository('ThumbtackOfflinerBundle:Domain');
         $this->maxProcessCount = $mpc;
         $this->uploadPath = $uploadPath;
+        error_reporting(E_ERROR | E_WARNING | E_PARSE);
     }
     public function runQueueTask(){
         if($this->regProcess()){
@@ -159,12 +160,31 @@ class ServiceProcessor {
                     $result['lastTotal'] = $result['ready'];
                 }else{
                     $domain->setStatus(ServiceProcessor::STATUS_PROGRESS);
-                    $result['lastTotal'] = 15;
                 }
                 $domain->setStatistics(json_encode($result));
                 $domain->setRefreshDate(new \DateTime('now'));
                 $this->dm->persist($domain);
                 $this->dm->flush();
+            }else{
+                $query = $this->dm->createQuery(
+                    'SELECT d
+                     FROM ThumbtackOfflinerBundle:Domain d
+                     WHERE d.refreshDate < :date
+                     AND d.status = :ready'
+                )->setMaxResults(1)->setParameter('ready', ServiceProcessor::STATUS_READY);
+                $date = new \DateTime();
+                $date->modify('-1 day');;
+                $query->setParameter('date',$date);
+                $domain = $query->getResult()[0];
+                if($domain){
+                    $domain->setStatus(ServiceProcessor::STATUS_PROGRESS);
+                    foreach($domain->getPages() as $page){
+                        $page->setStatus(ServiceProcessor::STATUS_AWAITING);
+                        $this->dm->persist($page);
+                    }
+                    $this->dm->persist($domain);
+                    $this->dm->flush();
+                }
             }
         return true;
     }

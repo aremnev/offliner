@@ -110,7 +110,7 @@ app.controller("indexerCtrl",function($scope,$http,$window){
     $scope.domainTemplate = function(data,domain){
         var result ='';
         result += '<div class="page-info">';
-        result += '<h4>'+domain.url+' stat:</h4>';
+        result += '<h4>'+domain.url+':</h4>';
         result += '<div class="stats">';
         result += '<span class="stats-item"><span class="stats-label">In queue</span> <span class="stats-count">' + data.await + '</span></span>';
         result += '<span class="stats-item"><span class="stats-label">In progress</span> <span class="stats-count">' + data.progress + '</span></span>';
@@ -121,7 +121,9 @@ app.controller("indexerCtrl",function($scope,$http,$window){
             if(proc != 100){
                 result += '<h4>Refreshing index: '+proc+'%</h4>';
             }else{
-                result += '<h4>Index is actual. Until next refreshing:  14 hours</h4>'
+                var now = new Date();
+                var d = new Date(domain.refreshDate.date);
+                result += '<h4>Index is actual. Until next refreshing: '+parseInt(24-(now-d)/(3600*1000))+' hours</h4>'
             }
         }else{
             result += '<h4>Initial indexing</h4>';
