@@ -117,7 +117,12 @@ app.controller("indexerCtrl",function($scope,$http,$window){
         result += '<span class="stats-item"><span class="stats-label">Done</span>  <span class="stats-count">' + data.ready + '</span></span>';
         result += '</div>';
         if(data.lastTotal){
-            result += '<h4>Refreshing index: '+Math.round(data.ready/data.lastTotal*100)+'%</h4>';
+            proc = Math.round(data.ready/data.lastTotal*100);
+            if(proc != 100){
+                result += '<h4>Refreshing index: '++'%</h4>'
+            }else{
+                result += '<h4>Index is actual. Until next refreshing:  14 hours</h4>'
+            }
         }else{
             result += '<h4>Initial indexing</h4>';
         }
