@@ -76,9 +76,12 @@ class Domain implements \JsonSerializable {
     public function __toString() {
         return (string)$this->id;
     }
+
+    // Review: where is it used? read YAGNI principle
     public function jsonSerialize() {
         return array("id"=>$this->id,"status"=>$this->status,"date"=>$this->date,"url"=>$this->url,"refreshDate"=>$this->refreshDate);
     }
+
     public function __construct(){
         if(func_get_arg(0)){
             $data = func_get_arg(0);

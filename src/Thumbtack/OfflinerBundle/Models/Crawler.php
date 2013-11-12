@@ -4,11 +4,11 @@ namespace Thumbtack\OfflinerBundle\Models;
 
 class Crawler {
     public static function getPage($link){
-        error_reporting(E_ERROR | E_PARSE);
-        require_once(__DIR__.'/../Misc/url_to_absolute.php');
+        error_reporting(E_ERROR | E_PARSE); // Review use  -1 
+        require_once(__DIR__.'/../Misc/url_to_absolute.php'); // Review: move to top
         $page = array();
         if(Crawler::retrieve_remote_file_size($link)>1024*1024){ // big files
-            return null;
+            return null; // Review: you return $page at the end of function, use certain retunrned parameters, in this case - array()
         }
         $page['html'] = Crawler::get_url_data($link);
         if(!$page['html']){

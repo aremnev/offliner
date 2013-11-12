@@ -62,7 +62,7 @@ class ServiceProcessor {
         $this->domainsRepo = $this->dm->getRepository('ThumbtackOfflinerBundle:Domain');
         $this->maxProcessCount = $mpc;
         $this->uploadPath = $uploadPath;
-        error_reporting(E_ERROR | E_WARNING | E_PARSE);
+        error_reporting(E_ERROR | E_WARNING | E_PARSE); // Review: use error_reporting(-1); (E_ALL)
     }
     public function runQueueTask(){
         if($this->regProcess()){
@@ -71,7 +71,7 @@ class ServiceProcessor {
              */
             $task = $this->tasksRepo->findOneByStatus(ServiceProcessor::STATUS_AWAITING);
             if(isset($task)){
-                $parsed = parse_url($task->getUrl());
+                $parsed = parse_url($task->getUrl()); // Review: use PHP_URL_HOST
                 $host = $parsed['host'];
                 $task->setStatus(ServiceProcessor::STATUS_PROGRESS);
                 $this->dm->persist($task);
@@ -80,13 +80,13 @@ class ServiceProcessor {
                 exec("node -e \"".$script."\"");
                 exec("cd completed_tasks/ && zip ".$task->getId().".zip -r ".$task->getId()." && mv -f ".$task->getId().".zip ".$this->uploadPath.$task->getId().$host.".zip");
                 $task->setStatus(ServiceProcessor::STATUS_READY);
-                $task->setReady(true);
+                $task->setReady(true); // Review: unnedeed
                 $this->dm->persist($task);
                 $this->dm->flush();
             }
             $this->unregProcess();
         }
-        return  true;
+        return  true; // Review: ??? change return and "if" logic
     }
     public function runIndexing(){
         if($this->regProcess()){
@@ -99,33 +99,35 @@ class ServiceProcessor {
                 $page->setStatus(ServiceProcessor::STATUS_PROGRESS);
                 $this->dm->persist($page);
                 $this->dm->flush();
+                // Review: move to top
                 require_once(__DIR__.'/../Misc/normilize_url.php');
+
                 $parsed_page = Crawler::getPage($page->getUrl());
-                if($parsed_page){
+                if($parsed_page){ // Review: use empty()
                     foreach($parsed_page['links'] as $link){
                         $link = normilize_url($link);
                         $existed = $this->pagesRepo->findOneByHashUrl(md5($link));
-                        if($this->checkDomain($link,$domain->getHost()) && !$existed){
+                        if( $this->checkDomain($link, $domain->getHost()) && !$existed ){
                             $newPage = new Page($link);
                             $newPage->setDomain($domain);
                             $this->dm->persist($newPage);
                             $this->dm->flush();
                         }
                     }
-                    $page->setReady(true);
+                    $page->setReady(true); // Review: remove unnecessary
                     $page->setStatus(ServiceProcessor::STATUS_READY);
                     $page->setContent($parsed_page['plain']);
                     $page->setHtml($parsed_page['html']);
                     $page->setTitle($parsed_page['title']);
                     $this->dm->persist($page);
                 }else{
-                    $this->dm->remove($page);
+                    $this->dm->remove($page); // Review: ???
                 }
                 $this->dm->flush();
             }
             $this->unregProcess();
         }
-        return  true;
+        return  true; // Review: ??? change return and "if" logic
     }
     public function runStatUpdate(){
             /**
@@ -188,8 +190,9 @@ class ServiceProcessor {
             }
         return true;
     }
+
     public function regProcess(){
-        $success = false;
+        $success = false; // Review: remove, use return true or false directly
         $this->dm->beginTransaction();
         $query = $this->dm->createQuery('SELECT count(p) FROM ThumbtackOfflinerBundle:Process p');
         if(intval($query->getSingleScalarResult()) < $this->maxProcessCount){
@@ -202,17 +205,19 @@ class ServiceProcessor {
         }else{
             $this->dm->rollback();
         }
-         return $success;
+        return $success;
     }
+
     public function unregProcess(){
-        if($this->process){
+        if($this->process){ // Review: isset and make this field null
             $this->dm->remove($this->process);
             $this->dm->flush();
             $this->dm->clear();
         }
     }
+
     private function checkDomain($url,$domainHost){
-        $parsed = parse_url($url);
+        $parsed = parse_url($url); // Review: use PHP_URL_HOST
         return $parsed['host'] == $domainHost;
     }
     /**
