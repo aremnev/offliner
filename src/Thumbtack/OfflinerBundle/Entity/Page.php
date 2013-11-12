@@ -4,9 +4,6 @@ namespace Thumbtack\OfflinerBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Constraints\DateTime;
 use Thumbtack\OfflinerBundle\Models\ServiceProcessor;
 
 /**
@@ -34,7 +31,7 @@ class Page implements \JsonSerializable{
      *
      * @ORM\ManyToOne(targetEntity="Domain", inversedBy="pages")
      * @ORM\JoinColumn(name="domain_id", referencedColumnName="id")
-     */flf
+     */
     
     protected $domain;
 
@@ -76,7 +73,7 @@ class Page implements \JsonSerializable{
      */
     protected $status = '';
     /**
-     * @var bool
+     * @var bool //REVU: SetStatus as ENUM , delete ready
      *
      * @ORM\Column(name="ready", type="boolean")
      */
@@ -96,7 +93,7 @@ class Page implements \JsonSerializable{
         $this->date = new \DateTime();
     }
     /**
-     * @return \Thumbtack\OfflinerBundle\Entity\User
+     * @return User
      */
     public function getUser() {
         return $this->domain->getUser();
@@ -114,7 +111,7 @@ class Page implements \JsonSerializable{
      * Set url
      *
      * @param string $url
-     * @return Task
+     * @return Page
      */
     public function setUrl($url) {
         $this->url = $url;
@@ -135,7 +132,7 @@ class Page implements \JsonSerializable{
      * Set status
      *
      * @param string $status
-     * @return Task
+     * @return Page
      */
     public function setStatus($status) {
         $this->status = $status;
@@ -155,7 +152,7 @@ class Page implements \JsonSerializable{
      * Set ready
      *
      * @param boolean $ready
-     * @return Task
+     * @return Page
      */
     public function setReady($ready) {
         $this->ready = $ready;
@@ -175,7 +172,7 @@ class Page implements \JsonSerializable{
      * Set title
      *
      * @param $title
-     * @return Task
+     * @return Page
      */
     public function setTitle($title) {
         $this->title = $title;
@@ -212,11 +209,14 @@ class Page implements \JsonSerializable{
     public function getContent() {
         return $this->content;
     }
+
     /**
      * @param string $html
+     * @return $this
      */
     public function setHtml($html) {
         $this->html = $html;
+        return $this;
     }
 
     /**
@@ -229,7 +229,7 @@ class Page implements \JsonSerializable{
      * Set date
      *
      * @param \DateTime $date
-     * @return Task
+     * @return Page
      */
     public function setDate($date) {
         $this->date = $date;
@@ -245,11 +245,15 @@ class Page implements \JsonSerializable{
     public function getDate() {
         return $this->date;
     }
+
     /**
      * @param Domain $domain
+     * @return $this
      */
     public function setDomain($domain) {
         $this->domain = $domain;
+
+        return $this;
     }
 
     /**

@@ -13,7 +13,7 @@ use Thumbtack\OfflinerBundle\Entity\Task;
 
 class ServiceProcessor {
     const STATUS_AWAITING = 'in queue';
-    const STATUS_PROGRESS = 'in progress';
+    const STATUS_PROGRESS = 'in progress'; //REVU: overhead ????
     const STATUS_READY = 'Ready';
     /**
      * @var EntityManager
@@ -80,6 +80,7 @@ class ServiceProcessor {
                 exec("node -e \"".$script."\"");
                 exec("cd completed_tasks/ && zip ".$task->getId().".zip -r ".$task->getId()." && mv -f ".$task->getId().".zip ".$this->uploadPath.$task->getId().$host.".zip");
                 $task->setStatus(ServiceProcessor::STATUS_READY);
+                $task->setFilename($task->getId().$host.".zip");
                 $task->setReady(true);
                 $this->dm->persist($task);
                 $this->dm->flush();

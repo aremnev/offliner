@@ -34,9 +34,9 @@ class IndexerModel {
         $boolQuery = new Bool();
         $userQuery = new Terms();
         $userQuery->setTerms('user',array($this->user->getId()));
-        if(isset($domainId)){
+        //if(!empty($domainId)){
             $userQuery->addTerm('domain',array($domainId));
-        }
+        //}
         $boolQuery->addMust($userQuery);
         $boolQuery->setMinimumNumberShouldMatch(1);
         $contentQuery = new Query\FuzzyLikeThis();

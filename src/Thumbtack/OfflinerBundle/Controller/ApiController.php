@@ -40,14 +40,17 @@ class ApiController extends BaseController {
         $txt = strcode(base64_decode($txt), 'mypassword');
         echo $txt;
         */
-        $id = ApiController::strcode(base64_decode($key), $this->container->getParameter('secret'));
+        $results = array();
+        $email = ApiController::strcode(base64_decode($key), $this->container->getParameter('secret'));
         $data = $this->getRequest()->get('search');
-        /* @var TransformedFinder $finder */
-        $index = $this->container->get('fos_elastica.index.pages.page');
-        $user = $this->getDoctrine()->getRepository('ThumbtackOfflinerBundle:User')->findOneById($id);
-        $searcher = new IndexerModel($user,$index,$this->getDoctrine()->getManager());
-        $domain = $this->getRequest()->get('domainId');;
-        $results = $searcher->find($data->text,$domain);
+        $user = $this->getDoctrine()->getRepository('ThumbtackOfflinerBundle:User')->findOneByEmail($email);
+        if(!empty($data) && !empty($user)){
+            /* @var TransformedFinder $finder */
+            $index = $this->container->get('fos_elastica.index.pages.page');
+            $searcher = new IndexerModel($user,$index,$this->getDoctrine()->getManager());
+            $domain = $this->getRequest()->get('domainId');
+            $results = $searcher->find($data,$domain);
+        }
         return new Response(json_encode($results));
     }
 }

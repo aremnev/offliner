@@ -76,7 +76,6 @@ app.controller("offlinerCtrl",function($scope,$http,$window){
                     case 'newTask':
                         if(data){
                             $scope.message = 'Added';
-                            $scope.sendRequest('getStat');
                             $scope.sendRequest('getTasks');
                         }else{
                             $scope.message = 'Something wrong';
@@ -88,7 +87,6 @@ app.controller("offlinerCtrl",function($scope,$http,$window){
                     case 'deleteTask':
                         if(status == 204){
                             $scope.message = 'Deleted';
-                            $scope.sendRequest('getStat');
                             $scope.sendRequest('getTasks');
                         }else{
                             $scope.message = 'Something wrong';

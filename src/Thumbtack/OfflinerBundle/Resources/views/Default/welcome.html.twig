@@ -2,7 +2,7 @@
 {% block global_stat %}
 
     {% verbatim %}
-    <div class="stats stats-theme-light pull-right social">
+    <div class="stats stats-theme-light pull-right social" xmlns="http://www.w3.org/1999/html">
         <span style="display: inline-block;"><span class="stats-label"></span> <span class="stats-count" style="font-size: 100%">FOLLOW US:</span></span>
         <span class="stats-item"><span class="stats-label">Twitter</span> <span class="stats-count"><span class="icon icon-wf "></span></span></span>
         <span class="stats-item"><span class="stats-label">Google</span> <span class="stats-count"><span class="icon icon-wf"></span></span></span>
@@ -61,7 +61,7 @@
                             <td> <label class="label">{{ task.maxDepth }}</label></td>
                             <td> <small>{{ task.date|date:'yyyy-MM-dd HH:mm:ss'  }}</small></td>
                             <td>
-                                <a href="uploads/{{task.id}}.zip"з><label class="btn btn-success pull-left" ng-if="task.ready" title="Download">
+                                <a href="uploads/{{task.filename}}"з><label class="btn btn-success pull-left" ng-if="task.ready" title="Download">
                                         <span class="icon icon-wf icon-action">&#59256;</span>
                                     </label></a>
                                 <label class="btn btn-danger pull-right" ng-click="sendRequest('deleteTask',{{task.id}})" title="Delete">
@@ -179,14 +179,16 @@
                     <span class="icon icon-wf ">&#128240;</span>
                     Profile
                 </tab-heading>
-                <div class="loading"><p>In w<span class="rotateO"></span>rk</p></div>
+               <!-- <div class="loading"><p>In w<span class="rotateO"></span>rk</p></div>-->
                 <div>
+    {% endverbatim %}
                     <div class="panel">
-                        {% endverbatim %}
                         You are logged-in as <span class="username">{{ app.user.nickname }}</span>, manage your api keys and info below</a>.
-                        Yours ApiKey =  <span class="username"> {{ user_api_key }}</span>
-                        {% verbatim %}
                     </div>
+                    <div class="page-content">
+                        <p>Yours ApiKey <input disabled value = "{{ user_api_key }}"/><a href="#" class="btn btn-inverse"><span class="icon icon-wf icon-action">&#59249;</span></a>
+                    </div>
+     {% verbatim %}
                 </div>
             </tab>
             <tab >

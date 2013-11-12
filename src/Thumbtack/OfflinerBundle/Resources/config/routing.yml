@@ -10,3 +10,6 @@ thumbtackOffliner_searcher:
 thumbtackOffliner_oauth:
     resource: "@ThumbtackOfflinerBundle/Security/UserProvider.php"
     type:     annotation
+thumbtackOffliner_api:
+    resource: "@ThumbtackOfflinerBundle/Controller/ApiController.php"
+    type:     annotation

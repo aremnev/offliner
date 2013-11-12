@@ -44,6 +44,13 @@ class Task implements \JsonSerializable {
     /**
      * @var string
      *
+     * @ORM\Column(name="filename", type="string", length=100)
+     */
+    protected $filename = '';
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="status", type="string", length=20)
      */
     protected $status = '';
@@ -79,7 +86,8 @@ class Task implements \JsonSerializable {
     }
 
     public function jsonSerialize() {
-        return array("id" => $this->id, "maxDepth" => $this->maxDepth, "status" => $this->status, "onlyDomain" => $this->onlyDomain, "clearScripts" => $this->clearScripts, "date" => $this->date, "url" => $this->url, "ready" => $this->ready);
+        return array("id" => $this->id, "maxDepth" => $this->maxDepth, "status" => $this->status, "onlyDomain" => $this->onlyDomain,
+            "clearScripts" => $this->clearScripts, "date" => $this->date, "url" => $this->url,"filename" => $this->filename, "ready" => $this->ready);
     }
 
     public function __construct() {
@@ -108,7 +116,7 @@ class Task implements \JsonSerializable {
      * Set maxDepth
      *
      * @param integer $maxDepth
-     * @return Task
+     * @return Task //REVU: TASK -> PAGE
      */
     public function setMaxDepth($maxDepth) {
         $this->maxDepth = $maxDepth;
@@ -145,7 +153,19 @@ class Task implements \JsonSerializable {
     public function getUrl() {
         return $this->url;
     }
+    /**
+     * @param string $filename
+     */
+    public function setFilename($filename) {
+        $this->filename = $filename;
+    }
 
+    /**
+     * @return string
+     */
+    public function getFilename() {
+        return $this->filename;
+    }
     /**
      * Set status
      *

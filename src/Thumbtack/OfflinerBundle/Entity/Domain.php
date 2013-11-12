@@ -79,12 +79,13 @@ class Domain implements \JsonSerializable {
     public function jsonSerialize() {
         return array("id"=>$this->id,"status"=>$this->status,"date"=>$this->date,"url"=>$this->url,"refreshDate"=>$this->refreshDate);
     }
-    public function __construct(){
-        if(func_get_arg(0)){
-            $data = func_get_arg(0);
+    public function __construct($data = null){
+        //if(func_get_arg(0)){
+            //Review: check param REFACTOR THIS SHIT
+            if(!empty($data)){
             $this->setUrl($data['url']);
             $this->status = $data['status'];
-        }
+             }
         $this->date = new \DateTime();
         $this->refreshDate = new \DateTime('2000-01-01');
         // REVIEW: where it is used
@@ -206,10 +207,8 @@ class Domain implements \JsonSerializable {
      * @param \DateTime $date
      * @return Task
      */
-    public function setDate($date)
-    {
+    public function setDate($date){
         $this->date = $date;
-    
         return $this;
     }
 
