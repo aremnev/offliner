@@ -15,33 +15,35 @@ class OfflinerController extends BaseController {
      * @Route("/tasks/new", name="newTask")
      * @Method ({"POST"})
      */
-    public function addTaskAction(){
-      $data = $this->getRequest()->getContent();
-    /**
-     * @var OfflinerModel $offliner
-     */
-      $offliner= $this->get("thumbtackOffliner");
-      $msg = ($offliner->addTaskToQueue($data)?"true":"false");
-      $response = new Response($msg);
-      $response->headers->set('Content-Type', 'application/json');
-        $response->setStatusCode(202);
-    return $response;
+    public function addTaskAction() {
+        $data = $this->getRequest()->getContent();
+        $response = new Response();
+        $response->setStatusCode(500);
+        if (!empty($data)) {
+            /** @var OfflinerModel $offliner */
+            $offliner = $this->get("thumbtackOffliner");
+            if ($offliner->addTask($data)) {
+                $response->headers->set('Content-Type', 'application/json');
+                $response->setStatusCode(202);
+            }
+        }
+        return $response;
     }
+
     /**
      * @Route("/tasks/{id}", name="updateTask")
      * @Method ({"PUT"})
      */
-    public function updateTaskAction($id){
+    public function updateTaskAction($id) {
         return $this->addTaskAction();
     }
+
     /**
      * @Route("/tasks", name="tasksList")
-     * @Method ({"POST"})
+     * @Method ({"GET"})
      */
-    public function taskListAction(){
-        /**
-         * @var User $user
-         */
+    public function taskListAction() {
+        /** @var User $user */
         $user = $this->getUser();
         $response = new Response(json_encode($user->getTasks()->toArray()));
         $response->headers->set('Content-Type', 'application/json');
@@ -52,13 +54,11 @@ class OfflinerController extends BaseController {
      * @Route("/tasks/{id}", requirements={"id" = "\d+"}, defaults={"id" = null} , name="taskDelete")
      * @Method ({"DELETE"})
      */
-    public function taskDeleteAction($id){
-        /**
-         * @var OfflinerModel $offliner
-         */
+    public function taskDeleteAction($id) {
+        /** @var OfflinerModel $offliner */
         $offliner = $this->get("thumbtackOffliner");
         $response = new Response();
-        $response->setStatusCode($offliner->deleteTaskById($id)?204:404);
+        $response->setStatusCode($offliner->deleteTaskById($id) ? 204 : 404);
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
@@ -68,19 +68,18 @@ class OfflinerController extends BaseController {
      */
     public function getFromUploadsAction($path) {
         $upload_path = $this->container->getParameter('uploads_dir');
-        $response = new Response(file_get_contents($upload_path.$path));
+        $response = new Response(file_get_contents($upload_path . $path));
         $response->headers->set('Content-Type', 'application/zip');
-        $response->setStatusCode(200); //status 'canceled' but : http://stackoverflow.com/questions/15393210/chrome-showing-canceled-on-successful-file-download-200-status
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $path . '"');
         return $response;
     }
+
     /**
      * @Route("/stat", name="stat")
      * @Method ({"GET"})
      */
-    public function statAction(){
-        /**
-         * @var OfflinerModel $offliner
-         */
+    public function statAction() {
+        /** @var OfflinerModel $offliner */
         $offliner = $this->get("thumbtackOffliner");
         $msg = $offliner->getUserStat($this->getUser());
         $response = new Response(json_encode($msg));

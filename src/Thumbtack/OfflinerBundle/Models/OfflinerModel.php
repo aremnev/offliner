@@ -1,62 +1,55 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: istrelnikov
- * Date: 9/20/13
- * Time: 8:42 PM
- * To change this template use File | Settings | File Templates.
- */
 namespace Thumbtack\OfflinerBundle\Models;
-//TODO: error codes/messages
+
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Thumbtack\OfflinerBundle\Entity\Task;
 use Thumbtack\OfflinerBundle\Entity\User;
 
+require_once(__DIR__ . '/../Misc/normilize_url.php');
 class OfflinerModel {
-    //----constants
-    /**
-     * @var EntityManager
-     */
-    private  $dm;
-    /**
-     * @var User
-     */
-    private  $user;
-    /**
-     * @var EntityRepository
-     */
+    /** @var EntityManager */
+    private $dm;
+    /** @var User */
+    private $user;
+    /** @var EntityRepository */
     private $tasksRepo;
 
     /**
      * @param $secure
      * @param $doctrine
      */
-    function __construct($secure,$doctrine){
+    function __construct($secure, $doctrine) {
         $this->dm = $doctrine->getManager();
         $this->user = $secure->getToken()->getUser();
         $this->tasksRepo = $this->dm->getRepository('ThumbtackOfflinerBundle:Task');
     }
 
-    function addTaskToQueue($json){
-        try{
-            require_once(__DIR__.'/../Misc/normilize_url.php');
-            $data = json_decode($json,true);
-            $data['url']= normilize_url($data['url']);
+    function addTask($json) {
+        try {
+            if (empty($json)) { // {url,status,maxDepth,clearScripts,onlyDomain} validation???
+                return false;
+            }
+            $data = json_decode($json, true);
+            $data['url'] = normilize_url($data['url']);
             $data['status'] = ServiceProcessor::STATUS_AWAITING;
-            if(!isset($data['id'])){
-                $task = new Task($data);
+            if (empty($data['id'])) { //create
+                $task = new Task();
                 $task->setUser($this->user);
+                $task->setStatus($data['status']);
+                $task->setClearScripts($data['clearScripts']);
+                $task->setMaxDepth($data['maxDepth']);
+                $task->setOnlyDomain($data['onlyDomain']);
+                $task->setUrl($data['url']);
                 $this->dm->persist($task);
                 $this->dm->flush();
                 return true;
-            }else{  //
-                /**
-                 * @var Task $task
-                 */
+            } else { //update
+                /** @var Task $task */
                 $task = $this->tasksRepo->findOneById($data['id']);
                 $task->setUser($this->user);
+                $task->setStatus($data['status']);
                 $task->setClearScripts($data['clearScripts']);
                 $task->setMaxDepth($data['maxDepth']);
                 $task->setDate(new \DateTime());
@@ -66,22 +59,24 @@ class OfflinerModel {
                 $this->dm->flush();
                 return true;
             }
-        }catch (Exception $e){
-            return false;
-        }
-    }
-    function deleteTaskById($id){
-        $task = $this->tasksRepo->findOneById($id);
-        if($task){
-            $this->dm->remove($task);
-            $this->dm->flush();
-            return true;
-        }else{
+        } catch (Exception $e) {
+            //suppress&log
             return false;
         }
     }
 
-    public function getUserStat($user){
+    function deleteTaskById($id) {
+        $task = $this->tasksRepo->findOneById($id);
+        if ($task) {
+            $this->dm->remove($task);
+            $this->dm->flush();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getUserStat($user) {
         $query = $this->dm->createQuery('SELECT count(t) FROM ThumbtackOfflinerBundle:Task t WHERE t.status = ?1 AND t.user = ?2');
         $query->setParameter(2, $user);
         $query->setParameter(1, ServiceProcessor::STATUS_AWAITING);

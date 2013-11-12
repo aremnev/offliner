@@ -64,18 +64,17 @@ class User implements UserInterface, \Serializable {
      *
      * @ORM\OneToMany(targetEntity="Task", mappedBy="user",cascade={"persist", "remove"})
      */
-    protected $tasks = ''; // Review: it's should be null
+    protected $tasks = null; // Review: it's should be null --Resolved
     /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Domain", mappedBy="user",cascade={"persist", "remove"})
      */
-    protected $domains = ''; // Review: it's should be null
+    protected $domains = null;
     /**
      * Constructor
      */
     public function __construct() {
-        // Review: Use ArrayObject from SPL instead, it's faster and more reliable
         $this->tasks = new ArrayCollection();
         $this->domains = new ArrayCollection();
     }
@@ -96,9 +95,12 @@ class User implements UserInterface, \Serializable {
      * Remove tasks
      *
      * @param Task $tasks
+     * @return User
      */
     public function removeTask(Task $tasks) {
         $this->tasks->removeElement($tasks);
+
+        return $this;
     }
 
     /**
@@ -109,6 +111,7 @@ class User implements UserInterface, \Serializable {
     public function getTasks() {
         return $this->tasks;
     }
+
     /**
      * Add domain
      *
@@ -125,9 +128,12 @@ class User implements UserInterface, \Serializable {
      * Remove domain
      *
      * @param Domain $domain
+     * @return User
      */
     public function removeDomain(Domain $domain) {
         $this->domains->removeElement($domain);
+
+        return $this;
     }
 
     /**
@@ -253,12 +259,12 @@ class User implements UserInterface, \Serializable {
         return $this->photo;
     }
 
-    //------UserInterface implement
+    /***  UserInterface implementation ***/
     public function getRoles() {
         if ($this->username == 'xplk90@gmail.com') {
-            return array('ROLE_ADMIN', 'UASHE_KRASAVCHIK', 'ROLE_OAUTH_USER');
+            return array('ROLE_ADMIN', 'ROLE_OAUTH_USER');
         }
-        return array('ROLE_USER', 'POCHTI_KRASAVCHIK', 'ROLE_OAUTH_USER');
+        return array('ROLE_USER', 'ROLE_OAUTH_USER');
     }
 
     /**
@@ -267,6 +273,7 @@ class User implements UserInterface, \Serializable {
     public function getPassword() {
         return $this->password;
     }
+
     /**
      * Set password
      *
@@ -275,6 +282,7 @@ class User implements UserInterface, \Serializable {
      */
     public function setPassword($pass) {
         $this->password = $pass;
+
         return $this;
     }
 
@@ -304,12 +312,13 @@ class User implements UserInterface, \Serializable {
     }
 
     public function serialize() {
-        return \json_encode(array($this->username, $this->email,$this->password, $this->photo, $this->nickname, $this->joinDate, $this->id,$this->tasks));
+        return \json_encode(array($this->username, $this->email, $this->password,
+                                 $this->photo, $this->nickname, $this->joinDate, $this->id, $this->tasks)
+        );
     }
 
     public function unserialize($serialized) {
-        list($this->username, $this->email,$this->password, $this->photo, $this->nickname, $this->joinDate, $this->id,$this->tasks) = \json_decode($serialized);
+        list($this->username, $this->email, $this->password,
+             $this->photo, $this->nickname, $this->joinDate, $this->id, $this->tasks) = \json_decode($serialized);
     }
-
-
 }

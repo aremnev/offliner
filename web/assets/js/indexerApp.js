@@ -69,7 +69,7 @@ app.controller("indexerCtrl",function($scope,$http,$window){
                             $scope.result = '<h4>'+opt_data.url+' statistics is empty</h4>';
                         }
                     case 'newDomain':
-                        if(data){
+                        if(status == 201){
                             $scope.message = 'Added';
                             $scope.sendRequest('getDomains');
                         }else{

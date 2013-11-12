@@ -2,7 +2,6 @@
 
 namespace Thumbtack\OfflinerBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -82,30 +81,28 @@ class Task implements \JsonSerializable {
      */
     protected $date;
 
+    public function __construct() {
+        $this->date = new \DateTime();
+        $this->ready = false;
+    }
 
     public function __toString() {
         return json_encode($this->jsonSerialize());
     }
 
-    // Review: join with __toString()
     public function jsonSerialize() {
-        return array("id" => $this->id, "maxDepth" => $this->maxDepth, "status" => $this->status, "onlyDomain" => $this->onlyDomain,
-            "clearScripts" => $this->clearScripts, "date" => $this->date, "url" => $this->url,"filename" => $this->filename, "ready" => $this->ready);
+        return array(
+            "id" => $this->id,
+            "maxDepth" => $this->maxDepth,
+            "status" => $this->status,
+            "onlyDomain" => $this->onlyDomain,
+            "clearScripts" => $this->clearScripts,
+            "date" => $this->date,
+            "url" => $this->url,
+            "filename" => $this->filename,
+            "ready" => $this->ready
+        );
     }
-
-    public function __construct() {
-        if (func_get_arg(0)) {
-            $data = func_get_arg(0);
-            $this->maxDepth = $data['maxDepth'];
-            $this->url = $data['url'];
-            $this->status = $data['status'];
-            $this->onlyDomain = $data['onlyDomain'];
-            $this->clearScripts = $data['clearScripts'];
-        }
-        $this->date = new \DateTime();
-        $this->ready = false;
-    }
-
     /**
      * Get id
      *
@@ -119,7 +116,7 @@ class Task implements \JsonSerializable {
      * Set maxDepth
      *
      * @param integer $maxDepth
-     * @return Task //REVU: TASK -> PAGE
+     * @return Task
      */
     public function setMaxDepth($maxDepth) {
         $this->maxDepth = $maxDepth;
@@ -156,11 +153,15 @@ class Task implements \JsonSerializable {
     public function getUrl() {
         return $this->url;
     }
+
     /**
      * @param string $filename
+     * @return Task
      */
     public function setFilename($filename) {
         $this->filename = $filename;
+
+        return $this;
     }
 
     /**
@@ -169,6 +170,7 @@ class Task implements \JsonSerializable {
     public function getFilename() {
         return $this->filename;
     }
+
     /**
      * Set status
      *
@@ -277,10 +279,10 @@ class Task implements \JsonSerializable {
     /**
      * Set user
      *
-     * @param \Thumbtack\OfflinerBundle\Entity\User $user
+     * @param User $user
      * @return Task
      */
-    public function setUser(\Thumbtack\OfflinerBundle\Entity\User $user = null) {
+    public function setUser(User $user = null) {
         $this->user = $user;
 
         return $this;
@@ -289,7 +291,7 @@ class Task implements \JsonSerializable {
     /**
      * Get user
      *
-     * @return \Thumbtack\OfflinerBundle\Entity\User
+     * @return User
      */
     public function getUser() {
         return $this->user;

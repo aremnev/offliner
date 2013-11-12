@@ -77,29 +77,30 @@ class Domain implements \JsonSerializable {
         return (string)$this->id;
     }
 
-    // Review: where is it used? read YAGNI principle
+    // Review: where is it used? read YAGNI principle -- It is a very necessary thing for compiling json string on request
     public function jsonSerialize() {
-        return array("id"=>$this->id,"status"=>$this->status,"date"=>$this->date,"url"=>$this->url,"refreshDate"=>$this->refreshDate);
+        return array(
+            "id" => $this->id,
+            "status" => $this->status,
+            "date" => $this->date,
+            "url" => $this->url,
+            "refreshDate" => $this->refreshDate
+        );
     }
 
-    public function __construct($data = null){
-        //if(func_get_arg(0)){
-            //Review: check param REFACTOR THIS SHIT
-            if(!empty($data)){
-                $this->setUrl($data['url']);
-                $this->status = $data['status'];
-             }
+    public function __construct() {
         $this->date = new \DateTime();
         $this->refreshDate = new \DateTime('2000-01-01');
-        // REVIEW: where it is used
-        $this->ready = false;
-        $this->pages = new ArrayCollection();
+        // REVIEW: where it is used --Resolved
+        //$this->ready = false;
+        $this->pages = new ArrayCollection(); //Review: replace by native array() -- ArrayCollection is needed for lazy loading and etc Doctrine features
     }
+
     /**
      * Add page
      *
      * @param Page $page
-     * @return User
+     * @return Domain
      */
     public function addPage(Page $page) {
         $this->pages[] = $page;
@@ -111,26 +112,29 @@ class Domain implements \JsonSerializable {
      * Remove page
      *
      * @param Page $page
+     * @return Domain
      */
     public function removePage(Page $page) {
         $this->pages->removeElement($page);
+
+        return $this;
     }
 
     /**
-     * Get tasks
+     * Get pages
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return ArrayCollection
      */
     public function getPages() {
         return $this->pages;
     }
+
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -138,63 +142,64 @@ class Domain implements \JsonSerializable {
      * Set url
      *
      * @param string $url
-     * @return Task
+     * @return Domain
      */
-    public function setUrl($url)
-    {
+    public function setUrl($url) {
         $this->url = $url;
-        // REVIEW: if only one url parameter is needed - use second param of parse_url(), like that - PHP_URL_HOST
-        $parsed = parse_url($url);
-        $this->host = $parsed['host'];
+        // REVIEW: if only one url parameter is needed - use second param of parse_url(), like that - PHP_URL_HOST --Resolved
+        $this->host = parse_url($url, PHP_URL_HOST);
+
         return $this;
     }
 
     /**
      * Get url
      *
-     * @return string 
+     * @return string
      */
-    public function getUrl()
-    {
+    public function getUrl() {
         return $this->url;
     }
+
     /**
      * Get url
      *
      * @return string
      */
-    public function getHost()
-    {
+    public function getHost() {
         return $this->host;
     }
+
     /**
      * Set status
      *
      * @param string $status
-     * @return Task
+     * @return Domain
      */
-    public function setStatus($status)
-    {
+    public function setStatus($status) {
         $this->status = $status;
-    
+
         return $this;
     }
 
     /**
      * Get status
      *
-     * @return string 
+     * @return string
      */
-    public function getStatus()
-    {
+    public function getStatus() {
         return $this->status;
     }
 
     /**
      * @param string $statistics
+     *
+     * @return Domain
      */
     public function setStatistics($statistics) {
         $this->statistics = $statistics;
+
+        return $this;
     }
 
     /**
@@ -208,20 +213,20 @@ class Domain implements \JsonSerializable {
      * Set date
      *
      * @param \DateTime $date
-     * @return Task
+     * @return Domain
      */
-    public function setDate($date){
+    public function setDate($date) {
         $this->date = $date;
+
         return $this;
     }
 
     /**
      * Get date
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
-    public function getDate()
-    {
+    public function getDate() {
         return $this->date;
     }
 
@@ -229,12 +234,11 @@ class Domain implements \JsonSerializable {
      * Set user
      *
      * @param User $user
-     * @return Task
+     * @return Domain
      */
-    public function setUser(User $user = null)
-    {
+    public function setUser(User $user = null) {
         $this->user = $user;
-    
+
         return $this;
     }
 
@@ -243,19 +247,25 @@ class Domain implements \JsonSerializable {
      *
      * @return User
      */
-    public function getUser()
-    {
+    public function getUser() {
         return $this->user;
     }
 
     /**
+     * Set refreshDate
+     *
      * @param \DateTime $refreshDate
+     * @return Domain
      */
     public function setRefreshDate($refreshDate) {
         $this->refreshDate = $refreshDate;
+
+        return $this;
     }
 
     /**
+     * Get refreshDate
+     *
      * @return \DateTime
      */
     public function getRefreshDate() {

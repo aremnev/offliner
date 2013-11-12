@@ -2,7 +2,6 @@
 
 namespace Thumbtack\OfflinerBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,9 +23,13 @@ class Process {
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
-    public function getId(){
+    public function getId() {
         return $this->id;
+    }
+
+    public function __toString() {
+        return (string)$this->id;
     }
 }

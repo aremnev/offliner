@@ -18,7 +18,6 @@ class RootController extends BaseController {
      * @Route("/signIn", name="homepage")
      */
     public function signInAction() {
-
         if ($this->isUserLogged()) {
             return $this->redirect($this->generateUrl('welcome'));
         }
@@ -29,24 +28,24 @@ class RootController extends BaseController {
      * @Route("/", name="welcome")
      */
     public function welcomeAction() {
-        $key = base64_encode(ApiController::strcode($this->getUser()->getEmail(),$this->container->getParameter('secret')));
-        return $this->render('ThumbtackOfflinerBundle:Default:welcome.html.twig',array('user_api_key' => $key));
+        $key = base64_encode(ApiController::strcode($this->getUser()->getEmail(), $this->container->getParameter('secret')));
+        return $this->render('ThumbtackOfflinerBundle:Default:welcome.html.twig', array('user_api_key' => $key));
     }
+
     /**
      * @Route("/login/{email}", name="login")
      */
-    public function loginAction($email) {
+    public function loginAction($email) { //TODO: DIVIDE AJAX AND NOT-AJAX CALLS
         if ($this->isUserLogged()) {
             return $this->redirect($this->generateUrl('welcome'));
         }
         $pass = $this->getRequest()->query->get('pass');
-        /**
-         * @var UserProvider $userProvider
-         */
+        /** @var UserProvider $userProvider */
         $userProvider = $this->get('thumbtackoffliner.oauth_user_provider');
-        $user = $userProvider->loginUser($email,$pass);
+        $user = $userProvider->loginUser($email, $pass);
         return $this->regUserAction($user);
     }
+
     /**
      * @Route("/register/{email}", name="register")
      */
@@ -60,7 +59,7 @@ class RootController extends BaseController {
          * @var UserProvider $userProvider
          */
         $userProvider = $this->get('thumbtackoffliner.oauth_user_provider');
-        $user = $userProvider->registerUser($nickname,$email,$pass);
+        $user = $userProvider->registerUser($nickname, $email, $pass);
         return $this->regUserAction($user);
     }
 
@@ -69,30 +68,19 @@ class RootController extends BaseController {
      * @param User $user
      * @return Response
      */
-    private function regUserAction($user){
-        $result = array();
-        if(isset($user) && $user != null ){
+    private function regUserAction($user) {
+        $response = new Response();
+        $response->setStatusCode(401);
+        if (!empty($user)) {
             $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
             $this->container->get('security.context')->setToken($token);
-            $result['code'] = 0;
-            $result['message'] = 'success';
-        }else{
-            $result['code'] = 1;
-            $result['message'] = 'failed';
+            $response->setStatusCode(200);
         }
-        $response = new Response(json_encode($result));
-        $response->setStatusCode(($result['code'] == 0?200:401));
-        $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
+
     /**
      * @Route("/about", name="about")
-     */
-    public function phpinfoAction() {
-
-        return $this->render('ThumbtackOfflinerBundle:Default:about.html.php');
-    }
-    /**
      * @Route("/userstat", name="userstat")
      * @Route("/profile", name="profile")
      * @Route("/recover", name="recover")
@@ -102,7 +90,6 @@ class RootController extends BaseController {
      * @Route("/demo", name="demo")
      */
     public function todoAction() {
-
         return $this->render('ThumbtackOfflinerBundle:Default:todo.html.twig');
     }
 

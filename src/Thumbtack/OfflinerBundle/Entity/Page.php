@@ -2,21 +2,16 @@
 
 namespace Thumbtack\OfflinerBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Thumbtack\OfflinerBundle\Models\ServiceProcessor;
 
 /**
  * task
  *
- * @ORM\Table(name="indexer_pages",
- *   uniqueConstraints={
- *      @ORM\UniqueConstraint(name="search_idx", columns={"hash_url","domain_id"})
- *  }
- * )
+ * @ORM\Table(name="indexer_pages")
  * @ORM\Entity
  */
-class Page implements \JsonSerializable{
+class Page implements \JsonSerializable {
     /**
      * @var integer
      *
@@ -32,7 +27,7 @@ class Page implements \JsonSerializable{
      * @ORM\ManyToOne(targetEntity="Domain", inversedBy="pages")
      * @ORM\JoinColumn(name="domain_id", referencedColumnName="id")
      */
-    
+
     protected $domain;
 
     /**
@@ -73,11 +68,11 @@ class Page implements \JsonSerializable{
      */
     protected $status = '';
     /**
-     * @var bool //REVU: SetStatus as ENUM , delete ready
+     * @var bool
      *
      * @ORM\Column(name="ready", type="boolean")
      */
-    protected $ready;
+    protected $ready; //REVU: $status as ENUM , delete ready
 
     /**
      * @var \DateTime
@@ -86,19 +81,33 @@ class Page implements \JsonSerializable{
      */
     protected $date;
 
-    // Review: need default value for $url 
-    public function __construct($url){
+    public function __construct($url) {
         $this->status = ServiceProcessor::STATUS_AWAITING;
         $this->ready = false;
         $this->setUrl($url);
         $this->date = new \DateTime();
     }
+
+    public function __toString() {
+        return json_encode($this->jsonSerialize());
+    }
+    public function jsonSerialize() {
+        return array(
+            "id" => $this->id,
+            "url" => $this->url,
+            'hash_url' => $this->hashUrl,
+            "date" => $this->date,
+            "title" => $this->title
+        );
+    }
+
     /**
      * @return User
      */
     public function getUser() {
         return $this->domain->getUser();
     }
+
     /**
      * Get id
      *
@@ -117,6 +126,7 @@ class Page implements \JsonSerializable{
     public function setUrl($url) {
         $this->url = $url;
         $this->hashUrl = md5($url);
+
         return $this;
     }
 
@@ -149,6 +159,7 @@ class Page implements \JsonSerializable{
     public function getStatus() {
         return $this->status;
     }
+
     /**
      * Set ready
      *
@@ -169,6 +180,7 @@ class Page implements \JsonSerializable{
     public function getReady() {
         return $this->ready;
     }
+
     /**
      * Set title
      *
@@ -194,7 +206,7 @@ class Page implements \JsonSerializable{
      * Set content
      *
      * @param $content
-     * @return Task
+     * @return Page
      */
     public function setContent($content) {
         $this->content = $content;
@@ -213,10 +225,11 @@ class Page implements \JsonSerializable{
 
     /**
      * @param string $html
-     * @return $this
+     * @return Page
      */
     public function setHtml($html) {
         $this->html = $html;
+
         return $this;
     }
 
@@ -226,6 +239,7 @@ class Page implements \JsonSerializable{
     public function getHtml() {
         return $this->html;
     }
+
     /**
      * Set date
      *
@@ -249,7 +263,7 @@ class Page implements \JsonSerializable{
 
     /**
      * @param Domain $domain
-     * @return $this
+     * @return Page
      */
     public function setDomain($domain) {
         $this->domain = $domain;
@@ -263,12 +277,4 @@ class Page implements \JsonSerializable{
     public function getDomain() {
         return $this->domain;
     }
-
-    public function __toString() {
-        return json_encode($this->jsonSerialize());
-    }
-
-    // Review: join with __toString()
-    public function jsonSerialize() {
-        return array("id"=>$this->id,"url"=>$this->url,'hash_url'=>$this->hashUrl,"date"=>$this->date,"title"=>$this->title);
-    }}
+}

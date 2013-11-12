@@ -42,7 +42,7 @@ app.controller("offlinerCtrl",function($scope,$http,$window){
         switch (req_action){
             case 'getTasks':
                 action = 'tasks';
-                method = 'POST';
+                method = 'GET';
                 break;
             case 'newTask':
                 action = 'tasks/new';
@@ -74,7 +74,7 @@ app.controller("offlinerCtrl",function($scope,$http,$window){
                         }
                         break;
                     case 'newTask':
-                        if(data){
+                        if(status == 202){
                             $scope.message = 'Added';
                             $scope.sendRequest('getTasks');
                         }else{

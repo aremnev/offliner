@@ -13,21 +13,22 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Thumbtack\OfflinerBundle\Entity\User;
 
 class UserProvider extends BaseOAuthUserProvider {
-    /**
-     * @var EntityManager
-     */
+    /** @var EntityManager */
     protected $em;
 
     function __construct($doctrine) {
         $this->em = $doctrine->getManager();
     }
     /**
-     * RegisterUser
+     * @param $nickname
+     * @param $email
+     * @param $pass
+     * @return null|User
      */
-    public function registerUser($nickname,$email,$pass) {
+    public function registerUser($nickname, $email, $pass) {
         $repository = $this->em->getRepository('ThumbtackOfflinerBundle:User');
         $user = $repository->findOneByEmail($email);
-        if(!isset($user)){
+        if (!isset($user)) {
             $user = new User();
             $user->setUsername($nickname);
             $user->setNickname($nickname);
@@ -38,24 +39,24 @@ class UserProvider extends BaseOAuthUserProvider {
             $this->em->persist($user);
             $this->em->flush();
             return $user;
-        }else{
-            return null;
-        }
-    }
-    /**
-     * LoginUser
-     */
-    public function loginUser($email,$pass) {
-        $repository = $this->em->getRepository('ThumbtackOfflinerBundle:User');
-        /**
-         * @var User $user
-         */
-        $user = $repository->findOneByEmail($email);
-        if (isset($user) && $user->getPassword() == md5($pass)) {
-            return $user;
         } else {
             return null;
         }
+    }
+
+    /**
+     * @param $email
+     * @param $pass
+     * @return null|User
+     */
+    public function loginUser($email, $pass) {
+        $repository = $this->em->getRepository('ThumbtackOfflinerBundle:User');
+        /** @var User $user */
+        $user = $repository->findOneByEmail($email);
+        if (isset($user) && $user->getPassword() == md5($pass)) {
+            return $user;
+        }
+        return null;
     }
 
     /**

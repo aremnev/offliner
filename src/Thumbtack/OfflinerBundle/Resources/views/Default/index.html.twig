@@ -3,33 +3,39 @@
 {% block global_stat %}
     {% verbatim %}
     <div class="stats stats-theme-light pull-right">
-        <span style="display: inline-block;"><span class="stats-label"></span> <span class="stats-count" style="font-size: 100%">FOLLOW US:</span></span>
-        <span class="stats-item"><span class="stats-label">Twitter</span> <span class="stats-count"><span class="icon icon-wf "></span></span></span>
-        <span class="stats-item"><span class="stats-label">Google</span> <span class="stats-count"><span class="icon icon-wf"></span></span></span>
-        <a href="https://github.com/aremnev/offliner"><span class="stats-item"><span class="stats-label">Github</span> <span class="stats-count"><span class="icon icon-wf ">&#62208;</span></span></span></a>
+        <span style="display: inline-block;"><span class="stats-label"></span> <span class="stats-count"
+                                                                                     style="font-size: 100%">FOLLOW US:</span></span>
+        <span class="stats-item"><span class="stats-label">Twitter</span> <span class="stats-count"><span
+                        class="icon icon-wf "></span></span></span>
+        <span class="stats-item"><span class="stats-label">Google</span> <span class="stats-count"><span
+                        class="icon icon-wf"></span></span></span>
+        <a href="https://github.com/aremnev/offliner"><span class="stats-item"><span
+                        class="stats-label">Github</span> <span class="stats-count"><span
+                            class="icon icon-wf ">&#62208;</span></span></span></a>
     </div>
     {% endverbatim %}
 {% endblock %}
 {% block data %}
     {% verbatim %}
     <div class="row-fluid">
-        <div  ng-if="false" class="loading"><p>L<span class="rotateO"></span>ading...</p></div>
-        <div class="tabs-left" >
-                <div class="panel">
+        <div ng-if="false" class="loading"><p>L<span class="rotateO"></span>ading...</p></div>
+        <div class="tabs-left">
+            <div class="panel">
                 <h4> Hello! You are not authorized. Please use forms below and get started!</h4>
-                    {{message}}
-                 </div>
-                <div class="page-content">
+                {{ message }}
+            </div>
+            <div class="page-content">
                  <span class="login-form">
                     <form ng-submit="sendLoginRequest()">
                         <div class="bordered">
                             <h4>Log in:</h4>
                             <input type="email" required placeholder="E-mail" ng-model="email" class="panel-input">
                             <input type="password" required placeholder="Password" ng-model="pass" class="panel-input">
+
                             <p><a href="recover">Forgot password</a>
                         </div>
                         <div class="btn-group">
-                            <button type="submit" class="btn btn-success btn-large" >Login</button>
+                            <button type="submit" class="btn btn-success btn-large">Login</button>
                         </div>
                         <p style="margin: 0">
                         <ul class="nav nav-tabs">
@@ -57,12 +63,12 @@
                             <input type="password" required placeholder="Password" ng-model="pass" class="panel-input">
                         </div>
                         <div class="btn-group">
-                            <button type="submit" class="btn btn-success btn-large" >Register</button>
+                            <button type="submit" class="btn btn-success btn-large">Register</button>
                         </div>
                     </form>
                 </span>
-                </div>
-         </div>
+            </div>
+        </div>
     </div>
     {% endverbatim %}
 {% endblock %}
