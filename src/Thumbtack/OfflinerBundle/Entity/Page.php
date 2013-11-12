@@ -86,6 +86,7 @@ class Page implements \JsonSerializable{
      */
     protected $date;
 
+    // Review: need default value for $url 
     public function __construct($url){
         $this->status = ServiceProcessor::STATUS_AWAITING;
         $this->ready = false;
@@ -266,6 +267,8 @@ class Page implements \JsonSerializable{
     public function __toString() {
         return json_encode($this->jsonSerialize());
     }
+
+    // Review: join with __toString()
     public function jsonSerialize() {
         return array("id"=>$this->id,"url"=>$this->url,'hash_url'=>$this->hashUrl,"date"=>$this->date,"title"=>$this->title);
     }}

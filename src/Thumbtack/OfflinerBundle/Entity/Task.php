@@ -54,12 +54,14 @@ class Task implements \JsonSerializable {
      * @ORM\Column(name="status", type="string", length=20)
      */
     protected $status = '';
+
     /**
      * @var bool
      *
      * @ORM\Column(name="ready", type="boolean")
      */
-    protected $ready;
+    protected $ready; // Review: join with $status and remove this field
+
     /**
      * @var bool
      *
@@ -85,6 +87,7 @@ class Task implements \JsonSerializable {
         return json_encode($this->jsonSerialize());
     }
 
+    // Review: join with __toString()
     public function jsonSerialize() {
         return array("id" => $this->id, "maxDepth" => $this->maxDepth, "status" => $this->status, "onlyDomain" => $this->onlyDomain,
             "clearScripts" => $this->clearScripts, "date" => $this->date, "url" => $this->url,"filename" => $this->filename, "ready" => $this->ready);

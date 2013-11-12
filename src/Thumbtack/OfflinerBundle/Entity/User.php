@@ -64,17 +64,18 @@ class User implements UserInterface, \Serializable {
      *
      * @ORM\OneToMany(targetEntity="Task", mappedBy="user",cascade={"persist", "remove"})
      */
-    protected $tasks = '';
+    protected $tasks = ''; // Review: it's should be null
     /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Domain", mappedBy="user",cascade={"persist", "remove"})
      */
-    protected $domains = '';
+    protected $domains = ''; // Review: it's should be null
     /**
      * Constructor
      */
     public function __construct() {
+        // Review: Use ArrayObject from SPL instead, it's faster and more reliable
         $this->tasks = new ArrayCollection();
         $this->domains = new ArrayCollection();
     }
