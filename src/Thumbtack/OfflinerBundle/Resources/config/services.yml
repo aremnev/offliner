@@ -1,23 +1,5 @@
 parameters:
 services:
- thumbtackOffliner.menu_builder:
-        class: Thumbtack\OfflinerBundle\Menu\MenuBuilder
-        arguments: ["@knp_menu.factory"]
-
- thumbtackOffliner.menu.main:
-        class: Knp\Menu\MenuItem # the service definition requires setting the class
-        factory_service: thumbtackOffliner.menu_builder
-        factory_method: mainMenu
-        arguments: ["@request"]
-        scope: request # needed as we have the request as a dependency here
-        tags:
-            - { name: knp_menu.menu, alias: main } # The alias is what is used to retrieve the menu
- thumbtackoffliner.oauth_user_provider:
-        class: Thumbtack\OfflinerBundle\Security\UserProvider
-        arguments: [@doctrine]
- thumbtackOffliner:
-        class: Thumbtack\OfflinerBundle\Models\OfflinerModel
-        arguments: [@security.context,@doctrine]
- thumbtackServiceProcessor:
-        class: Thumbtack\OfflinerBundle\Models\ServiceProcessor
-        arguments: ["@doctrine","%offliner_max_proccess_count%","%uploads_dir%"]
+ thumbtackOfflinerProcessor:
+        class: Thumbtack\OfflinerBundle\Models\OfflinerProcessor
+        arguments: ["@doctrine",5,"%uploads_dir%"] #TODO: replace max_proc_count

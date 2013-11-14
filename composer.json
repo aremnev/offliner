@@ -22,7 +22,6 @@
         "knplabs/knp-menu": "2.0.x-dev",
         "knplabs/knp-menu-bundle": "2.0.x-dev",
         "jms/serializer": "0.13.0",
-        "knplabs/knp-snappy-bundle": "dev-master",
         "hwi/oauth-bundle": "0.3.*@dev",
         "friendsofsymfony/elastica-bundle": "3.0.*@dev",
         "xplk/phantomCrawl":"0.0.3"

@@ -14,5 +14,6 @@ parameters:
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
 
-    offliner_max_proccess_count: 2
+    max_proccess_count: 2
     uploads_dir: /home/offliner_uploads/
+    user_classname : Thumbtack\AppBundle\Entity\User

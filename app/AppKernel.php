@@ -17,6 +17,8 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
+            new Thumbtack\AppBundle\ThumbtackAppBundle(),
+            new Thumbtack\IndexerBundle\ThumbtackIndexerBundle(),
             new Thumbtack\OfflinerBundle\ThumbtackOfflinerBundle(),
             new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
             new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),

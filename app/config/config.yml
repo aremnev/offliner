@@ -65,15 +65,6 @@ swiftmailer:
 knp_menu:
     templating: true
     twig: true
-knp_snappy:
-    pdf:
-        enabled:    true
-        binary:     /usr/local/bin/wkhtmltopdf-i386
-        options:    []
-    image:
-        enabled:    false
-        binary:     /usr/local/bin/wkhtmltoimage
-        options:    []
 hwi_oauth:
     firewall_name: secured_area
     resource_owners:
@@ -120,7 +111,7 @@ fos_elastica:
                       domain:
                   persistence:
                       driver: orm # orm, mongodb, propel are available
-                      model: Thumbtack\OfflinerBundle\Entity\Page
+                      model: Thumbtack\IndexerBundle\Entity\Page
                       provider: ~
                       finder: ~
                       listener: ~

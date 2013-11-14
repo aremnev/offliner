@@ -12,12 +12,12 @@ app.controller("mainCtrl",function($scope,$http,$window){
     $scope.sendLoginRequest = function(){
         $http({method:'GET',url:'login/'+$scope.email+'?pass='+$scope.pass})
             .success(function(data, status, headers, config) {
-                if(data.code ==0){
+                if(status == 200){
                 $scope.message = 'Successful login';
                 window.location.reload(true);
                 }
             }).error(function(data, status, headers, config) {
-                if(data.code == 1){
+                if(status != 200){
                     $scope.message = 'Login failed';
                 }else{
                 $scope.message = 'Response failed! Status:'+status;
@@ -27,12 +27,12 @@ app.controller("mainCtrl",function($scope,$http,$window){
     $scope.sendRegisterRequest = function(){
         $http({method:'GET',url:'register/'+$scope.email+'?pass='+$scope.pass+'&nick='+$scope.nick})
             .success(function(data, status, headers, config) {
-                if(data.code ==0){
+                if(status == 200){
                     $scope.message = 'Successful register';
                     window.location.reload(true);
                 }
             }).error(function(data, status, headers, config) {
-                if(data.code == 1){
+                if(status != 200){
                     $scope.message = 'Register failed';
                 }else{
                     $scope.message = 'Response failed! Status:'+status;

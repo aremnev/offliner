@@ -1,0 +1,21 @@
+parameters:
+services:
+ thumbtackApp.menu_builder:
+        class: Thumbtack\AppBundle\Menu\MenuBuilder
+        arguments: ["@knp_menu.factory"]
+
+ thumbtackApp.menu.main:
+        class: Knp\Menu\MenuItem # the service definition requires setting the class
+        factory_service: thumbtackApp.menu_builder
+        factory_method: mainMenu
+        arguments: ["@request"]
+        scope: request # needed as we have the request as a dependency here
+        tags:
+            - { name: knp_menu.menu, alias: main } # The alias is what is used to retrieve the menu
+ thumbtackApp.oauth_user_provider:
+        class: Thumbtack\AppBundle\Security\UserProvider
+        arguments: [@doctrine]
+ thumbtackOffliner:
+        class: Thumbtack\OfflinerBundle\Models\OfflinerModel
+        arguments: [@security.context,@doctrine]
+

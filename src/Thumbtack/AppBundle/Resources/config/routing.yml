@@ -1,0 +1,15 @@
+thumbtackApp_root:
+    resource: "@ThumbtackAppBundle/Controller/RootController.php"
+    type:     annotation
+thumbtackApp_offliner:
+    resource: "@ThumbtackOfflinerBundle/Controller/OfflinerController.php"
+    type:     annotation  #may be replaced with custom configuration
+thumbtackApp_indexer:
+    resource: "@ThumbtackIndexerBundle/Controller/IndexerController.php"
+    type:     annotation  #may be replaced with custom configuration
+thumbtackApp_oauth:
+    resource: "@ThumbtackAppBundle/Security/UserProvider.php"
+    type:     annotation
+thumbtackApp_indexer_api:
+    resource: "@ThumbtackIndexerBundle/Controller/ApiController.php"
+    type:     annotation  #may be replaced with custom configuration

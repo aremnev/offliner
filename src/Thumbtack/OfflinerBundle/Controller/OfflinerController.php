@@ -5,12 +5,12 @@ namespace Thumbtack\OfflinerBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Thumbtack\OfflinerBundle\Controller\BaseController;
-use Thumbtack\OfflinerBundle\Entity\User;
+use Thumbtack\AppBundle\Entity\User;
 use Thumbtack\OfflinerBundle\Models\OfflinerModel;
 
-class OfflinerController extends BaseController {
+class OfflinerController extends Controller {
     /**
      * @Route("/tasks/new", name="newTask")
      * @Method ({"POST"})

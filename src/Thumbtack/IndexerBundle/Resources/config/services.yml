@@ -1,0 +1,7 @@
+parameters:
+services:
+  thumbtackIndexerProcessor:
+          class: Thumbtack\IndexerBundle\Models\IndexerProcessor
+          arguments: ["@doctrine",5] #TODO: replace max_proc_count
+
+

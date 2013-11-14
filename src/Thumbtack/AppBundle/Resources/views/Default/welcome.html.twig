@@ -1,0 +1,259 @@
+{% extends '::layout.html.twig' %}
+{% block global_stat %}
+
+    {% verbatim %}
+    <div class="stats stats-theme-light pull-right social" xmlns="http://www.w3.org/1999/html">
+        <span style="display: inline-block;"><span class="stats-label"></span> <span class="stats-count"
+                                                                                     style="font-size: 100%">FOLLOW US:</span></span>
+        <span class="stats-item"><span class="stats-label">Twitter</span> <span class="stats-count"><span
+                        class="icon icon-wf "></span></span></span>
+        <span class="stats-item"><span class="stats-label">Google</span> <span class="stats-count"><span
+                        class="icon icon-wf"></span></span></span>
+        <a href="https://github.com/aremnev/offliner"><span class="stats-item"><span
+                        class="stats-label">Github</span> <span class="stats-count"><span
+                            class="icon icon-wf ">&#62208;</span></span></span></a>
+    </div>
+    {% endverbatim %}
+    <!--<div class="logged pull-right">Logged as: {{ app.user.nickname|length > 6 ? app.user.nickname|slice(0, 6) ~ '...' : app.user.nickname  }} </div>-->
+{% endblock %}
+
+{% block data %}
+    {% verbatim %}
+    <div class="row-fluid">
+    <tabset class="tabbable tabs-left" ng-controller="tabsCtrl">
+    <tab select="tabSelect('offliner');">
+        <tab-heading id="offliner">
+            <span style="float: right; vertical-align:top;font-size: 100%;color: red;">beta</span>
+            <span class="icon icon-wf ">&#59198;</span>
+            Offliner service
+        </tab-heading>
+        <div ng-controller="offlinerCtrl">
+            <div ng-if="loading" class="loading"><p>L<span class="rotateO"></span>ading...</p></div>
+            <div class="panel">
+                Beta service! Offliner allows download any website fully! When task be ready your can download zip with
+                website content.
+                <p>When each your task complete we send download url on your e-mail
+
+                <p>NOTE: 'Clear Scripts' option may dramatically change the ready page quality.
+
+                <div class="new-task-form">
+                    <form>
+                        <span>URL <input type="url" ng-model="url"></span>
+                        <!--<span>Domain Only<input type="checkbox" ng-model="onlyDomain" ></span>
+                        <span>Clear Scripts<input type="checkbox" ng-model="clearScripts" ></span>
+                        <span>Crawl depth<input type="number" ng-model="maxDepth" ng-change="validate()"></span>-->
+                        <button class="btn btn-info btn-large" type="submit" ng-click="sendRequest('newTask')">Create
+                            new task
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <!--Redesign needed-->
+            <!--<div class='status-message' ng-show="message" ">Status message: {{ ctrl.message }}  <b ng-click="message = ''">X</b></div>-->
+            <table class="list">
+                <thead>
+                <tr>
+                    <td style="width: 25%"> Url</td>
+                    <td style="width: 10%"> Status</td>
+                    <td style="width: 10%"> Domain Only</td>
+                    <td style="width: 10%"> Clear Scripts</td>
+                    <td style="width: 5%"> Depth</td>
+                    <td style="width: 10%"> Date</td>
+                    <td style="width: 20%"> Options</td>
+                </tr>
+                </thead>
+                <tbody ng-repeat="task in tasks">
+                <tr ng-show="!inEdit(task)" id="task{{ task.id }}">
+                    <td> {{ task.url }}</td>
+                    <td><label class="label">{{ task.status }}</label></td>
+                    <td><label class="label">{{ task.onlyDomain }}</label></td>
+                    <td><label class="label">{{ task.clearScripts }}</label></td>
+                    <td><label class="label">{{ task.maxDepth }}</label></td>
+                    <td>
+                        <small>{{ task.date|date:'yyyy-MM-dd HH:mm:ss' }}</small>
+                    </td>
+                    <td>
+                        <a href="uploads/{{ task.filename }}" з><label class="btn btn-success pull-left"
+                                                                       ng-if="task.ready" title="Download">
+                                <span class="icon icon-wf icon-action">&#59256;</span>
+                            </label></a>
+                        <label class="btn btn-danger pull-right" ng-click="sendRequest('deleteTask',{{ task.id }})"
+                               title="Delete">
+                            <span class="icon icon-wf icon-action">&#59177;</span>
+                        </label>
+                        <label class="btn btn-info pull-right " ng-if="task.status == 'in queue'"
+                               ng-click="setEditId({{ task.id }})" title="Edit">
+                            <span class="icon icon-wf icon-action">&#9998;</span>
+                        </label>
+                    </td>
+                </tr>
+                <tr ng-show="inEdit(task)" id="task{{ task.id }}">
+                    <td><input type="url" ng-model="task.url"></td>
+                    <td><label class="label">{{ task.status }}</label></td>
+                    <td><input type="checkbox" ng-model="task.onlyDomain"></td>
+                    <td><input type="checkbox" ng-model="task.clearScripts"></td>
+                    <td><input type="number" ng-model="task.maxDepth"></td>
+                    <td>
+                        <small>{{ task.date|date:'yyyy-MM-dd HH:mm:ss' }}</small>
+                    </td>
+                    <td>
+                        <label class="btn btn-danger disabled pull-right" title="Delete"><span
+                                    class="icon icon-wf icon-action">&#59177;</span></label>
+                        <label class="btn btn-info pull-right" ng-click="saveEdit(task)" title="Save"><span
+                                    class="icon icon-wf icon-action">&#10003;</span></label>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </tab>
+    <tab select="tabSelect('indexer');" active="tabs.indexer">
+        <tab-heading id="indexer">
+            <span class="icon icon-wf ">&#128213;</span>
+            Indexer service
+        </tab-heading>
+        <div ng-controller="indexerCtrl">
+            <div ng-if="loading" class="loading"><p>L<span class="rotateO"></span>ading...</p></div>
+            <div class="panel">
+                Manage domains in your search index . Answers? <a href="#">Quick Tour</a>
+
+                <p>Indexing status you can check on your profile page
+
+                <p>Read <a href="#">API References</a> for link it to your website.
+
+                <div class="new-domain-form">
+                    <form>
+                        <span>URL <input type="url" ng-model="url"></span>
+                        <button class="btn btn-info btn-large" type="submit" ng-click="sendRequest('newDomain')">Add to
+                            my domains
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <!--Redesign needed-->
+            <!--<div class='status-message' ng-show="message" ">Status message: {{ message }}  <b ng-click="message = ''">X</b></div>-->
+            <table class="list">
+                <thead>
+                <tr>
+                    <td style="width: 25%"> Url</td>
+                    <td style="width: 10%"> Status</td>
+                    <td style="width: 10%"> Date</td>
+                    <td style="width: 20%"> Options</td>
+                </tr>
+                </thead>
+                <tbody ng-repeat="domain in domains">
+                <tr id="domain{{ domain.id }}">
+                    <td> {{ domain.url }}</td>
+                    <td><label class="label">{{ domain.status }}</label></td>
+                    <td>
+                        <small>{{ domain.date|date:'yyyy-MM-dd HH:mm:ss' }}</small>
+                    </td>
+                    <td>
+                        <label class="btn btn-danger pull-right" ng-click="sendRequest('deleteDomain',{{ domain.id }})"
+                               title="Delete">
+                            <span class="icon icon-wf icon-action">&#59177;</span>
+                        </label>
+                        <label class="btn btn-info pull-right"
+                               ng-click="sendRequest('getDomainInfo',{{ domain.id }},{{ domain }})"
+                               title="Staticstics (refreshs every 10 minutes)">
+                            <span class="icon icon-wf icon-action">&#128196;</span>
+                        </label>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="page-content" compile="result"></div>
+        </div>
+    </tab>
+    <tab select="tabSelect('search');" active="tabs.search">
+        <tab-heading id="search">
+            <span class="icon icon-wf ">&#9881;</span>
+            Indexer search test
+        </tab-heading>
+        <div ng-controller="indexerCtrl">
+            <div ng-if="loading" class="loading"><p>L<span class="rotateO"></span>ading...</p></div>
+            <div class="panel">
+                Check search results from your own index
+                <p>Search result output params managed on Indexer service tab
+
+                <p>Read <a href="#">API References</a> for link it to your website.
+
+                <div class="search-form">
+                    <form>
+                        <input type="text" placeholder="Search" ng-submit="sendSearchRequest()" ng-model="searchText"
+                               class="panel-input">
+                        <button type="submit" class="btn btn-success btn-large" ng-click="sendSearchRequest()">Search
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="page-content">
+                <p ng-show="links.length < 1 && searchResult.length < 1">Search results will show here</p>
+
+                <p ng-show="searchResult.length > 1">{{ searchResult }}</p>
+                <ol class="nav-list search-results">
+                    <li ng-repeat="link in links" class="search-results-item">
+                        <i class="icon icon-wf icon-action pull-right" ng-click="divShow = !divShow"
+                           compile='divArrow(divShow)'></i>
+                        <a href="{{ link.page.url }}" target="_blank">{{ link.page.title }}</a>
+
+                        <div class="highlighted" ng-repeat="hl in link.highlights.content" compile='hl'></div>
+                        <div class="search-results-details" ng-show="divShow">
+                            <small>Last indexed: {{ link.page.date.date }}
+                                <a href="/preview/{{ link.page.hash_url }}" target="_blank" title="Saved copy">Saved
+                                    copy</a>
+
+                                <div style="float: right">score:{{ link.score }}%</div>
+                            </small>
+                        </div>
+                    </li>
+                </ol>
+                <div style="height: 10px"></div>
+            </div>
+        </div>
+    </tab>
+    <tab select="tabSelect('profile');" active="tabs.profile">
+    <tab-heading id="profile">
+        <span class="icon icon-wf ">&#128240;</span>
+        Profile
+    </tab-heading>
+    <!-- <div class="loading"><p>In w<span class="rotateO"></span>rk</p></div>-->
+    <div>
+    {% endverbatim %}
+    <div class="panel">
+        You are logged-in as <span class="username">{{ app.user.nickname }}</span>, manage your api keys and info
+        below</a>.
+    </div>
+        <div class="page-content">
+            <p>Yours ApiKey <input disabled value="{{ user_api_key }}"/><a href="#" class="btn btn-inverse"><span
+                            class="icon icon-wf icon-action">&#59249;</span></a>
+        </div>
+    <div>
+    {% verbatim %}
+    </tab>
+    <tab>
+        <tab-heading id="logout">
+            Logout
+        </tab-heading>
+        <a href="logout"><h1 style="padding: 10%">Logging out... click here if you read this</h1></a>
+
+    </tab>
+    </tabset>
+    </div>
+    {% endverbatim %}
+{% endblock %}
+{% block javascripts %}
+    <script>
+        //logout action simple realization
+        window.onload = function () {
+            tabs = document.getElementsByTagName('tab-heading');
+            for (var key in tabs) {
+                if (tabs[key].id == 'logout') {
+                    tabs[key].parentNode.onclick = function () {
+                        window.location = window.location + "logout";
+                    }
+                }
+            }
+        }
+    </script>
+{% endblock %}

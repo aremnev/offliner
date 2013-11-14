@@ -17,7 +17,7 @@ class runOfflinerTaskCommand extends ContainerAwareCommand {
 
     protected function execute(InputInterface $input, OutputInterface $output) {
         /** @var ServiceProcessor $service */
-        $service = $this->getContainer()->get("thumbtackServiceProcessor");
+        $service = $this->getContainer()->get("thumbtackOfflinerProcessor");
         echo $service->runQueueTask();
     }
 }

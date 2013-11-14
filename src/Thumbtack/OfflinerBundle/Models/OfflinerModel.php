@@ -4,8 +4,9 @@ namespace Thumbtack\OfflinerBundle\Models;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Thumbtack\OfflinerBundle\Entity\OfflinerUserInterface;
 use Thumbtack\OfflinerBundle\Entity\Task;
-use Thumbtack\OfflinerBundle\Entity\User;
+use Thumbtack\AppBundle\Entity\User;
 
 require_once(__DIR__ . '/../Misc/normilize_url.php');
 class OfflinerModel {
@@ -19,10 +20,14 @@ class OfflinerModel {
     /**
      * @param $secure
      * @param $doctrine
+     * @throws \Symfony\Component\Config\Definition\Exception\Exception
      */
     function __construct($secure, $doctrine) {
         $this->dm = $doctrine->getManager();
         $this->user = $secure->getToken()->getUser();
+        if(!($this->user instanceof OfflinerUserInterface)){
+            throw new Exception('constructor param User must implements OfflinerUserInterface');
+        }
         $this->tasksRepo = $this->dm->getRepository('ThumbtackOfflinerBundle:Task');
     }
 
@@ -33,7 +38,7 @@ class OfflinerModel {
             }
             $data = json_decode($json, true);
             $data['url'] = normilize_url($data['url']);
-            $data['status'] = ServiceProcessor::STATUS_AWAITING;
+            $data['status'] = OfflinerProcessor::STATUS_AWAITING;
             if (empty($data['id'])) { //create
                 $task = new Task();
                 $task->setUser($this->user);
@@ -79,11 +84,11 @@ class OfflinerModel {
     public function getUserStat($user) {
         $query = $this->dm->createQuery('SELECT count(t) FROM ThumbtackOfflinerBundle:Task t WHERE t.status = ?1 AND t.user = ?2');
         $query->setParameter(2, $user);
-        $query->setParameter(1, ServiceProcessor::STATUS_AWAITING);
+        $query->setParameter(1, OfflinerProcessor::STATUS_AWAITING);
         $result['queue'] = $query->getSingleScalarResult();
-        $query->setParameter(1, ServiceProcessor::STATUS_PROGRESS);
+        $query->setParameter(1, OfflinerProcessor::STATUS_PROGRESS);
         $result['progress'] = $query->getSingleScalarResult();
-        $query->setParameter(1, ServiceProcessor::STATUS_READY);
+        $query->setParameter(1, OfflinerProcessor::STATUS_READY);
         $result['done'] = $query->getSingleScalarResult();
         return $result;
     }

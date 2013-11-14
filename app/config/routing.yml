@@ -1,5 +1,5 @@
-thumbtack_offliner:
-    resource: "@ThumbtackOfflinerBundle/Resources/config/routing.yml"
+thumbtack_app:
+    resource: "@ThumbtackAppBundle/Resources/config/routing.yml"
     prefix:   /
 hwi_oauth_redirect:
     resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"

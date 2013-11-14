@@ -3,6 +3,7 @@
 namespace Thumbtack\OfflinerBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Thumbtack\AppBundle\Entity\User;
 
 /**
  * task
@@ -23,7 +24,7 @@ class Task implements \JsonSerializable {
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="tasks")
+     * @ORM\ManyToOne(targetEntity="Thumbtack\AppBundle\Entity\User", inversedBy="tasks")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $user;

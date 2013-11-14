@@ -8,7 +8,7 @@ security:
 
     providers:
         hwi_provider:
-             id: thumbtackoffliner.oauth_user_provider
+             id: thumbtackApp.oauth_user_provider
 
     firewalls:
         dev:
@@ -30,7 +30,7 @@ security:
                             login_path:        /signIn
                             failure_path:      /signIn
                             oauth_user_provider:
-                                service:  thumbtackoffliner.oauth_user_provider
+                                service:  thumbtackApp.oauth_user_provider
                             default_target_path: /
             logout:
                 path:   /logout
