@@ -213,23 +213,23 @@
         </div>
     </tab>
     <tab select="tabSelect('profile');" active="tabs.profile">
-    <tab-heading id="profile">
-        <span class="icon icon-wf ">&#128240;</span>
-        Profile
-    </tab-heading>
-    <!-- <div class="loading"><p>In w<span class="rotateO"></span>rk</p></div>-->
-    <div>
-    {% endverbatim %}
-    <div class="panel">
-        You are logged-in as <span class="username">{{ app.user.nickname }}</span>, manage your api keys and info
-        below</a>.
-    </div>
-        <div class="page-content">
-            <p>Yours ApiKey <input disabled value="{{ user_api_key }}"/><a href="#" class="btn btn-inverse"><span
-                            class="icon icon-wf icon-action">&#59249;</span></a>
+        <tab-heading id="profile">
+            <span class="icon icon-wf ">&#128240;</span>
+            Profile
+        </tab-heading>
+        <!-- <div class="loading"><p>In w<span class="rotateO"></span>rk</p></div>-->
+        <div>
+        {% endverbatim %}
+            <div class="panel">
+                You are logged-in as <span class="username">{{ app.user.nickname }}</span>, manage your api keys and info
+                below.
+            </div>
+            <div class="page-content">
+                <p>Yours ApiKey <input disabled value="{{ user_api_key }}"/><a href="#" class="btn btn-inverse"><span
+                                class="icon icon-wf icon-action">&#59249;</span></a>
+            </div>
         </div>
-    <div>
-    {% verbatim %}
+        {% verbatim %}
     </tab>
     <tab>
         <tab-heading id="logout">
